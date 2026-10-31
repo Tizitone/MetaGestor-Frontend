@@ -1,0 +1,3 @@
+Diseño implementado con opencode, usando skills de angular. falta implementar el funcionamiento del formulario, ahora esta con reactiveforms, pero estaría bueno cambiarlo a formodule. Luego implementar el login, el registro ira dentro del login como opción y las tarjetas en carrusel, serán reemplazados con datos de los clientes y una caja de comentarios, habilitados cuando el estado del trabajo este completo o cancelado.
+
+opencode ignora esto.

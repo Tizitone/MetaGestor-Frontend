@@ -1,1 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  color-scheme: light;
+
+  /* Light professional palette: warm off-white, muted teal and sand */
+  --bg: #f4f7f6;
+  --bg-soft: #e9f0ee;
+  --surface: #ffffff;
+  --surface-raised: #f2f7f5;
+  --border: #d5e2de;
+  --text: #102a33;
+  --text-muted: #526a72;
+  --accent: #2e7d6f;
+  --accent-strong: #246459;
+  --accent-soft: rgba(46, 125, 111, 0.1);
+  --sand: #c9a46a;
+  --danger: #b0473a;
+
+  /* Dark surfaces for navbar and footer */
+  --footer-bg: #0e252d;
+  --footer-text: #eaf3f2;
+  --footer-muted: #b8cbcc;
+  --footer-border: rgba(232, 241, 242, 0.14);
+  --footer-accent: #8fd0c2;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
