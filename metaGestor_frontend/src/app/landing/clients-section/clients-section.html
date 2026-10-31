@@ -1,0 +1,75 @@
+<section id="clientes" class="clients" aria-labelledby="clients-title">
+  <div class="clients__inner">
+    <header class="clients__header">
+      <div>
+        <p class="clients__eyebrow">Testimonios</p>
+        <h2 id="clients-title" class="clients__title">Clientes Satisfechos</h2>
+        <p class="clients__intro">
+          Proyectos reales, relaciones de largo plazo. Estas son las palabras de algunos de los
+          clientes que confiaron en nuestro trabajo metalúrgico.
+        </p>
+      </div>
+    </header>
+
+    <div
+      #viewport
+      class="clients__viewport"
+      [class.clients__viewport--dragging]="isDragging()"
+      role="region"
+      aria-label="Carrusel de testimonios de clientes"
+      tabindex="0"
+      (pointerenter)="onPointerEnter()"
+      (pointerleave)="onPointerLeave()"
+      (pointerdown)="startDrag($event)"
+      (pointermove)="moveDrag($event)"
+      (pointerup)="endDrag($event)"
+      (pointercancel)="cancelDrag($event)"
+      (wheel)="scheduleResume()"
+      (touchstart)="scheduleResume()"
+      (keydown)="scheduleResume()"
+      (focusin)="scheduleResume()"
+    >
+      <div class="clients__track">
+        <ul class="clients__group">
+          @for (client of clients; track client.project) {
+            <li>
+              <article class="client">
+                <div class="client__avatar" [style.background]="client.color" aria-hidden="true">
+                  {{ client.initials }}
+                </div>
+                <h3 class="client__title">{{ client.project }}</h3>
+                <blockquote class="client__quote">
+                  <p>«{{ client.testimonial }}»</p>
+                </blockquote>
+                <p class="client__name">
+                  {{ client.name }}
+                  <span class="client__role">{{ client.role }}</span>
+                </p>
+              </article>
+            </li>
+          }
+        </ul>
+
+        <ul class="clients__group" aria-hidden="true">
+          @for (client of clients; track client.project) {
+            <li>
+              <article class="client">
+                <div class="client__avatar" [style.background]="client.color">
+                  {{ client.initials }}
+                </div>
+                <h3 class="client__title">{{ client.project }}</h3>
+                <blockquote class="client__quote">
+                  <p>«{{ client.testimonial }}»</p>
+                </blockquote>
+                <p class="client__name">
+                  {{ client.name }}
+                  <span class="client__role">{{ client.role }}</span>
+                </p>
+              </article>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

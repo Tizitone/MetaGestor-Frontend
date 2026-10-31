@@ -1,0 +1,38 @@
+<div id="inicio" class="landing">
+  <header class="navbar">
+    <nav class="navbar__inner" aria-label="Navegación principal">
+      <button class="btn btn--text" type="button" (click)="onInicio()">Inicio</button>
+
+      <div class="navbar__actions">
+        <button class="btn btn--ghost" type="button" (click)="onIniciarSesion()">
+          Iniciar sesión
+        </button>
+        <button class="btn btn--primary" type="button" (click)="onContactanos()">
+          Contáctanos
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__card">
+        <div class="hero__background" aria-hidden="true"></div>
+        <div class="hero__overlay" aria-hidden="true"></div>
+
+        <div class="hero__content">
+          <h1 id="hero-title" class="hero__title">MetaGestor</h1>
+          <p class="hero__subtitle">Soluciones metalúrgicas personalizadas</p>
+        </div>
+      </div>
+    </section>
+
+    <app-about-section />
+
+    <app-clients-section />
+
+    <app-contact-section />
+  </main>
+
+  <app-site-footer />
+</div>

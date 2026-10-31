@@ -1,0 +1,63 @@
+<section id="sobre-nosotros" class="about" aria-labelledby="about-title">
+  <div class="about__inner">
+    <header class="about__header">
+      <p class="about__eyebrow">Conócenos</p>
+      <h2 id="about-title" class="about__title">Sobre nosotros</h2>
+      <p class="about__intro">
+        En <strong>MetaGestor</strong> diseñamos, fabricamos y mantenemos soluciones metalúrgicas a
+        medida para la industria. Trabajamos acero al carbono, acero inoxidable y aluminio,
+        integrando ingeniería, corte de precisión, soldadura calificada y control de calidad en cada
+        etapa. Entregamos estructuras y componentes duraderos, seguros y con trazabilidad completa,
+        desde el prototipo hasta la producción en serie.
+      </p>
+    </header>
+
+    <ul class="benefits" aria-label="Beneficios principales">
+      @for (benefit of benefits; track benefit.title) {
+        <li class="benefit">
+          <span class="benefit__icon" aria-hidden="true">✓</span>
+          <h3 class="benefit__title">{{ benefit.title }}</h3>
+          <p class="benefit__text">{{ benefit.description }}</p>
+        </li>
+      }
+    </ul>
+
+    <div class="comparison">
+      <div class="comparison__header">
+        <h3 class="comparison__title">MetaGestor vs. la competencia</h3>
+        <p class="comparison__note">Datos referenciales de ejemplo, pendientes de validación.</p>
+      </div>
+
+      <div
+        class="comparison__scroll"
+        role="region"
+        aria-label="Tabla comparativa entre MetaGestor y la competencia"
+        tabindex="0"
+      >
+        <table class="comparison__table">
+          <caption class="visually-hidden">
+            Comparación de MetaGestor con la competencia
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Aspecto</th>
+              <th scope="col" class="comparison__ours">
+                MetaGestor <span class="comparison__badge">Recomendado</span>
+              </th>
+              <th scope="col">Competencia promedio</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of comparisonRows; track row.feature) {
+              <tr>
+                <th scope="row">{{ row.feature }}</th>
+                <td class="comparison__ours">{{ row.metaGestor }}</td>
+                <td>{{ row.competitor }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
