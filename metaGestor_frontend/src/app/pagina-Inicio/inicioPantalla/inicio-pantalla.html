@@ -1,0 +1,38 @@
+<div id="inicio" class="pagina-inicio">
+  <header class="barra-navegacion">
+    <nav class="barra-navegacion__contenedor" aria-label="Navegación principal">
+      <button class="boton boton--texto" type="button" (click)="alInicio()">Inicio</button>
+
+      <div class="barra-navegacion__acciones">
+        <button class="boton boton--contorno" type="button" (click)="alIniciarSesion()">
+          Iniciar sesión
+        </button>
+        <button class="boton boton--primario" type="button" (click)="alContactar()">
+          Contáctanos
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="portada" aria-labelledby="titulo-portada">
+      <div class="portada__tarjeta">
+        <div class="portada__fondo" aria-hidden="true"></div>
+        <div class="portada__capa" aria-hidden="true"></div>
+
+        <div class="portada__contenido">
+          <h1 id="titulo-portada" class="portada__titulo">MetaGestor</h1>
+          <p class="portada__subtitulo">Soluciones metalúrgicas personalizadas</p>
+        </div>
+      </div>
+    </section>
+
+    <app-descripcion-component />
+
+    <app-comentarios-component />
+
+    <app-contacto-componente />
+  </main>
+
+  <app-footer-componente />
+</div>

@@ -1,10 +1,7 @@
 import { Routes } from '@angular/router';
+import { InicioPantalla } from './pagina-Inicio/inicioPantalla/inicio-pantalla';
 
 export const routes: Routes = [
-  {
-    path: '',
-    title: 'MetaGestor | Soluciones metalúrgicas personalizadas',
-    loadComponent: () => import('./landing/landing-page').then((m) => m.LandingPage),
-  },
-  { path: '**', redirectTo: '' },
+  {path:"" , redirectTo:"inicio", pathMatch:"full"},
+  {path:"inicio", component:InicioPantalla}
 ];

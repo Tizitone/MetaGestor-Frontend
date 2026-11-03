@@ -16,8 +16,11 @@
   --accent-soft: rgba(46, 125, 111, 0.1);
   --sand: #c9a46a;
   --danger: #b0473a;
+  --exito: #1f6b3b;
+  --exito-borde: #7fb894;
+  --exito-fondo: #e7f5ec;
 
-  /* Dark surfaces for navbar and footer */
+  /* Superficies oscuras para la barra de navegación y el pie de página */
   --footer-bg: #0e252d;
   --footer-text: #eaf3f2;
   --footer-muted: #b8cbcc;

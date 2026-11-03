@@ -3,12 +3,12 @@
   background: var(--bg);
 }
 
-.contact {
+.contacto {
   padding-block: clamp(3rem, 7vw, 6rem);
   scroll-margin-top: 5.5rem;
 }
 
-.contact__inner {
+.contacto__contenedor {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(2rem, 5vw, 4rem);
@@ -17,7 +17,7 @@
   margin-inline: auto;
 }
 
-.contact__eyebrow {
+.contacto__etiqueta {
   margin: 0 0 0.6rem;
   color: var(--accent);
   font-size: 0.8rem;
@@ -26,7 +26,7 @@
   text-transform: uppercase;
 }
 
-.contact__title {
+.contacto__titulo {
   margin: 0;
   color: var(--text);
   font-size: clamp(2rem, 4vw, 3rem);
@@ -34,7 +34,7 @@
   letter-spacing: -0.02em;
 }
 
-.contact__title::after {
+.contacto__titulo::after {
   content: '';
   display: block;
   width: 4rem;
@@ -44,7 +44,7 @@
   background: var(--accent);
 }
 
-.contact__text {
+.contacto__texto {
   max-width: 44ch;
   margin: 1.25rem 0 0;
   color: var(--text-muted);
@@ -52,7 +52,7 @@
   line-height: 1.7;
 }
 
-.contact__details {
+.contacto__datos {
   display: grid;
   gap: 0.9rem;
   margin: 2rem 0 0;
@@ -60,14 +60,14 @@
   list-style: none;
 }
 
-.contact__details li {
+.contacto__datos li {
   display: grid;
   gap: 0.15rem;
   padding-left: 1rem;
   border-left: 2px solid var(--border);
 }
 
-.contact__label {
+.contacto__rotulo {
   color: var(--text-muted);
   font-size: 0.72rem;
   font-weight: 600;
@@ -75,18 +75,18 @@
   text-transform: uppercase;
 }
 
-.contact__details a {
+.contacto__datos a {
   color: var(--text);
   text-decoration: none;
   transition: color 160ms ease;
 }
 
-.contact__details a:hover {
+.contacto__datos a:hover {
   color: var(--accent);
 }
 
-/* ---------- Form ---------- */
-.contact__form {
+/* ---------- Formulario ---------- */
+.contacto__formulario {
   display: grid;
   gap: 1rem;
   padding: clamp(1.5rem, 3vw, 2.25rem);
@@ -96,22 +96,22 @@
   box-shadow: 0 30px 60px -45px rgba(16, 42, 51, 0.45);
 }
 
-.contact__grid {
+.contacto__rejilla {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
-.field {
+.campo {
   display: grid;
   gap: 0.45rem;
 }
 
-.field--full {
+.campo--completo {
   grid-column: 1 / -1;
 }
 
-.field__label {
+.campo__etiqueta {
   color: var(--text-muted);
   font-size: 0.72rem;
   font-weight: 600;
@@ -119,8 +119,8 @@
   text-transform: uppercase;
 }
 
-.field input,
-.field textarea {
+.campo input,
+.campo textarea {
   width: 100%;
   padding: 0.8rem 0.9rem;
   background: var(--bg-soft);
@@ -134,36 +134,36 @@
     box-shadow 160ms ease;
 }
 
-.field textarea {
+.campo textarea {
   min-height: 8rem;
   resize: vertical;
 }
 
-.field input::placeholder,
-.field textarea::placeholder {
+.campo input::placeholder,
+.campo textarea::placeholder {
   color: var(--text-muted);
   opacity: 0.65;
 }
 
-.field input:focus,
-.field textarea:focus {
+.campo input:focus,
+.campo textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.field input[aria-invalid='true'],
-.field textarea[aria-invalid='true'] {
+.campo input[aria-invalid='true'],
+.campo textarea[aria-invalid='true'] {
   border-color: var(--danger);
 }
 
-.field__error {
+.campo__error {
   margin: 0;
   color: var(--danger);
   font-size: 0.8rem;
 }
 
-.contact__submit {
+.contacto__enviar {
   justify-self: start;
   padding: 0.9rem 1.8rem;
   border: 0;
@@ -183,52 +183,70 @@
     transform 160ms ease;
 }
 
-.contact__submit:hover {
+.contacto__enviar:hover:not(:disabled) {
   background: var(--accent-strong);
   transform: translateY(-1px);
 }
 
-.contact__submit:focus-visible {
+.contacto__enviar:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.contacto__enviar:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
-.contact__success {
+.contacto__exito {
   margin: 0;
   padding: 0.75rem 1rem;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  background: var(--exito-fondo);
+  border: 1px solid var(--exito-borde);
   border-radius: 0.6rem;
-  color: var(--accent-strong);
+  color: var(--exito);
   font-size: 0.9rem;
 }
 
-/* ---------- Responsive ---------- */
+.contacto__error-envio {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border: 1px solid var(--danger);
+  border-radius: 0.6rem;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+/* ---------- Adaptable ---------- */
 @media (max-width: 900px) {
-  .contact__inner {
+  .contacto__contenedor {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .contact__inner {
+  .contacto__contenedor {
     width: min(1180px, calc(100% - 1.5rem));
   }
 
-  .contact__grid {
+  .contacto__rejilla {
     grid-template-columns: 1fr;
   }
 
-  .contact__form {
+  .contacto__formulario {
     padding: 1.25rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .contact__details a,
-  .field input,
-  .field textarea,
-  .contact__submit {
+  .contacto__datos a,
+  .campo input,
+  .campo textarea,
+  .contacto__enviar {
     transition: none;
   }
 }

@@ -3,17 +3,17 @@
   background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
 }
 
-.about {
+.descripcion {
   padding-block: clamp(3rem, 7vw, 6rem);
   scroll-margin-top: 5.5rem;
 }
 
-.about__inner {
+.descripcion__contenedor {
   width: min(1180px, calc(100% - 2.5rem));
   margin-inline: auto;
 }
 
-.about__eyebrow {
+.descripcion__etiqueta {
   margin: 0 0 0.6rem;
   color: var(--accent);
   font-size: 0.8rem;
@@ -22,7 +22,7 @@
   text-transform: uppercase;
 }
 
-.about__title {
+.descripcion__titulo {
   margin: 0;
   color: var(--text);
   font-size: clamp(2rem, 4vw, 3rem);
@@ -30,7 +30,7 @@
   letter-spacing: -0.02em;
 }
 
-.about__title::after {
+.descripcion__titulo::after {
   content: '';
   display: block;
   width: 4rem;
@@ -40,7 +40,7 @@
   background: var(--accent);
 }
 
-.about__intro {
+.descripcion__introduccion {
   max-width: 70ch;
   margin: 1.1rem 0 0;
   color: var(--text-muted);
@@ -48,12 +48,12 @@
   line-height: 1.7;
 }
 
-.about__intro strong {
+.descripcion__introduccion strong {
   color: var(--text);
 }
 
-/* ---------- Benefits ---------- */
-.benefits {
+/* ---------- Beneficios ---------- */
+.beneficios {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 1rem;
@@ -62,7 +62,7 @@
   list-style: none;
 }
 
-.benefit {
+.beneficio {
   padding: 1.4rem 1.4rem 1.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -70,7 +70,7 @@
   box-shadow: 0 18px 30px -28px rgba(16, 42, 51, 0.35);
 }
 
-.benefit__icon {
+.beneficio__icono {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -83,21 +83,21 @@
   font-weight: 700;
 }
 
-.benefit__title {
+.beneficio__titulo {
   margin: 0 0 0.4rem;
   color: var(--text);
   font-size: 1.05rem;
 }
 
-.benefit__text {
+.beneficio__texto {
   margin: 0;
   color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.6;
 }
 
-/* ---------- Comparison table ---------- */
-.comparison {
+/* ---------- Tabla comparativa ---------- */
+.comparativa {
   margin-top: clamp(2.5rem, 5vw, 4rem);
   padding: clamp(1.25rem, 3vw, 2rem);
   background: var(--surface);
@@ -106,7 +106,7 @@
   box-shadow: 0 30px 50px -45px rgba(16, 42, 51, 0.4);
 }
 
-.comparison__header {
+.comparativa__encabezado {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -115,44 +115,44 @@
   margin-bottom: 1.25rem;
 }
 
-.comparison__title {
+.comparativa__titulo {
   margin: 0;
   color: var(--text);
   font-size: clamp(1.15rem, 2vw, 1.4rem);
 }
 
-.comparison__note {
+.comparativa__nota {
   margin: 0;
   color: var(--text-muted);
   font-size: 0.85rem;
 }
 
-.comparison__scroll {
+.comparativa__desplazamiento {
   overflow-x: auto;
   border-radius: 0.75rem;
 }
 
-.comparison__scroll:focus-visible {
+.comparativa__desplazamiento:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
-.comparison__table {
+.comparativa__tabla {
   width: 100%;
   min-width: 40rem;
   border-collapse: collapse;
   font-size: 0.95rem;
 }
 
-.comparison__table th,
-.comparison__table td {
+.comparativa__tabla th,
+.comparativa__tabla td {
   padding: 0.9rem 1.1rem;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--border);
 }
 
-.comparison__table thead th {
+.comparativa__tabla thead th {
   background: var(--surface-raised);
   color: var(--accent);
   font-size: 0.75rem;
@@ -161,31 +161,31 @@
   border-bottom-color: var(--border);
 }
 
-.comparison__table tbody th {
+.comparativa__tabla tbody th {
   color: var(--text);
   font-weight: 600;
 }
 
-.comparison__table tbody td {
+.comparativa__tabla tbody td {
   color: var(--text-muted);
 }
 
-.comparison__table tbody tr:last-child th,
-.comparison__table tbody tr:last-child td {
+.comparativa__tabla tbody tr:last-child th,
+.comparativa__tabla tbody tr:last-child td {
   border-bottom: 0;
 }
 
-.comparison__table .comparison__ours {
+.comparativa__tabla .comparativa__propia {
   background: var(--accent-soft);
   color: var(--text);
   font-weight: 600;
 }
 
-.comparison__table thead .comparison__ours {
+.comparativa__tabla thead .comparativa__propia {
   color: var(--accent);
 }
 
-.comparison__badge {
+.comparativa__insignia {
   display: inline-block;
   margin-left: 0.4rem;
   padding: 0.15rem 0.5rem;
@@ -198,7 +198,7 @@
   vertical-align: middle;
 }
 
-.visually-hidden {
+.visualmente-oculto {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -210,22 +210,22 @@
   border: 0;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Adaptable ---------- */
 @media (max-width: 640px) {
-  .about__inner {
+  .descripcion__contenedor {
     width: min(1180px, calc(100% - 1.5rem));
   }
 
-  .benefits {
+  .beneficios {
     grid-template-columns: 1fr;
   }
 
-  .comparison {
+  .comparativa {
     padding: 1rem;
   }
 
-  .comparison__table th,
-  .comparison__table td {
+  .comparativa__tabla th,
+  .comparativa__tabla td {
     padding: 0.75rem 0.85rem;
   }
 }

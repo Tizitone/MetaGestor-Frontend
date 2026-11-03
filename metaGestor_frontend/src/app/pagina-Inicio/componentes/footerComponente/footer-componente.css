@@ -2,13 +2,13 @@
   display: block;
 }
 
-.footer {
+.pie-pagina {
   position: relative;
   background: var(--footer-bg);
   border-top: 1px solid var(--footer-border);
 }
 
-.footer::before {
+.pie-pagina::before {
   content: '';
   position: absolute;
   top: 0;
@@ -18,7 +18,7 @@
   background: linear-gradient(90deg, var(--footer-accent), var(--sand));
 }
 
-.footer__inner {
+.pie-pagina__contenedor {
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) repeat(2, minmax(0, 1fr));
   gap: 2.5rem;
@@ -27,7 +27,7 @@
   padding-block: clamp(2.5rem, 5vw, 4rem) clamp(1.8rem, 3vw, 2.5rem);
 }
 
-.footer__name {
+.pie-pagina__nombre {
   margin: 0 0 0.75rem;
   color: var(--footer-text);
   font-size: 1.25rem;
@@ -35,7 +35,7 @@
   letter-spacing: -0.01em;
 }
 
-.footer__summary {
+.pie-pagina__resumen {
   max-width: 46ch;
   margin: 0;
   color: var(--footer-muted);
@@ -43,7 +43,7 @@
   line-height: 1.65;
 }
 
-.footer__heading {
+.pie-pagina__titulo {
   margin: 0 0 0.9rem;
   color: var(--footer-accent);
   font-size: 0.72rem;
@@ -52,7 +52,7 @@
   text-transform: uppercase;
 }
 
-.footer__list {
+.pie-pagina__lista {
   display: grid;
   gap: 0.55rem;
   margin: 0;
@@ -60,21 +60,21 @@
   list-style: none;
 }
 
-.footer__list a,
-.footer__list span {
+.pie-pagina__lista a,
+.pie-pagina__lista span {
   color: var(--footer-text);
   font-size: 0.92rem;
   text-decoration: none;
   transition: color 160ms ease;
 }
 
-.footer__list a:hover {
+.pie-pagina__lista a:hover {
   color: var(--footer-accent);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
-.footer__bottom {
+.pie-pagina__inferior {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -87,45 +87,45 @@
   font-size: 0.8rem;
 }
 
-.footer__bottom p {
+.pie-pagina__inferior p {
   margin: 0;
 }
 
-.footer a:focus-visible {
+.pie-pagina a:focus-visible {
   outline: 2px solid var(--footer-accent);
   outline-offset: 3px;
   border-radius: 0.2rem;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Adaptable ---------- */
 @media (max-width: 800px) {
-  .footer__inner {
+  .pie-pagina__contenedor {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .footer__brand {
+  .pie-pagina__marca {
     grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 560px) {
-  .footer__inner,
-  .footer__bottom {
+  .pie-pagina__contenedor,
+  .pie-pagina__inferior {
     width: min(1180px, calc(100% - 1.5rem));
   }
 
-  .footer__inner {
+  .pie-pagina__contenedor {
     grid-template-columns: 1fr;
     gap: 1.8rem;
   }
 
-  .footer__bottom {
+  .pie-pagina__inferior {
     justify-content: flex-start;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .footer__list a {
+  .pie-pagina__lista a {
     transition: none;
   }
 }
