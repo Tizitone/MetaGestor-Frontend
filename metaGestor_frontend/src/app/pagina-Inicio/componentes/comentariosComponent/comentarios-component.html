@@ -1,0 +1,79 @@
+<section id="clientes" class="comentarios" aria-labelledby="titulo-comentarios">
+  <div class="comentarios__contenedor">
+    <header class="comentarios__encabezado">
+      <div>
+        <p class="comentarios__etiqueta">Testimonios</p>
+        <h2 id="titulo-comentarios" class="comentarios__titulo">Clientes Satisfechos</h2>
+        <p class="comentarios__introduccion">
+          Proyectos reales, relaciones de largo plazo. Estas son las palabras de algunos de los
+          clientes que confiaron en nuestro trabajo metalúrgico.
+        </p>
+      </div>
+    </header>
+
+    <div
+      #visor
+      class="comentarios__visor"
+      [class.comentarios__visor--arrastrando]="estaArrastrando()"
+      role="region"
+      aria-label="Carrusel de testimonios de clientes"
+      tabindex="0"
+      (pointerenter)="alEntrarPuntero()"
+      (pointerleave)="alSalirPuntero()"
+      (pointerdown)="iniciarArrastre($event)"
+      (pointermove)="moverArrastre($event)"
+      (pointerup)="finalizarArrastre($event)"
+      (pointercancel)="cancelarArrastre($event)"
+      (wheel)="programarReanudacion()"
+      (touchstart)="programarReanudacion()"
+      (keydown)="programarReanudacion()"
+      (focusin)="programarReanudacion()"
+    >
+      <div class="comentarios__pista">
+        <ul class="comentarios__grupo">
+          @for (comentario of comentarios; track comentario.proyecto) {
+            <li>
+              <article class="comentario">
+                <div
+                  class="comentario__avatar"
+                  [style.background]="comentario.color"
+                  aria-hidden="true"
+                >
+                  {{ comentario.iniciales }}
+                </div>
+                <h3 class="comentario__titulo">{{ comentario.proyecto }}</h3>
+                <blockquote class="comentario__cita">
+                  <p>«{{ comentario.testimonio }}»</p>
+                </blockquote>
+                <p class="comentario__nombre">
+                  {{ comentario.nombre }}
+                  <span class="comentario__cargo">{{ comentario.cargo }}</span>
+                </p>
+              </article>
+            </li>
+          }
+        </ul>
+
+        <ul class="comentarios__grupo" aria-hidden="true">
+          @for (comentario of comentarios; track comentario.proyecto) {
+            <li>
+              <article class="comentario">
+                <div class="comentario__avatar" [style.background]="comentario.color">
+                  {{ comentario.iniciales }}
+                </div>
+                <h3 class="comentario__titulo">{{ comentario.proyecto }}</h3>
+                <blockquote class="comentario__cita">
+                  <p>«{{ comentario.testimonio }}»</p>
+                </blockquote>
+                <p class="comentario__nombre">
+                  {{ comentario.nombre }}
+                  <span class="comentario__cargo">{{ comentario.cargo }}</span>
+                </p>
+              </article>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
