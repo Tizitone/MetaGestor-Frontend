@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { InicioPantalla } from './inicio-pantalla';
 
 describe('InicioPantalla', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [InicioPantalla],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 

@@ -1,0 +1,292 @@
+<div class="auth">
+  <header class="auth__barra">
+    <a class="auth__marca" routerLink="/inicio" aria-label="MetaGestor, volver al inicio">
+      <span class="auth__marca-icono" aria-hidden="true">M</span>
+      <span>MetaGestor</span>
+    </a>
+    <a class="auth__volver" routerLink="/inicio">
+      <span aria-hidden="true">&larr;</span>
+      Volver al inicio
+    </a>
+  </header>
+
+  <main class="auth__contenedor">
+    <aside class="auth__presentacion" aria-labelledby="auth-presentacion-titulo">
+      <p class="auth__etiqueta">Portal de clientes</p>
+      <h1 id="auth-presentacion-titulo" class="auth__titulo-presentacion">
+        Tus proyectos, siempre bajo control.
+      </h1>
+      <p class="auth__texto-presentacion">
+        Accede a MetaGestor para seguir el avance de tus trabajos, revisar tus pedidos y mantener
+        una comunicaci&oacute;n directa con nuestro equipo.
+      </p>
+
+      <ul class="auth__beneficios">
+        <li>Sigue el estado de cada trabajo en tiempo real.</li>
+        <li>Consulta el historial de tus proyectos y entregas.</li>
+        <li>Comparte comentarios cuando un trabajo est&eacute; finalizado.</li>
+      </ul>
+
+      <div class="auth__sello" aria-hidden="true">
+        <span class="auth__sello-linea"></span>
+        <span>Soluciones metal&uacute;rgicas a medida</span>
+      </div>
+    </aside>
+
+    <section class="auth__panel" aria-labelledby="auth-titulo">
+      @if (modo() === 'login') {
+        <div class="auth__cabecera">
+          <p class="auth__etiqueta auth__etiqueta--panel">Bienvenido de nuevo</p>
+          <h2 id="auth-titulo" class="auth__titulo">Iniciar sesi&oacute;n</h2>
+          <p class="auth__descripcion">
+            Ingresa con el correo y la contrase&ntilde;a de tu cuenta.
+          </p>
+        </div>
+
+        <form class="auth__formulario" [formRoot]="formularioLogin">
+          <div class="campo">
+            <label class="campo__etiqueta" for="login-email">Correo electr&oacute;nico</label>
+            <input
+              id="login-email"
+              type="email"
+              [formField]="formularioLogin.email"
+              autocomplete="email"
+              placeholder="nombre@empresa.cl"
+              [attr.aria-invalid]="errorLogin('email')"
+              [attr.aria-describedby]="errorLogin('email') ? 'login-email-error' : null"
+            />
+            @if (formularioLogin.email().invalid() && formularioLogin.email().touched()) {
+              <p id="login-email-error" class="campo__error">
+                {{ formularioLogin.email().errors()[0]?.message }}
+              </p>
+            }
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="login-contrasenia">Contrase&ntilde;a</label>
+            <div class="campo__contenedor">
+              <input
+                id="login-contrasenia"
+                [type]="mostrarContraseniaLogin() ? 'text' : 'password'"
+                [formField]="formularioLogin.contrasenia"
+                autocomplete="current-password"
+                placeholder="Tu contrase&ntilde;a"
+                [attr.aria-invalid]="errorLogin('contrasenia')"
+                [attr.aria-describedby]="
+                  errorLogin('contrasenia') ? 'login-contrasenia-error' : null
+                "
+              />
+              <button
+                class="campo__ver"
+                type="button"
+                aria-label="Mostrar u ocultar contrase&ntilde;a"
+                [attr.aria-pressed]="mostrarContraseniaLogin()"
+                (click)="alternarContraseniaLogin()"
+              >
+                {{ mostrarContraseniaLogin() ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+            @if (
+              formularioLogin.contrasenia().invalid() && formularioLogin.contrasenia().touched()
+            ) {
+              <p id="login-contrasenia-error" class="campo__error">
+                {{ formularioLogin.contrasenia().errors()[0]?.message }}
+              </p>
+            }
+          </div>
+
+          <button
+            class="auth__enviar"
+            type="submit"
+            [disabled]="formularioLogin().invalid() || formularioLogin().submitting()"
+          >
+            @if (formularioLogin().submitting()) {
+              Ingresando...
+            } @else {
+              Ingresar
+            }
+          </button>
+
+          @if (estadoLogin() === 'exito') {
+            <p class="auth__aviso auth__aviso--exito" role="status">
+              Sesi&oacute;n iniciada correctamente.
+            </p>
+          } @else if (estadoLogin() === 'error') {
+            <p class="auth__aviso auth__aviso--error" role="alert">{{ mensajeErrorLogin() }}</p>
+          }
+
+          <p class="auth__alternativa">
+            &iquest;A&uacute;n no tienes cuenta?
+            <button class="auth__enlace" type="button" (click)="cambiarModo('registro')">
+              Crear una cuenta
+            </button>
+          </p>
+        </form>
+      } @else {
+        <div class="auth__cabecera">
+          <p class="auth__etiqueta auth__etiqueta--panel">Primer paso</p>
+          <h2 id="auth-titulo" class="auth__titulo">Crear cuenta</h2>
+          <p class="auth__descripcion">
+            Completa tus datos para acceder al seguimiento de tus proyectos.
+          </p>
+        </div>
+
+        <form class="auth__formulario" [formRoot]="formularioRegistro">
+          <div class="campo">
+            <label class="campo__etiqueta" for="registro-nombre">Nombre completo</label>
+            <input
+              id="registro-nombre"
+              type="text"
+              [formField]="formularioRegistro.nombreCompleto"
+              autocomplete="name"
+              placeholder="Nombre y apellido"
+              [attr.aria-invalid]="errorRegistro('nombreCompleto')"
+              [attr.aria-describedby]="
+                errorRegistro('nombreCompleto') ? 'registro-nombre-error' : null
+              "
+            />
+            @if (
+              formularioRegistro.nombreCompleto().invalid() &&
+              formularioRegistro.nombreCompleto().touched()
+            ) {
+              <p id="registro-nombre-error" class="campo__error">
+                {{ formularioRegistro.nombreCompleto().errors()[0]?.message }}
+              </p>
+            }
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="registro-email">Correo electr&oacute;nico</label>
+            <input
+              id="registro-email"
+              type="email"
+              [formField]="formularioRegistro.email"
+              autocomplete="email"
+              placeholder="nombre@empresa.cl"
+              [attr.aria-invalid]="errorRegistro('email')"
+              [attr.aria-describedby]="errorRegistro('email') ? 'registro-email-error' : null"
+            />
+            @if (formularioRegistro.email().invalid() && formularioRegistro.email().touched()) {
+              <p id="registro-email-error" class="campo__error">
+                {{ formularioRegistro.email().errors()[0]?.message }}
+              </p>
+            }
+          </div>
+
+          <div class="auth__rejilla">
+            <div class="campo">
+              <label class="campo__etiqueta" for="registro-telefono">Tel&eacute;fono</label>
+              <input
+                id="registro-telefono"
+                type="tel"
+                [formField]="formularioRegistro.telefono"
+                autocomplete="tel"
+                inputmode="tel"
+                placeholder="1123456789"
+                [attr.aria-invalid]="errorRegistro('telefono')"
+                [attr.aria-describedby]="
+                  errorRegistro('telefono') ? 'registro-telefono-error' : null
+                "
+              />
+              @if (
+                formularioRegistro.telefono().invalid() && formularioRegistro.telefono().touched()
+              ) {
+                <p id="registro-telefono-error" class="campo__error">
+                  {{ formularioRegistro.telefono().errors()[0]?.message }}
+                </p>
+              }
+            </div>
+
+            <div class="campo">
+              <label class="campo__etiqueta" for="registro-dni">DNI</label>
+              <input
+                id="registro-dni"
+                type="text"
+                [formField]="formularioRegistro.dni"
+                inputmode="numeric"
+                placeholder="12345678"
+                [attr.aria-invalid]="errorRegistro('dni')"
+                [attr.aria-describedby]="errorRegistro('dni') ? 'registro-dni-error' : null"
+              />
+              @if (formularioRegistro.dni().invalid() && formularioRegistro.dni().touched()) {
+                <p id="registro-dni-error" class="campo__error">
+                  {{ formularioRegistro.dni().errors()[0]?.message }}
+                </p>
+              }
+            </div>
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="registro-contrasenia">Contrase&ntilde;a</label>
+            <div class="campo__contenedor">
+              <input
+                id="registro-contrasenia"
+                [type]="mostrarContraseniaRegistro() ? 'text' : 'password'"
+                [formField]="formularioRegistro.contrasenia"
+                autocomplete="new-password"
+                placeholder="M&iacute;nimo 8 caracteres"
+                [attr.aria-invalid]="errorRegistro('contrasenia')"
+                [attr.aria-describedby]="
+                  errorRegistro('contrasenia') ? 'registro-contrasenia-error' : null
+                "
+              />
+              <button
+                class="campo__ver"
+                type="button"
+                aria-label="Mostrar u ocultar contrase&ntilde;a"
+                [attr.aria-pressed]="mostrarContraseniaRegistro()"
+                (click)="alternarContraseniaRegistro()"
+              >
+                {{ mostrarContraseniaRegistro() ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+            @if (
+              formularioRegistro.contrasenia().invalid() &&
+              formularioRegistro.contrasenia().touched()
+            ) {
+              <p id="registro-contrasenia-error" class="campo__error">
+                {{ formularioRegistro.contrasenia().errors()[0]?.message }}
+              </p>
+            }
+          </div>
+
+          <button
+            class="auth__enviar"
+            type="submit"
+            [disabled]="formularioRegistro().invalid() || formularioRegistro().submitting()"
+          >
+            @if (formularioRegistro().submitting()) {
+              Creando cuenta...
+            } @else {
+              Crear cuenta
+            }
+          </button>
+
+          @if (estadoRegistro() === 'exito') {
+            <p class="auth__aviso auth__aviso--exito" role="status">
+              Cuenta creada correctamente.
+              <button class="auth__enlace" type="button" (click)="cambiarModo('login')">
+                Inicia sesi&oacute;n
+              </button>
+            </p>
+          } @else if (estadoRegistro() === 'error') {
+            <p class="auth__aviso auth__aviso--error" role="alert">
+              {{ mensajeErrorRegistro() }}
+            </p>
+          }
+
+          <p class="auth__alternativa">
+            &iquest;Ya tienes una cuenta?
+            <button class="auth__enlace" type="button" (click)="cambiarModo('login')">
+              Iniciar sesi&oacute;n
+            </button>
+          </p>
+        </form>
+      }
+    </section>
+  </main>
+
+  <footer class="auth__pie">
+    <p>MetaGestor &middot; Soluciones metal&uacute;rgicas personalizadas</p>
+  </footer>
+</div>

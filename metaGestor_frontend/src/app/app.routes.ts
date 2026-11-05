@@ -2,6 +2,14 @@ import { Routes } from '@angular/router';
 import { InicioPantalla } from './pagina-Inicio/inicioPantalla/inicio-pantalla';
 
 export const routes: Routes = [
-  {path:"" , redirectTo:"inicio", pathMatch:"full"},
-  {path:"inicio", component:InicioPantalla}
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  { path: 'inicio', component: InicioPantalla },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pagina-Auth/autenticacionPantalla/autenticacion-pantalla').then(
+        (modulo) => modulo.AutenticacionPantalla,
+      ),
+  },
+  { path: '**', redirectTo: 'inicio' },
 ];

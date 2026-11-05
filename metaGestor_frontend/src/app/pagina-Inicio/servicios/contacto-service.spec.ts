@@ -1,8 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { URL_API } from '../../compartido/url-api';
 import type { SolicitudContacto } from '../modelos/solicitud-contacto';
-import { ContactoService, URL_API } from './contacto-service';
+import { ContactoService } from './contacto-service';
 
 describe('ContactoService', () => {
   let servicio: ContactoService;
