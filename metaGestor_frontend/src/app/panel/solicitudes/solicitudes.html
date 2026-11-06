@@ -1,0 +1,24 @@
+<section class="page" aria-labelledby="solicitudes-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Solicitudes</p>
+      <h1 id="solicitudes-title" class="page__title">Solicitudes</h1>
+      <p class="page__description">
+        Revisa las solicitudes recibidas desde el sitio, busca por contacto o filtra por el
+        contenido del requerimiento.
+      </p>
+    </div>
+    <p class="page__summary">
+      <strong>{{ solicitudes().length }}</strong> solicitudes recibidas
+    </p>
+  </header>
+
+  <app-data-table
+    caption="Solicitudes"
+    searchPlaceholder="Buscar por nombre, correo, teléfono o descripción…"
+    emptyMessage="No hay solicitudes que coincidan con la búsqueda."
+    [columns]="columns"
+    [rows]="solicitudes()"
+    [rowId]="rowId"
+  />
+</section>

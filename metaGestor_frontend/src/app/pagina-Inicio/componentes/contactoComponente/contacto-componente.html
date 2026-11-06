@@ -1,0 +1,129 @@
+<section id="contacto" class="contacto" aria-labelledby="titulo-contacto">
+  <div class="contacto__contenedor">
+    <div class="contacto__introduccion">
+      <p class="contacto__etiqueta">Hablemos</p>
+      <h2 id="titulo-contacto" class="contacto__titulo">Contacto</h2>
+      <p class="contacto__texto">
+        Cuéntanos qué necesitas fabricar o reparar y te responderemos con una propuesta clara,
+        plazos realistas y el detalle técnico de cada etapa.
+      </p>
+
+      <ul class="contacto__datos">
+        <li>
+          <span class="contacto__rotulo">Correo</span>
+          <a href="mailto:contacto@metagestor.cl">contacto@metagestor.cl</a>
+        </li>
+        <li>
+          <span class="contacto__rotulo">Teléfono</span>
+          <a href="tel:+56912345678">+56 9 1234 5678</a>
+        </li>
+        <li>
+          <span class="contacto__rotulo">Ubicación</span>
+          <span>Champagnat 1528, Mar del plata</span>
+        </li>
+      </ul>
+    </div>
+
+    <form class="contacto__formulario" [formRoot]="formularioContacto">
+      <div class="contacto__rejilla">
+        <div class="campo">
+          <label class="campo__etiqueta" for="contacto-nombre">Nombre</label>
+          <input
+            id="contacto-nombre"
+            type="text"
+            [formField]="formularioContacto.nombre"
+            autocomplete="name"
+            placeholder="Tu nombre"
+            [attr.aria-invalid]="mostrarError('nombre')"
+            [attr.aria-describedby]="mostrarError('nombre') ? 'contacto-nombre-error' : null"
+          />
+          @if (formularioContacto.nombre().invalid() && formularioContacto.nombre().touched()) {
+            <p id="contacto-nombre-error" class="campo__error">
+              {{ formularioContacto.nombre().errors()[0]?.message }}
+            </p>
+          }
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="contacto-email">Correo electrónico</label>
+          <input
+            id="contacto-email"
+            type="email"
+            [formField]="formularioContacto.email"
+            autocomplete="email"
+            placeholder="nombre@empresa.cl"
+            [attr.aria-invalid]="mostrarError('email')"
+            [attr.aria-describedby]="mostrarError('email') ? 'contacto-email-error' : null"
+          />
+          @if (formularioContacto.email().invalid() && formularioContacto.email().touched()) {
+            <p id="contacto-email-error" class="campo__error">
+              {{ formularioContacto.email().errors()[0]?.message }}
+            </p>
+          }
+        </div>
+
+        <div class="campo campo--completo">
+          <label class="campo__etiqueta" for="contacto-telefono">Teléfono</label>
+          <input
+            id="contacto-telefono"
+            type="tel"
+            [formField]="formularioContacto.telefono"
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="+56 9 1234 5678"
+            [attr.aria-invalid]="mostrarError('telefono')"
+            [attr.aria-describedby]="mostrarError('telefono') ? 'contacto-telefono-error' : null"
+          />
+          @if (formularioContacto.telefono().invalid() && formularioContacto.telefono().touched()) {
+            <p id="contacto-telefono-error" class="campo__error">
+              {{ formularioContacto.telefono().errors()[0]?.message }}
+            </p>
+          }
+        </div>
+
+        <div class="campo campo--completo">
+          <label class="campo__etiqueta" for="contacto-descripcion">Descripción</label>
+          <textarea
+            id="contacto-descripcion"
+            rows="5"
+            [formField]="formularioContacto.descripcion"
+            placeholder="Cuéntanos sobre tu proyecto, materiales y plazos."
+            [attr.aria-invalid]="mostrarError('descripcion')"
+            [attr.aria-describedby]="
+              mostrarError('descripcion') ? 'contacto-descripcion-error' : null
+            "
+          ></textarea>
+          @if (
+            formularioContacto.descripcion().invalid() && formularioContacto.descripcion().touched()
+          ) {
+            <p id="contacto-descripcion-error" class="campo__error">
+              {{ formularioContacto.descripcion().errors()[0]?.message }}
+            </p>
+          }
+        </div>
+      </div>
+
+      <button
+        class="contacto__enviar"
+        type="submit"
+        [disabled]="formularioContacto().invalid() || formularioContacto().submitting()"
+      >
+        @if (formularioContacto().submitting()) {
+          Enviando…
+        } @else {
+          Enviar mensaje
+        }
+      </button>
+
+      @if (estadoEnvio() === 'exito' && !formularioContacto().dirty()) {
+        <p class="contacto__exito" role="status">
+          Gracias por contactarnos, revisaremos tu solicitud lo antes posible.
+        </p>
+      } @else if (estadoEnvio() === 'error') {
+        <p class="contacto__error-envio" role="alert">
+          Hubo un error al enviar la solicitud. Intenta nuevamente más tarde.
+        </p>
+      }
+    </form>
+  </div>
+</section>

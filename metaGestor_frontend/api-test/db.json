@@ -1,0 +1,456 @@
+{
+  "clientes": [
+  {
+    "idCliente": 1,
+    "nombre": "Ana Torres",
+    "email": "ana.torres@andesminerals.cl",
+    "telefono": "912345678",
+    "dni": 18345678
+  },
+  {
+    "idCliente": 2,
+    "nombre": "Rodrigo Salas",
+    "email": "rsalas@puertonorte.cl",
+    "telefono": "987654321",
+    "dni": 17654321
+  },
+  {
+    "idCliente": 3,
+    "nombre": "Valentina Ruiz",
+    "email": "vruiz@estudiobruma.cl",
+    "telefono": "956781234",
+    "dni": 19234567
+  },
+  {
+    "idCliente": 4,
+    "nombre": "Diego Fuentes",
+    "email": "dfuentes@solaraustral.cl",
+    "telefono": "934567812",
+    "dni": 16876543
+  },
+  {
+    "idCliente": 5,
+    "nombre": "Paula Herrera",
+    "email": "pherrera@agromaipo.cl",
+    "telefono": "978123456",
+    "dni": 20123456
+  },
+  {
+    "idCliente": 6,
+    "nombre": "Ignacio Torres",
+    "email": "itorres@muninunoa.cl",
+    "telefono": "923456789",
+    "dni": 15765432
+  },
+  {
+    "idCliente": 7,
+    "nombre": "Camila Rojas",
+    "email": "crojas@mineraalto.cl",
+    "telefono": "967812345",
+    "dni": 18987654
+  },
+  {
+    "idCliente": 8,
+    "nombre": "Matías Silva",
+    "email": "msilva@aceroandino.cl",
+    "telefono": "945678123",
+    "dni": 17456789
+  },
+  {
+    "idCliente": 9,
+    "nombre": "Fernanda Soto",
+    "email": "fsoto@construccionsur.cl",
+    "telefono": "991234567",
+    "dni": 19543210
+  },
+  {
+    "idCliente": 10,
+    "nombre": "Sebastián Vega",
+    "email": "svega@logisticacentro.cl",
+    "telefono": "932198765",
+    "dni": 16678901
+  },
+  {
+    "idCliente": 11,
+    "nombre": "Antonia Paredes",
+    "email": "aparedes@metalurgica.cl",
+    "telefono": "976543210",
+    "dni": 20345678
+  },
+  {
+    "idCliente": 12,
+    "nombre": "Tomás Contreras",
+    "email": "tcontreras@energianorte.cl",
+    "telefono": "954321098",
+    "dni": 18123456
+  },
+  {
+    "idCliente": 13,
+    "nombre": "Javiera Núñez",
+    "email": "jnunez@puertopacifico.cl",
+    "telefono": "989876543",
+    "dni": 17234567
+  },
+  {
+    "idCliente": 14,
+    "nombre": "Felipe Aravena",
+    "email": "faravena@obrasmaipo.cl",
+    "telefono": "963210987",
+    "dni": 19876543
+  }
+  ],
+  "empleados": [
+  {
+    "legajo": 1001,
+    "nombre": "Luis Martínez",
+    "email": "lmartinez@metagestor.cl",
+    "telefono": "911223344",
+    "dni": 16001122,
+    "historial": []
+  },
+  {
+    "legajo": 1002,
+    "nombre": "Carla Fuentes",
+    "email": "cfuentes@metagestor.cl",
+    "telefono": "922334455",
+    "dni": 17112233,
+    "historial": []
+  },
+  {
+    "legajo": 1003,
+    "nombre": "Pedro Rojas",
+    "email": "projas@metagestor.cl",
+    "telefono": "933445566",
+    "dni": 18223344,
+    "historial": []
+  },
+  {
+    "legajo": 1004,
+    "nombre": "María José Díaz",
+    "email": "mjdiaz@metagestor.cl",
+    "telefono": "944556677",
+    "dni": 19334455,
+    "historial": []
+  },
+  {
+    "legajo": 1005,
+    "nombre": "Jorge Silva",
+    "email": "jsilva@metagestor.cl",
+    "telefono": "955667788",
+    "dni": 16445566,
+    "historial": []
+  },
+  {
+    "legajo": 1007,
+    "nombre": "Ricardo Pizarro",
+    "email": "rpizarro@metagestor.cl",
+    "telefono": "977889900",
+    "dni": 18667788,
+    "historial": []
+  },
+  {
+    "legajo": 1008,
+    "nombre": "Sofía Herrera",
+    "email": "sherrera@metagestor.cl",
+    "telefono": "988990011",
+    "dni": 19778899,
+    "historial": []
+  },
+  {
+    "legajo": 1009,
+    "nombre": "Andrés Molina",
+    "email": "amolina@metagestor.cl",
+    "telefono": "999001122",
+    "dni": 15889900,
+    "historial": []
+  },
+  {
+    "legajo": 1010,
+    "nombre": "Beatriz Salinas",
+    "email": "bsalinas@metagestor.cl",
+    "telefono": "900112233",
+    "dni": 16990011,
+    "historial": []
+  }
+  ],
+  "tareas": [
+    {
+    "idTarea": 1,
+    "categorias": "LIGERO",
+    "fechaDeEntrega": "2026-11-10",
+    "fechaDeRegistro": "2026-10-21T09:15",
+    "descripcionMaterial": "Perfiles de acero al carbono",
+    "descripcionGeneral": "Fabricación de barandas para escalera"
+  },
+  {
+    "idTarea": 2,
+    "categorias": "MEDIANO",
+    "fechaDeEntrega": "2026-11-18",
+    "fechaDeRegistro": "2026-10-22T11:40",
+    "descripcionMaterial": "Planchas de acero inoxidable AISI 304",
+    "descripcionGeneral": "Estructura de soporte para estanque"
+  },
+  {
+    "idTarea": 3,
+    "categorias": "PESADO",
+    "fechaDeEntrega": "2026-11-25",
+    "fechaDeRegistro": "2026-10-23T08:05",
+    "descripcionMaterial": "Vigas IPN y planchas de 10 mm",
+    "descripcionGeneral": "Pasarela industrial con barandas"
+  },
+  {
+    "idTarea": 4,
+    "categorias": "LIGERO",
+    "fechaDeEntrega": "2026-11-05",
+    "fechaDeRegistro": "2026-10-24T15:20",
+    "descripcionMaterial": "Tubos cuadrados de aluminio",
+    "descripcionGeneral": "Mobiliario metálico para oficina"
+  },
+  {
+    "idTarea": 5,
+    "categorias": "MEDIANO",
+    "fechaDeEntrega": "2026-12-02",
+    "fechaDeRegistro": "2026-10-25T10:10",
+    "descripcionMaterial": "Perfiles galvanizados",
+    "descripcionGeneral": "Soportes para paneles solares"
+  },
+  {
+    "idTarea": 6,
+    "categorias": "PESADO",
+    "fechaDeEntrega": "2026-12-10",
+    "fechaDeRegistro": "2026-10-26T14:35",
+    "descripcionMaterial": "Acero estructural ASTM A36",
+    "descripcionGeneral": "Base para maquinaria industrial"
+  },
+  {
+    "idTarea": 7,
+    "categorias": "MEDIANO",
+    "fechaDeEntrega": "2026-11-22",
+    "fechaDeRegistro": "2026-10-27T07:50",
+    "descripcionMaterial": "Planchas de acero al carbono",
+    "descripcionGeneral": "Mantenimiento de línea de producción"
+  },
+  {
+    "idTarea": 8,
+    "categorias": "LIGERO",
+    "fechaDeEntrega": "2026-11-08",
+    "fechaDeRegistro": "2026-10-27T16:00",
+    "descripcionMaterial": "Planchas de acero corten",
+    "descripcionGeneral": "Señalética y escultura urbana"
+  },
+  {
+    "idTarea": 9,
+    "categorias": "MEDIANO",
+    "fechaDeEntrega": "2026-12-15",
+    "fechaDeRegistro": "2026-10-28T09:30",
+    "descripcionMaterial": "Tubos redondos de acero",
+    "descripcionGeneral": "Pasamanos para puente peatonal"
+  },
+  {
+    "idTarea": 10,
+    "categorias": "PESADO",
+    "fechaDeEntrega": "2026-11-30",
+    "fechaDeRegistro": "2026-10-28T12:45",
+    "descripcionMaterial": "Vigas HEB y placas de anclaje",
+    "descripcionGeneral": "Ampliación de nave industrial"
+  },
+  {
+    "idTarea": 11,
+    "categorias": "LIGERO",
+    "fechaDeEntrega": "2026-11-12",
+    "fechaDeRegistro": "2026-10-29T08:20",
+    "descripcionMaterial": "Planchas de aluminio compacto",
+    "descripcionGeneral": "Revestimiento de fachada"
+  },
+  {
+    "idTarea": 12,
+    "categorias": "MEDIANO",
+    "fechaDeEntrega": "2026-12-20",
+    "fechaDeRegistro": "2026-10-29T17:05",
+    "descripcionMaterial": "Perfiles de acero inoxidable",
+    "descripcionGeneral": "Estanterías para bodega refrigerada"
+  }
+  ],
+  "solicitudes": [
+{
+    "id": 1,
+    "nombre": "María López",
+    "email": "maria.lopez@correo.cl",
+    "telefono": "911234567",
+    "descripcion": "Necesito una cotización para rejas de protección para una bodega de 400 m²."
+  },
+  {
+    "id": 2,
+    "nombre": "Jorge Ramírez",
+    "email": "jramirez@industrialsur.cl",
+    "telefono": "922345678",
+    "descripcion": "Reparación de estructura metálica dañada por humedad en planta de alimentos."
+  },
+  {
+    "id": 3,
+    "nombre": "Carla Muñoz",
+    "email": "cmunoz@constructora.cl",
+    "telefono": "933456789",
+    "descripcion": "Fabricación de escalera metálica caracol para acceso a sala de máquinas."
+  },
+  {
+    "id": 4,
+    "nombre": "Felipe Vega",
+    "email": "fvega@agro.cl",
+    "telefono": "944567890",
+    "descripcion": "Soportes para estanques de acero inoxidable, necesitamos visita a terreno."
+  },
+  {
+    "id": 5,
+    "nombre": "Isidora Paz",
+    "email": "ipaz@estudio.cl",
+    "telefono": "955678901",
+    "descripcion": "Mobiliario metálico a medida para cafetería: mesas, sillas y repisas."
+  },
+  {
+    "id": 6,
+    "nombre": "Sebastián Núñez",
+    "email": "snunez@minera.cl",
+    "telefono": "966789012",
+    "descripcion": "Pasarelas y barandas certificadas para plataforma de mantenimiento."
+  },
+  {
+    "id": 7,
+    "nombre": "Paula Contreras",
+    "email": "pcontreras@retail.cl",
+    "telefono": "977890123",
+    "descripcion": "Estructura para letrero corporativo de 6 metros de altura en fachada."
+  },
+  {
+    "id": 8,
+    "nombre": "Matías Soto",
+    "email": "msoto@energia.cl",
+    "telefono": "988901234",
+    "descripcion": "Base metálica para generador eléctrico con aislación sísmica."
+  },
+  {
+    "id": 9,
+    "nombre": "Valentina Rojas",
+    "email": "vrojas@municipalidad.cl",
+    "telefono": "999012345",
+    "descripcion": "Rejas y portones para parque municipal, con terminación anticorrosiva."
+  },
+  {
+    "id": 10,
+    "nombre": "Diego Herrera",
+    "email": "dherrera@logistica.cl",
+    "telefono": "900123456",
+    "descripcion": "Rack metálico para almacenamiento de repuestos pesados, 200 posiciones."
+  }
+  ],
+  "registros": [
+  {
+    "id": 1,
+    "titulo": "Barandas escalera bloque A",
+    "tareaId": 1,
+    "clienteId": 1,
+    "proceso": "TERMINADO",
+    "participantesId": [1001, 1003],
+    "publicado": true
+  },
+  {
+    "id": 2,
+    "titulo": "Soporte estanque lixiviación",
+    "tareaId": 2,
+    "clienteId": 1,
+    "proceso": "ENPROCESO",
+    "participantesId": [1002, 1004],
+    "publicado": true
+  },
+  {
+    "id": 3,
+    "titulo": "Pasarela nave 2",
+    "tareaId": 3,
+    "clienteId": 2,
+    "proceso": "ENPROCESO",
+    "participantesId": [1001, 1005, 1007],
+    "publicado": false
+  },
+  {
+    "id": 4,
+    "titulo": "Mobiliario oficina central",
+    "tareaId": 4,
+    "clienteId": 3,
+    "proceso": "TERMINADO",
+    "participantesId": [1004, 1006],
+    "publicado": true
+  },
+  {
+    "id": 5,
+    "titulo": "Soportes parque solar",
+    "tareaId": 5,
+    "clienteId": 4,
+    "proceso": "ESPERA",
+    "participantesId": [1002, 1007],
+    "publicado": false
+  },
+  {
+    "id": 6,
+    "titulo": "Base maquinaria CNC",
+    "tareaId": 6,
+    "clienteId": 8,
+    "proceso": "ENPROCESO",
+    "participantesId": [1001, 1002, 1003],
+    "publicado": true
+  },
+  {
+    "id": 7,
+    "titulo": "Mantenimiento línea 3",
+    "tareaId": 7,
+    "clienteId": 5,
+    "proceso": "TERMINADO",
+    "participantesId": [1005, 1008],
+    "publicado": true
+  },
+  {
+    "id": 8,
+    "titulo": "Señalética plaza Ñuñoa",
+    "tareaId": 8,
+    "clienteId": 6,
+    "proceso": "TERMINADO",
+    "participantesId": [1006, 1009],
+    "publicado": true
+  },
+  {
+    "id": 9,
+    "titulo": "Pasamanos puente peatonal",
+    "tareaId": 9,
+    "clienteId": 9,
+    "proceso": "ESPERA",
+    "participantesId": [1003, 1010],
+    "publicado": false
+  },
+  {
+    "id": 10,
+    "titulo": "Ampliación nave industrial",
+    "tareaId": 10,
+    "clienteId": 7,
+    "proceso": "ENPROCESO",
+    "participantesId": [1001, 1007, 1009],
+    "publicado": false
+  },
+  {
+    "id": 11,
+    "titulo": "Fachada edificio corporativo",
+    "tareaId": 11,
+    "clienteId": 11,
+    "proceso": "ESPERA",
+    "participantesId": [1002, 1008],
+    "publicado": false
+  },
+  {
+    "id": 12,
+    "titulo": "Estanterías bodega de frío",
+    "tareaId": 12,
+    "clienteId": 10,
+    "proceso": "ENPROCESO",
+    "participantesId": [1002, 1008],
+    "publicado": true
+  }
+  ]
+}

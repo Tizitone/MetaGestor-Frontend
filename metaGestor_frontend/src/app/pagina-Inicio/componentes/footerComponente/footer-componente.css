@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.pie-pagina {
+  position: relative;
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
+}
+
+.pie-pagina::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--footer-accent), var(--sand));
+}
+
+.pie-pagina__contenedor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) repeat(2, minmax(0, 1fr));
+  gap: 2.5rem;
+  width: min(1180px, calc(100% - 2.5rem));
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 5vw, 4rem) clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.pie-pagina__nombre {
+  margin: 0 0 0.75rem;
+  color: var(--footer-text);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.pie-pagina__resumen {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--footer-muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.pie-pagina__titulo {
+  margin: 0 0 0.9rem;
+  color: var(--footer-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pie-pagina__lista {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pie-pagina__lista a,
+.pie-pagina__lista span {
+  color: var(--footer-text);
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.pie-pagina__lista a:hover {
+  color: var(--footer-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.pie-pagina__inferior {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  width: min(1180px, calc(100% - 2.5rem));
+  margin-inline: auto;
+  padding-block: 1.1rem 1.6rem;
+  border-top: 1px solid var(--footer-border);
+  color: var(--footer-muted);
+  font-size: 0.8rem;
+}
+
+.pie-pagina__inferior p {
+  margin: 0;
+}
+
+.pie-pagina a:focus-visible {
+  outline: 2px solid var(--footer-accent);
+  outline-offset: 3px;
+  border-radius: 0.2rem;
+}
+
+/* ---------- Adaptable ---------- */
+@media (max-width: 800px) {
+  .pie-pagina__contenedor {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pie-pagina__marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .pie-pagina__contenedor,
+  .pie-pagina__inferior {
+    width: min(1180px, calc(100% - 1.5rem));
+  }
+
+  .pie-pagina__contenedor {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+
+  .pie-pagina__inferior {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pie-pagina__lista a {
+    transition: none;
+  }
+}

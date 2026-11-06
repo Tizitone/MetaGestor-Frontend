@@ -1,0 +1,7 @@
+{
+  "/api/clientes/buscar/all": "/clientes",
+  "/api/empleados/buscar/all": "/empleados",
+  "/api/tareas/buscar/all": "/tareas",
+  "/api/solicitudes/buscar/all": "/solicitudes",
+  "/api/registros/buscar/all": "/registros"
+}

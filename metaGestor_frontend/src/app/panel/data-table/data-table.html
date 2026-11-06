@@ -1,0 +1,184 @@
+<div class="table">
+  <div class="table__toolbar">
+    <label class="search">
+      <span class="visually-hidden">Buscar en {{ caption() }}</span>
+      <svg class="search__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+        <path d="m20 20-3.6-3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+      <input
+        class="search__input"
+        type="search"
+        autocomplete="off"
+        [value]="search()"
+        [placeholder]="searchPlaceholder()"
+        (input)="onSearchInput($event)"
+      />
+    </label>
+
+    <div class="table__actions">
+      @if (hasColumnFilters()) {
+        <button
+          type="button"
+          class="button"
+          [class.button--active]="showFilters()"
+          [attr.aria-expanded]="showFilters()"
+          [attr.aria-controls]="filterPanelId"
+          (click)="toggleFilters()"
+        >
+          Filtros
+        </button>
+      }
+      @if (hasActiveFilters()) {
+        <button type="button" class="button button--ghost" (click)="resetFilters()">Limpiar</button>
+      }
+    </div>
+  </div>
+
+  @if (showFilters() && hasColumnFilters()) {
+    <div [id]="filterPanelId" class="filters">
+      @for (column of columns(); track column.key) {
+        @if (column.filter) {
+          <label class="filters__field">
+            <span class="filters__label">{{ column.header }}</span>
+            @if (column.filter === 'select') {
+              <select
+                class="filters__control"
+                [value]="filterValue(column.key)"
+                (change)="onColumnFilter(column.key, $event)"
+              >
+                <option value="">Todos</option>
+                @for (option of optionsFor(column.key); track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            } @else {
+              <input
+                class="filters__control"
+                type="search"
+                autocomplete="off"
+                [value]="filterValue(column.key)"
+                [placeholder]="column.filterPlaceholder ?? 'Filtrar…'"
+                (input)="onColumnFilter(column.key, $event)"
+              />
+            }
+          </label>
+        }
+      }
+    </div>
+  }
+
+  <div
+    class="table__scroll"
+    tabindex="0"
+    role="region"
+    [attr.aria-label]="caption() ? 'Tabla de ' + caption() : 'Tabla de datos'"
+  >
+    <table class="table__grid">
+      <caption class="visually-hidden">
+        {{
+          caption()
+        }}
+      </caption>
+      <thead>
+        <tr>
+          @for (column of columns(); track column.key) {
+            <th
+              scope="col"
+              [attr.aria-sort]="column.sortable === false ? null : ariaSort(column)"
+              [class.table__cell--end]="column.align === 'end'"
+              [style.width]="column.width"
+            >
+              @if (column.sortable === false) {
+                <span class="table__header">{{ column.header }}</span>
+              } @else {
+                <button type="button" class="table__sort" (click)="toggleSort(column)">
+                  <span>{{ column.header }}</span>
+                  <span
+                    class="table__sort-icon"
+                    [class.table__sort-icon--active]="sortKey() === column.key"
+                    aria-hidden="true"
+                    >{{ sortIcon(column) }}</span
+                  >
+                </button>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of pageRows(); track trackRow(row)) {
+          <tr>
+            @for (column of columns(); track column.key) {
+              <td [class.table__cell--end]="column.align === 'end'" [style.maxWidth]="column.width">
+                @switch (column.kind) {
+                  @case ('badge') {
+                    <span
+                      [class]="'badge badge--' + toneFor(column, row)"
+                      [attr.title]="cellText(column, row)"
+                      >{{ cellText(column, row) }}</span
+                    >
+                  }
+                  @case ('mono') {
+                    <span class="table__mono" [attr.title]="cellText(column, row)">{{
+                      cellText(column, row)
+                    }}</span>
+                  }
+                  @default {
+                    <span class="table__text" [attr.title]="cellText(column, row)">{{
+                      cellText(column, row)
+                    }}</span>
+                  }
+                }
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td class="table__empty" [attr.colspan]="columns().length">
+              <span class="table__empty-icon" aria-hidden="true">⌕</span>
+              <p>{{ emptyMessage() }}</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="table__footer">
+    <p class="table__count" role="status" aria-live="polite">
+      @if (total() === 0) {
+        Sin resultados
+      } @else {
+        Mostrando {{ rangeStart() }}–{{ rangeEnd() }} de {{ total() }}
+        {{ total() === 1 ? 'registro' : 'registros' }}
+      }
+    </p>
+
+    @if (pageCount() > 1) {
+      <div class="pager">
+        <button
+          type="button"
+          class="pager__button"
+          aria-label="Página anterior"
+          [disabled]="currentPage() === 0"
+          (click)="goToPage(currentPage() - 1)"
+        >
+          ‹
+        </button>
+        <span class="pager__status" aria-hidden="true"
+          >Página {{ currentPage() + 1 }} de {{ pageCount() }}</span
+        >
+        <button
+          type="button"
+          class="pager__button"
+          aria-label="Página siguiente"
+          [disabled]="currentPage() >= pageCount() - 1"
+          (click)="goToPage(currentPage() + 1)"
+        >
+          ›
+        </button>
+      </div>
+    }
+  </footer>
+</div>
