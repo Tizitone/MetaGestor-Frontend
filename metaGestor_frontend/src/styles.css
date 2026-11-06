@@ -16,16 +16,8 @@
   --accent-soft: rgba(46, 125, 111, 0.1);
   --sand: #c9a46a;
   --danger: #b0473a;
-<<<<<<< HEAD
-  --exito: #1f6b3b;
-  --exito-borde: #7fb894;
-  --exito-fondo: #e7f5ec;
-
-  /* Superficies oscuras para la barra de navegación y el pie de página */
-=======
 
   /* Dark surfaces for navbar and footer */
->>>>>>> tablas
   --footer-bg: #0e252d;
   --footer-text: #eaf3f2;
   --footer-muted: #b8cbcc;
@@ -56,8 +48,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-<<<<<<< HEAD
-=======
 /* Contenido solo para lectores de pantalla (captions, etiquetas). */
 .visually-hidden {
   position: absolute;
@@ -72,7 +62,6 @@ body {
   border: 0;
 }
 
->>>>>>> tablas
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

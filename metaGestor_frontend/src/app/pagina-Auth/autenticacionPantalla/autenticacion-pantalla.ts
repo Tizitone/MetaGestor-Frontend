@@ -9,7 +9,7 @@ import {
   pattern,
   required,
 } from '@angular/forms/signals';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import type { CredencialesInicioSesion, NuevoCliente } from '../modelos/credenciales';
 import { AutenticacionService } from '../servicios/autenticacion-service';
@@ -58,6 +58,7 @@ export class AutenticacionPantalla {
 
   private readonly autenticacion = inject(AutenticacionService);
   private readonly sesion = inject(SesionService);
+  private readonly router = inject(Router);
 
   protected readonly modeloLogin = signal<CredencialesInicioSesion>({ ...LOGIN_VACIO });
   protected readonly modeloRegistro = signal<FormularioRegistro>({ ...REGISTRO_VACIO });
@@ -71,21 +72,26 @@ export class AutenticacionPantalla {
     },
     {
       submission: {
-        action: async () => {
-          this.estadoLogin.set('enviando');
-          this.mensajeErrorLogin.set('');
-          try {
-            const respuesta = await firstValueFrom(
-              this.autenticacion.iniciarSesion(this.modeloLogin()),
-            );
-            this.sesion.guardarSesion(respuesta);
-            this.estadoLogin.set('exito');
-            this.formularioLogin().reset({ ...LOGIN_VACIO });
-          } catch (error) {
-            this.estadoLogin.set('error');
-            this.mensajeErrorLogin.set(this.mensajeDeError(error, 'login'));
-          }
-        },
+        action: () =>
+          new Promise<void>((resolver) => {
+            this.estadoLogin.set('enviando');
+            this.mensajeErrorLogin.set('');
+
+            this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({
+              next: (respuesta) => {
+                this.sesion.guardarSesion(respuesta);
+                this.estadoLogin.set('exito');
+                this.formularioLogin().reset({ ...LOGIN_VACIO });
+                void this.router.navigate(['/panel/clientes']);
+                resolver();
+              },
+              error: (error: unknown) => {
+                this.estadoLogin.set('error');
+                this.mensajeErrorLogin.set(this.mensajeDeError(error, 'login'));
+                resolver();
+              },
+            });
+          }),
         onInvalid: () => this.estadoLogin.set('inicial'),
       },
     },

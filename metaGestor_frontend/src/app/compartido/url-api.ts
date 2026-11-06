@@ -6,5 +6,5 @@ import { InjectionToken } from '@angular/core';
  */
 export const URL_API = new InjectionToken<string>('URL_API', {
   providedIn: 'root',
-  factory: () => 'http://localhost:8080/api',
+  factory: () => 'https://proyecto-final-progra3-production.up.railway.app/api',
 });
