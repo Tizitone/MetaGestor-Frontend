@@ -24,81 +24,57 @@
       </ul>
     </div>
 
-    <form class="contacto__formulario" [formRoot]="formularioContacto">
+    <form
+      class="contacto__formulario"
+      (submit)="enviar($event)"
+      (keydown.enter)="alPresionarEnter($event)"
+    >
       <div class="contacto__rejilla">
         <div class="campo">
           <label class="campo__etiqueta" for="contacto-nombre">Nombre</label>
-          <input
-            id="contacto-nombre"
-            type="text"
-            [formField]="formularioContacto.nombre"
-            autocomplete="name"
-            placeholder="Tu nombre"
-            [attr.aria-invalid]="mostrarError('nombre')"
-            [attr.aria-describedby]="mostrarError('nombre') ? 'contacto-nombre-error' : null"
-          />
-          @if (formularioContacto.nombre().invalid() && formularioContacto.nombre().touched()) {
-            <p id="contacto-nombre-error" class="campo__error">
-              {{ formularioContacto.nombre().errors()[0]?.message }}
-            </p>
+          <input id="contacto-nombre" type="text" [formField]="formulario.nombre" autocomplete="name"
+            placeholder="Tu nombre" />
+          @if(formulario.nombre().touched() && formulario.nombre().invalid())
+          {
+          @for (e of formulario.nombre().errors(); track e) {
+          <p id="contacto-nombre-error" class="campo__error">{{e.message}}</p>
+          }
           }
         </div>
 
         <div class="campo">
           <label class="campo__etiqueta" for="contacto-email">Correo electrónico</label>
-          <input
-            id="contacto-email"
-            type="email"
-            [formField]="formularioContacto.email"
-            autocomplete="email"
-            placeholder="nombre@empresa.cl"
-            [attr.aria-invalid]="mostrarError('email')"
-            [attr.aria-describedby]="mostrarError('email') ? 'contacto-email-error' : null"
-          />
-          @if (formularioContacto.email().invalid() && formularioContacto.email().touched()) {
-            <p id="contacto-email-error" class="campo__error">
-              {{ formularioContacto.email().errors()[0]?.message }}
-            </p>
+          <input id="contacto-email" type="email" [formField]="formulario.email" autocomplete="email"
+            placeholder="nombre@empresa.cl" />
+          @if(formulario.email().touched() && formulario.email().invalid())
+          {
+          @for (e of formulario.email().errors(); track e) {
+          <p id="contacto-email-error" class="campo__error">{{e.message}}</p>
+          }
           }
         </div>
 
         <div class="campo campo--completo">
           <label class="campo__etiqueta" for="contacto-telefono">Teléfono</label>
-          <input
-            id="contacto-telefono"
-            type="tel"
-            [formField]="formularioContacto.telefono"
-            autocomplete="tel"
-            inputmode="tel"
-            placeholder="+56 9 1234 5678"
-            [attr.aria-invalid]="mostrarError('telefono')"
-            [attr.aria-describedby]="mostrarError('telefono') ? 'contacto-telefono-error' : null"
-          />
-          @if (formularioContacto.telefono().invalid() && formularioContacto.telefono().touched()) {
-            <p id="contacto-telefono-error" class="campo__error">
-              {{ formularioContacto.telefono().errors()[0]?.message }}
-            </p>
+          <input id="contacto-telefono" type="tel" [formField]="formulario.telefono" autocomplete="tel" inputmode="tel"
+            placeholder="+56 9 1234 5678" />
+          @if(formulario.telefono().touched() && formulario.telefono().invalid())
+          {
+          @for (e of formulario.telefono().errors(); track e) {
+          <p id="contacto-telefono-error" class="campo__error">{{e.message}}</p>
+          }
           }
         </div>
 
         <div class="campo campo--completo">
           <label class="campo__etiqueta" for="contacto-descripcion">Descripción</label>
-          <textarea
-            id="contacto-descripcion"
-            rows="5"
-            [formField]="formularioContacto.descripcion"
-            placeholder="Cuéntanos sobre tu proyecto, materiales y plazos."
-            [attr.aria-invalid]="mostrarError('descripcion')"
-            [attr.aria-describedby]="
-              mostrarError('descripcion') ? 'contacto-descripcion-error' : null
-            "
-          ></textarea>
-          @if (
-            formularioContacto.descripcion().invalid() && formularioContacto.descripcion().touched()
-          ) {
-            <p id="contacto-descripcion-error" class="campo__error">
-              {{ formularioContacto.descripcion().errors()[0]?.message }}
-            </p>
+          <textarea id="contacto-descripcion" rows="5" [formField]="formulario.descripcion"
+            placeholder="Cuéntanos sobre tu proyecto, materiales y plazos."></textarea>
+          @if(formulario.descripcion().touched() && formulario.descripcion().invalid())
+          {
+          @for (e of formulario.descripcion().errors(); track e) {
+          <p id="contacto-descripcion-error" class="campo__error">{{e.message}}</p>
+          }
           }
         </div>
       </div>
@@ -106,23 +82,24 @@
       <button
         class="contacto__enviar"
         type="submit"
-        [disabled]="formularioContacto().invalid() || formularioContacto().submitting()"
+        [disabled]="formulario().invalid() || estadoEnvio() === 'enviando'"
+        [attr.aria-busy]="estadoEnvio() === 'enviando'"
       >
-        @if (formularioContacto().submitting()) {
-          Enviando…
+        @if (estadoEnvio() === 'enviando') {
+        Enviando…
         } @else {
-          Enviar mensaje
+        Enviar mensaje
         }
       </button>
 
-      @if (estadoEnvio() === 'exito' && !formularioContacto().dirty()) {
-        <p class="contacto__exito" role="status">
-          Gracias por contactarnos, revisaremos tu solicitud lo antes posible.
-        </p>
+      @if (estadoEnvio() === 'exito' && !formulario().dirty()) {
+      <p class="contacto__exito" role="status">
+        Gracias por contactarnos, revisaremos tu solicitud lo antes posible.
+      </p>
       } @else if (estadoEnvio() === 'error') {
-        <p class="contacto__error-envio" role="alert">
-          Hubo un error al enviar la solicitud. Intenta nuevamente más tarde.
-        </p>
+      <p class="contacto__error-envio" role="alert">
+        Hubo un error al enviar la solicitud. Intenta nuevamente más tarde.
+      </p>
       }
     </form>
   </div>
