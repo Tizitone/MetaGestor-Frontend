@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PanelData } from './panel-data';
 
 @Component({
@@ -10,7 +10,10 @@ import { PanelData } from './panel-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Panel {
+  private readonly router = inject(Router);
+
   private readonly data = inject(PanelData);
+  protected readonly rol = this.sesion.rol;
 
   protected readonly sections = computed(() => [
     { path: '/panel/clientes', label: 'Clientes', count: this.data.clientes().length },
@@ -23,4 +26,9 @@ export class Panel {
   protected readonly today = new Intl.DateTimeFormat('es-CL', { dateStyle: 'long' }).format(
     new Date(),
   );
+
+  protected cerrarSesion(): void {
+    this.sesion.cerrarSesion();
+    void this.router.navigate(['/login']);
+  }
 }

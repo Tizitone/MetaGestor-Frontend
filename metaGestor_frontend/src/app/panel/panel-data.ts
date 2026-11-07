@@ -1,71 +1,78 @@
-import { Service, computed, signal } from '@angular/core';
-import type { Cliente, Empleado, Registro, Solicitud, Tarea } from './panel.model';
-import { httpResource } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { URL_API } from '../compartido/url-api';
+import type { CategoriaTarea, Cliente, Empleado, Registro, Solicitud, Tarea } from './panel.model';
 
-const API = {
-  clientes: '/api/clientes/buscar/all',
-  empleados: '/api/empleados/buscar/all',
-  tareas: '/api/tareas/buscar/all',
-  solicitudes: '/api/solicitudes/buscar/all',
-  registros: '/api/registros/buscar/all',
-} as const;
+/** Tarea tal como la serializa JPA dentro del historial de un empleado. */
+interface TareaJpa {
+  id: number;
+  categorias: CategoriaTarea;
+  fecha_de_entrega: string;
+  fechaDeRegistro: string;
+  descripcion_material: string;
+  descripcion_general: string;
+}
+
+type EmpleadoJpa = Omit<Empleado, 'historial'> & { historial: TareaJpa[] };
+
+function normalizarEmpleado({ historial, ...empleado }: EmpleadoJpa): Empleado {
+  return {
+    ...empleado,
+    historial: historial.map((tarea) => ({
+      idTarea: tarea.id,
+      categorias: tarea.categorias,
+      fechaDeEntrega: tarea.fecha_de_entrega,
+      fechaDeRegistro: tarea.fechaDeRegistro,
+      descripcionMaterial: tarea.descripcion_material,
+      descripcionGeneral: tarea.descripcion_general,
+    })),
+  };
+}
 
 @Service()
 export class PanelData {
-  private readonly clientesResource = httpResource<Cliente[]>(() => API.clientes, {
-    defaultValue: [],
-  });
-  private readonly empleadosResource = httpResource<Empleado[]>(() => API.empleados, {
-    defaultValue: [],
-  });
-  private readonly tareasResource = httpResource<Tarea[]>(() => API.tareas, {
-    defaultValue: [],
-  });
-  private readonly solicitudesResource = httpResource<Solicitud[]>(() => API.solicitudes, {
-    defaultValue: [],
-  });
-  private readonly registrosResource = httpResource<Registro[]>(() => API.registros, {
-    defaultValue: [],
+  private readonly http = inject(HttpClient);
+  private readonly urlApi = inject(URL_API);
+
+  readonly clientes = toSignal(this.http.get<Cliente[]>(`${this.urlApi}/clientes/buscar/all`), {
+    initialValue: [],
   });
 
-  readonly clientes = computed<readonly Cliente[]>(() =>
-    this.clientesResource.hasValue() ? this.clientesResource.value() : [],
-  );
-  readonly empleados = computed<readonly Empleado[]>(() =>
-    this.empleadosResource.hasValue() ? this.empleadosResource.value() : [],
-  );
-  readonly tareas = computed<readonly Tarea[]>(() =>
-    this.tareasResource.hasValue() ? this.tareasResource.value() : [],
-  );
-  readonly solicitudes = computed<readonly Solicitud[]>(() =>
-    this.solicitudesResource.hasValue() ? this.solicitudesResource.value() : [],
-  );
-  readonly registros = computed<readonly Registro[]>(() =>
-    this.registrosResource.hasValue() ? this.registrosResource.value() : [],
+  readonly empleados = toSignal(
+    this.http
+      .get<EmpleadoJpa[]>(`${this.urlApi}/empleados/buscar/all`)
+      .pipe(map((empleados) => empleados.map(normalizarEmpleado))),
+    { initialValue: [] },
   );
 
-  readonly clientesPorId = computed(
-    () => new Map(this.clientes().map((cliente) => [cliente.idCliente, cliente])),
+  readonly tareas = toSignal(this.http.get<Tarea[]>(`${this.urlApi}/tareas/buscar/all`), {
+    initialValue: [],
+  });
+
+  readonly solicitudes = toSignal(
+    this.http.get<Solicitud[]>(`${this.urlApi}/solicitudes/buscar/all`),
+    { initialValue: [] },
   );
 
-  readonly tareasPorId = computed(
-    () => new Map(this.tareas().map((tarea) => [tarea.idTarea, tarea])),
-  );
-
-  readonly empleadosPorLegajo = computed(
-    () => new Map(this.empleados().map((empleado) => [empleado.legajo, empleado])),
-  );
+  readonly registros = toSignal(this.http.get<Registro[]>(`${this.urlApi}/registros/buscar/all`), {
+    initialValue: [],
+  });
 
   nombreDeCliente(id: number): string {
-    return this.clientesPorId().get(id)?.nombre ?? `Cliente #${id}`;
+    return this.clientes().find((cliente) => cliente.idCliente === id)?.nombre ?? `Cliente #${id}`;
   }
 
   resumenDeTarea(id: number): string {
-    return this.tareasPorId().get(id)?.descripcionGeneral ?? `Tarea #${id}`;
+    return (
+      this.tareas().find((tarea) => tarea.idTarea === id)?.descripcionGeneral ?? `Tarea #${id}`
+    );
   }
 
   nombreDeEmpleado(legajo: number): string {
-    return this.empleadosPorLegajo().get(legajo)?.nombre ?? `Legajo #${legajo}`;
+    return (
+      this.empleados().find((empleado) => empleado.legajo === legajo)?.nombre ?? `Legajo #${legajo}`
+    );
   }
 }
-
