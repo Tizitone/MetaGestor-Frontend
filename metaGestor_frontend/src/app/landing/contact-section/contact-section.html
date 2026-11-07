@@ -2,10 +2,10 @@
   <div class="contact__inner">
     <div class="contact__intro">
       <p class="contact__eyebrow">Hablemos</p>
-      <h2 id="contact-title" class="contact__title">Contacto</h2>
+      <h2 id="contact-title" class="contact__title">Contacdsadsato</h2>
       <p class="contact__text">
         Cuéntanos qué necesitas fabricar o reparar y te responderemos con una propuesta clara,
-        plazos realistas y el detalle técnico de cada etapa.
+        plazos realistas y el detalle técnico de cada etapa.dsadsad
       </p>
 
       <ul class="contact__details">
@@ -24,21 +24,20 @@
       </ul>
     </div>
 
-    <form class="contact__form" [formGroup]="contactForm" (submit)="onSubmit()" novalidate>
+    <form class="contact__form" (submit)="enviar($event)" novalidate>
       <div class="contact__grid">
         <div class="field">
           <label class="field__label" for="contact-name">Nombre</label>
           <input
             id="contact-name"
             type="text"
-            formControlName="name"
             autocomplete="name"
             placeholder="Tu nombre"
-            [attr.aria-invalid]="showError('name')"
-            [attr.aria-describedby]="showError('name') ? 'contact-name-error' : null"
+            [formField]="formulario.nombre"
           />
-          @if (showError('name')) {
-            <p id="contact-name-error" class="field__error">Ingresa tu nombre.</p>
+          @if(formulario().touched() && formulario.nombre().invalid())
+          {
+            <p id="contact-name-error" class="field__error">{{formulario().errors()[0]}}</p>
           }
         </div>
 
@@ -47,16 +46,13 @@
           <input
             id="contact-email"
             type="email"
-            formControlName="email"
             autocomplete="email"
             placeholder="nombre@empresa.cl"
-            [attr.aria-invalid]="showError('email')"
-            [attr.aria-describedby]="showError('email') ? 'contact-email-error' : null"
+            [formField]="formulario.email"
           />
-          @if (showError('email')) {
-            <p id="contact-email-error" class="field__error">
-              Ingresa un correo electrónico válido.
-            </p>
+          @if(formulario().touched() && formulario.email().invalid())
+          {
+            <p id="contact-email-error" class="field__error">{{formulario().errors()[0]}}</p>
           }
         </div>
 
@@ -65,17 +61,14 @@
           <input
             id="contact-phone"
             type="tel"
-            formControlName="phone"
             autocomplete="tel"
             inputmode="tel"
             placeholder="+56 9 1234 5678"
-            [attr.aria-invalid]="showError('phone')"
-            [attr.aria-describedby]="showError('phone') ? 'contact-phone-error' : null"
+            [formField]="formulario.telefono"
           />
-          @if (showError('phone')) {
-            <p id="contact-phone-error" class="field__error">
-              Ingresa un teléfono válido (mínimo 7 dígitos).
-            </p>
+          @if(formulario().touched() && formulario.email().invalid())
+          {
+            <p id="contact-phone-error" class="field__error">{{formulario().errors()[0]}}</p>
           }
         </div>
 
@@ -84,22 +77,19 @@
           <textarea
             id="contact-message"
             rows="5"
-            formControlName="message"
             placeholder="Cuéntanos sobre tu proyecto, materiales y plazos."
-            [attr.aria-invalid]="showError('message')"
-            [attr.aria-describedby]="showError('message') ? 'contact-message-error' : null"
+            [formField]="formulario.descripcion"
           ></textarea>
-          @if (showError('message')) {
-            <p id="contact-message-error" class="field__error">
-              Cuéntanos brevemente qué necesitas (mínimo 10 caracteres).
-            </p>
+          @if(formulario().touched() && formulario.email().invalid())
+          {
+            <p id="contact-message-error" class="field__error">{{formulario().errors()[0]}}</p>
           }
         </div>
       </div>
 
       <button class="contact__submit" type="submit">Enviar mensaje</button>
 
-      @if (sent()) {
+      @if (envidado()) {
         <p class="contact__success" role="status">
           Mensaje enviado. Te contactaremos a la brevedad.
         </p>

@@ -1,45 +1,44 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { email, form, FormField, minLength, required } from '@angular/forms/signals';
+import { datosConsulta } from './modelos/modeloFormulario';
 
 @Component({
+  imports: [FormField],
   selector: 'app-contact-section',
-  imports: [ReactiveFormsModule],
   templateUrl: './contact-section.html',
-  styleUrl: './contact-section.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './contact-section.css'
 })
-export class ContactSection {
-  private readonly formBuilder = inject(FormBuilder);
 
-  protected readonly contactForm = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    phone: ['', [Validators.required, Validators.pattern(/^\+?[\d\s()-]{7,20}$/)]],
-    message: ['', [Validators.required, Validators.minLength(10)]],
+export class ContactSection {
+
+  readonly envidado = signal<boolean>(false);
+  private readonly modeloFormulario = signal<datosConsulta>({nombre:"",email: "",telefono:"",descripcion:""});
+
+  readonly formulario = form(this.modeloFormulario,(ruta)=>{
+    required(ruta.email, {message:"Se necesita un correo electronico"}),
+    email(ruta.email, {message:"debe ser un correo valido"}),
+
+    required(ruta.nombre, {message:"Se necesita un nombre"}),
+    minLength(ruta.nombre,2,{message:"El nombre debe tener al menos 2 caracteres."}),
+
+    required(ruta.telefono,{message:"Ingresa tu telefono"}),
+    minLength(ruta.telefono,7,{message:"Ingresa un teléfono válido (mínimo 7 dígitos)."}),
+
+    required(ruta.descripcion, {message:"Cuéntanos qué necesitas."}),
+    minLength(ruta.descripcion, 10, {message:"Cuéntanos brevemente qué necesitas (mínimo 10 caracteres)."})
   });
 
-  protected readonly sent = signal(false);
+  
+  
 
   constructor() {
-    this.contactForm.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.sent.set(false));
   }
 
-  protected showError(controlName: 'name' | 'email' | 'phone' | 'message'): boolean {
-    const control = this.contactForm.controls[controlName];
-    return control.invalid && (control.touched || control.dirty);
-  }
 
-  protected onSubmit(): void {
-    this.contactForm.markAllAsTouched();
-
-    if (this.contactForm.invalid) {
-      this.sent.set(false);
-      return;
-    }
-
-    // TODO: conectar con el servicio de contacto o backend.
-    this.contactForm.reset(undefined, { emitEvent: false });
-    this.sent.set(true);
+  protected enviar(event : Event): void {
+    event.preventDefault();
+    this.envidado.update((valor) => !valor)
+    //post para solicitud
+    
   }
 }

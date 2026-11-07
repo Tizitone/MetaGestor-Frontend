@@ -70,31 +70,6 @@ export class AutenticacionPantalla {
       email(credenciales.email, { message: 'Ingresa un correo electronico valido.' });
       required(credenciales.contrasenia, { message: 'Ingresa tu contraseña.' });
     },
-    {
-      submission: {
-        action: () =>
-          new Promise<void>((resolver) => {
-            this.estadoLogin.set('enviando');
-            this.mensajeErrorLogin.set('');
-
-            this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({
-              next: (respuesta) => {
-                this.sesion.guardarSesion(respuesta);
-                this.estadoLogin.set('exito');
-                this.formularioLogin().reset({ ...LOGIN_VACIO });
-                void this.router.navigate(['/panel/clientes']);
-                resolver();
-              },
-              error: (error: unknown) => {
-                this.estadoLogin.set('error');
-                this.mensajeErrorLogin.set(this.mensajeDeError(error, 'login'));
-                resolver();
-              },
-            });
-          }),
-        onInvalid: () => this.estadoLogin.set('inicial'),
-      },
-    },
   );
 
   protected readonly formularioRegistro = form(
@@ -119,35 +94,22 @@ export class AutenticacionPantalla {
         message: 'La contraseña debe tener al menos 8 caracteres.',
       });
     },
-    {
-      submission: {
-        action: async () => {
-          this.estadoRegistro.set('enviando');
-          this.mensajeErrorRegistro.set('');
-          const datos = this.modeloRegistro();
-
-          try {
-            const cliente: NuevoCliente = {
-              nombre: datos.nombreCompleto.trim(),
-              email: datos.email.trim(),
-              telefono: datos.telefono,
-              dni: Number(datos.dni),
-              contrasenia: datos.contrasenia,
-            };
-
-            await firstValueFrom(this.autenticacion.registrarCliente(cliente));
-            this.estadoRegistro.set('exito');
-            this.formularioRegistro().reset({ ...REGISTRO_VACIO });
-            this.modeloLogin.update((actual) => ({ ...actual, email: cliente.email }));
-          } catch (error) {
-            this.estadoRegistro.set('error');
-            this.mensajeErrorRegistro.set(this.mensajeDeError(error, 'registro'));
-          }
-        },
-        onInvalid: () => this.estadoRegistro.set('inicial'),
-      },
-    },
   );
+
+  protected enviarLogin(evento : Event) : void{
+    evento.preventDefault();
+
+    this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({
+      //promesa de entrar si los datos estan bien
+      next:()=>
+      {
+
+      },
+      error:()=>{
+        
+      }
+    })
+  }
 
   protected cambiarModo(modo: Modo): void {
     if (this.modo() === modo) {
@@ -184,22 +146,22 @@ export class AutenticacionPantalla {
   private mensajeDeError(error: unknown, origen: Modo): string {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 0) {
-        return 'No se pudo conectar con el servidor. Revisa que el backend est\u00e9 en ejecuci\u00f3n.';
+        return 'No se pudo conectar con el servidor.';
       }
 
       if (error.status === 401 || error.status === 403) {
         return origen === 'login'
-          ? 'El correo o la contrase\u00f1a no son correctos.'
-          : 'El registro p\u00fablico no est\u00e1 habilitado en el servidor.';
+          ? 'El correo o la contraseña no son correctos.'
+          : 'El registro publico no esta habilitado en el servidor.';
       }
 
       if (origen === 'registro' && error.status === 400) {
-        return 'Revisa los datos ingresados: puede que el correo o el DNI ya est\u00e9n registrados.';
+        return 'Revisa los datos ingresados: puede que el correo o el DNI ya esten registrados.';
       }
     }
 
     return origen === 'login'
-      ? 'No pudimos iniciar sesi\u00f3n. Intenta nuevamente.'
+      ? 'No pudimos iniciar sesion. Intenta nuevamente.'
       : 'No pudimos crear tu cuenta. Intenta nuevamente.';
   }
 }
