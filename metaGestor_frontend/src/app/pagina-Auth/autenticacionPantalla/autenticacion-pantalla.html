@@ -91,9 +91,9 @@
           <button
             class="auth__enviar"
             type="submit"
-            [disabled]="formularioLogin().invalid() || formularioLogin().submitting()"
+            [disabled]="formularioLogin().invalid() || enviandoLogin()"
           >
-            @if (formularioLogin().submitting()) {
+            @if (enviandoLogin()) {
               Ingresando...
             } @else {
               Ingresar
