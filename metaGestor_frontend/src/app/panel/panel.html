@@ -22,6 +22,12 @@
 
     <div class="sidebar__footer">
       <a class="sidebar__link" routerLink="/">← Volver al sitio</a>
+      @if (rol(); as rolActual) {
+        <p class="sidebar__note">Sesión: {{ rolActual }}</p>
+      }
+      <button class="sidebar__link sidebar__link--boton" type="button" (click)="cerrarSesion()">
+        Cerrar sesión
+      </button>
     </div>
   </aside>
 
