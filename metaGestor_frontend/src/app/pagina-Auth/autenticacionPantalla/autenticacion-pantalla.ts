@@ -1,17 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import {
-  email,
-  form,
-  FormField,
-  FormRoot,
-  minLength,
-  pattern,
-  required,
-} from '@angular/forms/signals';
+import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import type { CredencialesInicioSesion, NuevoCliente } from '../modelos/credenciales';
+import type { CredencialesInicioSesion} from '../modelos/credenciales';
 import { AutenticacionService } from '../servicios/autenticacion-service';
 import { SesionService } from '../servicios/sesion-service';
 
@@ -42,7 +33,7 @@ const REGISTRO_VACIO: FormularioRegistro = {
 
 @Component({
   selector: 'app-autenticacion-pantalla',
-  imports: [FormField, FormRoot, RouterLink],
+  imports: [FormField, RouterLink],
   templateUrl: './autenticacion-pantalla.html',
   styleUrl: './autenticacion-pantalla.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,10 +62,8 @@ export class AutenticacionPantalla {
       required(credenciales.contrasenia, { message: 'Ingresa tu contraseña.' });
     },
   );
-
   protected readonly formularioRegistro = form(
-    this.modeloRegistro,
-    (datos) => {
+    this.modeloRegistro,(datos) => {
       required(datos.nombreCompleto, { message: 'Ingresa tu nombre completo.' });
       minLength(datos.nombreCompleto, 3, {
         message: 'El nombre debe tener al menos 3 caracteres.',
@@ -97,6 +86,20 @@ export class AutenticacionPantalla {
   );
 
   protected enviarLogin(evento : Event) : void{
+    evento.preventDefault();
+
+    this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({
+      //promesa de entrar si los datos estan bien
+      next:()=>
+      {
+        this.router.navigate(['/panel'])
+      },
+      error:()=>{
+        
+      }
+    })
+  }
+    protected enviarRegistro(evento : Event) : void{
     evento.preventDefault();
 
     this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({

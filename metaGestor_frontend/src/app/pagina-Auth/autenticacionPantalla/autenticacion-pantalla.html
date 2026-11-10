@@ -124,7 +124,7 @@
           </p>
         </div>
 
-        <form class="auth__formulario" [formRoot]="formularioRegistro">
+        <form class="auth__formulario" (submit)="enviarRegistro($event)">
           <div class="campo">
             <label class="campo__etiqueta" for="registro-nombre">Nombre completo</label>
             <input
