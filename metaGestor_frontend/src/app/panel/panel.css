@@ -147,6 +147,15 @@
   text-decoration: underline;
 }
 
+.sidebar__link--boton {
+  display: block;
+  margin-top: 0.55rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
 .sidebar__note {
   margin: 0.7rem 0 0;
   color: rgba(184, 203, 204, 0.72);

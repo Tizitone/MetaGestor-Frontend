@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { SesionService } from '../pagina-Auth/servicios/sesion-service';
 import { PanelData } from './panel-data';
 
 @Component({
@@ -10,6 +11,7 @@ import { PanelData } from './panel-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Panel {
+  private readonly sesion = inject(SesionService);
   private readonly router = inject(Router);
 
   private readonly data = inject(PanelData);

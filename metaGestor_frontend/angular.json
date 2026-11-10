@@ -24,9 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ]
+            "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -54,7 +52,7 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "options": { "proxyConfig": "./api-test/proxy.conf.json" },
+          "options": { "proxyConfig": "./proxy.conf.mjs" },
           "configurations": {
             "production": {
               "buildTarget": "metaGestor_frontend:build:production"

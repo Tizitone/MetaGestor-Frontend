@@ -91,9 +91,9 @@
           <button
             class="auth__enviar"
             type="submit"
-            [disabled]="formularioLogin().invalid() || formularioLogin().submitting()"
+            [disabled]="formularioLogin().invalid() || enviandoLogin()"
           >
-            @if (formularioLogin().submitting()) {
+            @if (enviandoLogin()) {
               Ingresando...
             } @else {
               Ingresar
@@ -124,7 +124,7 @@
           </p>
         </div>
 
-        <form class="auth__formulario" (submit)="enviarRegistro($event)">
+        <form class="auth__formulario" [formRoot]="formularioRegistro">
           <div class="campo">
             <label class="campo__etiqueta" for="registro-nombre">Nombre completo</label>
             <input

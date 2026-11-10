@@ -1,8 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
+import {
+  email,
+  form,
+  FormField,
+  FormRoot,
+  minLength,
+  pattern,
+  required,
+} from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
-import type { CredencialesInicioSesion} from '../modelos/credenciales';
+import type { CredencialesInicioSesion } from '../modelos/credenciales';
 import { AutenticacionService } from '../servicios/autenticacion-service';
 import { SesionService } from '../servicios/sesion-service';
 
@@ -33,13 +41,14 @@ const REGISTRO_VACIO: FormularioRegistro = {
 
 @Component({
   selector: 'app-autenticacion-pantalla',
-  imports: [FormField, RouterLink],
+  imports: [FormField, FormRoot, RouterLink],
   templateUrl: './autenticacion-pantalla.html',
   styleUrl: './autenticacion-pantalla.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutenticacionPantalla {
   protected readonly modo = signal<Modo>('login');
+  protected readonly enviandoLogin = signal(false);
   protected readonly estadoLogin = signal<EstadoEnvio>('inicial');
   protected readonly estadoRegistro = signal<EstadoEnvio>('inicial');
   protected readonly mensajeErrorLogin = signal('');
@@ -62,8 +71,10 @@ export class AutenticacionPantalla {
       required(credenciales.contrasenia, { message: 'Ingresa tu contraseña.' });
     },
   );
+
   protected readonly formularioRegistro = form(
-    this.modeloRegistro,(datos) => {
+    this.modeloRegistro,
+    (datos) => {
       required(datos.nombreCompleto, { message: 'Ingresa tu nombre completo.' });
       minLength(datos.nombreCompleto, 3, {
         message: 'El nombre debe tener al menos 3 caracteres.',
@@ -85,33 +96,31 @@ export class AutenticacionPantalla {
     },
   );
 
-  protected enviarLogin(evento : Event) : void{
+  protected enviarLogin(evento: Event): void {
     evento.preventDefault();
 
-    this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({
-      //promesa de entrar si los datos estan bien
-      next:()=>
-      {
-        this.router.navigate(['/panel'])
-      },
-      error:()=>{
-        
-      }
-    })
-  }
-    protected enviarRegistro(evento : Event) : void{
-    evento.preventDefault();
+    if (this.formularioLogin().invalid() || this.enviandoLogin()) {
+      return;
+    }
+
+    this.estadoLogin.set('enviando');
+    this.mensajeErrorLogin.set('');
+    this.enviandoLogin.set(true);
 
     this.autenticacion.iniciarSesion(this.modeloLogin()).subscribe({
-      //promesa de entrar si los datos estan bien
-      next:()=>
-      {
-
+      next: (respuesta) => {
+        this.sesion.guardarSesion(respuesta);
+        this.estadoLogin.set('exito');
+        this.enviandoLogin.set(false);
+        this.modeloLogin.set({ ...LOGIN_VACIO });
+        void this.router.navigate(['/panel/clientes']);
       },
-      error:()=>{
-        
-      }
-    })
+      error: (error: unknown) => {
+        this.estadoLogin.set('error');
+        this.mensajeErrorLogin.set(this.mensajeDeError(error, 'login'));
+        this.enviandoLogin.set(false);
+      },
+    });
   }
 
   protected cambiarModo(modo: Modo): void {
