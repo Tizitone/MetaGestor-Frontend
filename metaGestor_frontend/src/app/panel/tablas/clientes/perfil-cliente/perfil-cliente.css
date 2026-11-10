@@ -1,0 +1,238 @@
+:host {
+  display: block;
+}
+
+/* ---------- Enlace de vuelta ---------- */
+.perfil__volver {
+  align-self: flex-start;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.perfil__volver:hover {
+  text-decoration: underline;
+}
+
+.perfil__volver:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Título de sección ---------- */
+.perfil__seccion-titulo {
+  margin: 0 0 0.8rem;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Tarjeta de datos ---------- */
+.perfil__panel {
+  padding: 1.25rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: 0 22px 48px -40px rgba(16, 42, 51, 0.55);
+}
+
+.perfil__campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 0;
+}
+
+.perfil__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.perfil__campo-label {
+  color: var(--text-muted);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.perfil__valor {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.perfil__valor--mono {
+  color: var(--text-muted);
+  font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+/* ---------- Lista de registros ---------- */
+.perfil__registros {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.registro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  padding: 0.95rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  background: var(--surface);
+  box-shadow: 0 22px 48px -40px rgba(16, 42, 51, 0.55);
+  transition: background-color 120ms ease;
+}
+
+.registro:hover {
+  background: var(--surface-raised);
+}
+
+.registro__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  min-width: 0;
+}
+
+.registro__titulo {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.registro__detalle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.registro__detalle strong {
+  color: var(--text);
+}
+
+.registro__meta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* ---------- Badges (mismo estilo que la tabla de registros) ---------- */
+.perfil__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.22rem 0.58rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.perfil__badge::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.perfil__badge--success {
+  border-color: #c4e4d7;
+  background: #e4f3ec;
+  color: #1f6b53;
+}
+
+.perfil__badge--info {
+  border-color: #c6e2eb;
+  background: #e3f1f6;
+  color: #1f5c74;
+}
+
+.perfil__badge--warning {
+  border-color: #f0dcb6;
+  background: #fbf1de;
+  color: #8a5a13;
+}
+
+.perfil__badge--neutral {
+  border-color: #dbe5e2;
+  background: #eef3f2;
+  color: #526a72;
+}
+
+/* ---------- Estados vacíos ---------- */
+.perfil__vacio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 2.2rem 1.2rem;
+  border: 1px dashed var(--border);
+  border-radius: 0.8rem;
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.perfil__vacio-icono {
+  font-size: 1.6rem;
+  opacity: 0.45;
+}
+
+.perfil__vacio-texto {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.perfil__no-encontrado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  padding: 1.6rem 1.4rem;
+  border: 1px dashed var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+
+.perfil__no-encontrado-texto {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .registro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .perfil__campos {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .registro {
+    transition: none;
+  }
+}

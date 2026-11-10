@@ -1,0 +1,86 @@
+<section class="page" aria-labelledby="perfil-cliente-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Clientes</p>
+      <h1 id="perfil-cliente-title" class="page__title">
+        {{ cliente()?.nombre ?? 'Cliente #' + idCliente() }}
+      </h1>
+      <p class="page__description">
+        Ficha del cliente con sus datos de contacto y los registros de trabajo en los que
+        participa.
+      </p>
+    </div>
+    <p class="page__summary">
+    <!--<strong>{{ registros().length }}</strong> registros asociados -->  
+    </p>
+  </header>
+
+  @if (cliente(); as clienteActual) {
+    <a class="perfil__volver" routerLink="/panel/clientes">Volver a clientes</a>
+
+    <section class="perfil__panel" aria-labelledby="perfil-datos-title">
+      <h2 id="perfil-datos-title" class="perfil__seccion-titulo">Datos del cliente</h2>
+      <dl class="perfil__campos">
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Identificador</dt>
+          <dd class="perfil__valor perfil__valor--mono">#{{ clienteActual.idCliente }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Correo</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ clienteActual.email }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Teléfono</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ clienteActual.telefono }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">DNI</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ clienteActual.dni }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="perfil-registros-title">
+      <h2 id="perfil-registros-title" class="perfil__seccion-titulo">Registros</h2>
+      <!-- 
+      @if (registros().length > 0) {
+        <ul class="perfil__registros">
+          @for (registro of registros(); track registro.id) {
+            <li class="registro">
+              <div class="registro__cuerpo">
+                <p class="registro__titulo">{{ registro.titulo }}</p>
+                <p class="registro__detalle">
+                  <strong>Tarea:</strong>
+                  {{ registro.tareaDescripcion }}
+                </p>
+                <p class="registro__detalle">
+                  <strong>Participantes:</strong>
+                  {{ registro.participantes }}
+                </p>
+              </div>
+              <div class="registro__meta">
+                <span [class]="'perfil__badge perfil__badge--' + tonoProceso(registro.proceso)">{{
+                  procesoLabel[registro.proceso]
+                }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="perfil__vacio" role="status">
+          <span class="perfil__vacio-icono" aria-hidden="true">⌕</span>
+          <p class="perfil__vacio-texto">Sin registros</p>
+        </div>
+      }
+      -->
+      
+    </section>
+  } @else {
+    <section class="perfil__no-encontrado" role="alert">
+      <p class="perfil__no-encontrado-texto">
+        No encontramos el cliente <strong>#{{ idCliente() }}</strong>.
+      </p>
+      <a class="perfil__volver" routerLink="/panel/clientes">← Volver a clientes</a>
+    </section>
+  }
+</section>

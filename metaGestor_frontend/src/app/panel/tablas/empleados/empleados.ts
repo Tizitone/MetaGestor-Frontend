@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DataTable, type TableColumn } from '../data-table/data-table';
-import { pluralize } from '../format';
-import { PanelData } from '../panel-data';
-import type { Empleado } from '../panel.model';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DataTable, type TableColumn } from '../../data-table/data-table';
+import { Modal } from '../../modal/modal';
+import { PanelData } from '../../panel-data/panel-data';
+import type { Empleado } from '../../panel.model';
+import { FormEmpleado } from './form-empleado/form-empleado';
+import { pluralize } from '../../extras/format';
 
 @Component({
   selector: 'app-empleados',
-  imports: [DataTable],
+  imports: [DataTable, FormEmpleado, Modal],
   templateUrl: './empleados.html',
   styleUrl: '../page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,7 +18,43 @@ export class Empleados {
 
   protected readonly empleados = this.data.empleados;
 
+  // --- Alta y modificación ---
+
+  protected readonly modalAbierta = signal(false);
+  protected readonly empleadoEnEdicion = signal<Empleado | null>(null);
+  protected readonly tituloModal = computed(() =>
+    this.empleadoEnEdicion() === null ? 'Nuevo empleado' : 'Modificar empleado',
+  );
+
+  // --- Baja ---
+
+  protected readonly errorEliminar = signal('');
+
   protected readonly rowId = (empleado: Empleado): number => empleado.legajo;
+
+  protected abrirCreacion(): void {
+    this.empleadoEnEdicion.set(null);
+    this.modalAbierta.set(true);
+  }
+
+  protected abrirModificacion(empleado: Empleado): void {
+    this.empleadoEnEdicion.set(empleado);
+    this.modalAbierta.set(true);
+  }
+
+  protected cerrarModal(): void {
+    this.modalAbierta.set(false);
+  }
+
+  protected async eliminar(empleado: Empleado): Promise<void> {
+    this.errorEliminar.set('');
+
+    try {
+      await this.data.eliminarEmpleado(empleado.legajo);
+    } catch {
+      this.errorEliminar.set('No se pudo eliminar el empleado. Intenta nuevamente.');
+    }
+  }
 
   protected readonly columns: readonly TableColumn<Empleado>[] = [
     {

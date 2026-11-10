@@ -176,99 +176,123 @@
   "tareas": [
     {
     "idTarea": 1,
+    "titulo": "Barandas escalera",
     "categorias": "LIGERO",
     "fechaDeEntrega": "2026-11-10",
     "fechaDeRegistro": "2026-10-21T09:15",
     "descripcionMaterial": "Perfiles de acero al carbono",
-    "descripcionGeneral": "Fabricación de barandas para escalera"
+    "descripcionGeneral": "Fabricación de barandas para escalera",
+    "cantidad": 4
   },
   {
     "idTarea": 2,
+    "titulo": "Soporte estanque",
     "categorias": "MEDIANO",
     "fechaDeEntrega": "2026-11-18",
     "fechaDeRegistro": "2026-10-22T11:40",
     "descripcionMaterial": "Planchas de acero inoxidable AISI 304",
-    "descripcionGeneral": "Estructura de soporte para estanque"
+    "descripcionGeneral": "Estructura de soporte para estanque",
+    "cantidad": 2
   },
   {
     "idTarea": 3,
+    "titulo": "Pasarela industrial",
     "categorias": "PESADO",
     "fechaDeEntrega": "2026-11-25",
     "fechaDeRegistro": "2026-10-23T08:05",
     "descripcionMaterial": "Vigas IPN y planchas de 10 mm",
-    "descripcionGeneral": "Pasarela industrial con barandas"
+    "descripcionGeneral": "Pasarela industrial con barandas",
+    "cantidad": 6
   },
   {
     "idTarea": 4,
+    "titulo": "Mobiliario de oficina",
     "categorias": "LIGERO",
     "fechaDeEntrega": "2026-11-05",
     "fechaDeRegistro": "2026-10-24T15:20",
     "descripcionMaterial": "Tubos cuadrados de aluminio",
-    "descripcionGeneral": "Mobiliario metálico para oficina"
+    "descripcionGeneral": "Mobiliario metálico para oficina",
+    "cantidad": 12
   },
   {
     "idTarea": 5,
+    "titulo": "Soportes paneles solares",
     "categorias": "MEDIANO",
     "fechaDeEntrega": "2026-12-02",
     "fechaDeRegistro": "2026-10-25T10:10",
     "descripcionMaterial": "Perfiles galvanizados",
-    "descripcionGeneral": "Soportes para paneles solares"
+    "descripcionGeneral": "Soportes para paneles solares",
+    "cantidad": 18
   },
   {
     "idTarea": 6,
+    "titulo": "Base para maquinaria",
     "categorias": "PESADO",
     "fechaDeEntrega": "2026-12-10",
     "fechaDeRegistro": "2026-10-26T14:35",
     "descripcionMaterial": "Acero estructural ASTM A36",
-    "descripcionGeneral": "Base para maquinaria industrial"
+    "descripcionGeneral": "Base para maquinaria industrial",
+    "cantidad": 3
   },
   {
     "idTarea": 7,
+    "titulo": "Mantenimiento de línea",
     "categorias": "MEDIANO",
     "fechaDeEntrega": "2026-11-22",
     "fechaDeRegistro": "2026-10-27T07:50",
     "descripcionMaterial": "Planchas de acero al carbono",
-    "descripcionGeneral": "Mantenimiento de línea de producción"
+    "descripcionGeneral": "Mantenimiento de línea de producción",
+    "cantidad": 5
   },
   {
     "idTarea": 8,
+    "titulo": "Señalética urbana",
     "categorias": "LIGERO",
     "fechaDeEntrega": "2026-11-08",
     "fechaDeRegistro": "2026-10-27T16:00",
     "descripcionMaterial": "Planchas de acero corten",
-    "descripcionGeneral": "Señalética y escultura urbana"
+    "descripcionGeneral": "Señalética y escultura urbana",
+    "cantidad": 9
   },
   {
     "idTarea": 9,
+    "titulo": "Pasamanos de puente",
     "categorias": "MEDIANO",
     "fechaDeEntrega": "2026-12-15",
     "fechaDeRegistro": "2026-10-28T09:30",
     "descripcionMaterial": "Tubos redondos de acero",
-    "descripcionGeneral": "Pasamanos para puente peatonal"
+    "descripcionGeneral": "Pasamanos para puente peatonal",
+    "cantidad": 40
   },
   {
     "idTarea": 10,
+    "titulo": "Ampliación de nave",
     "categorias": "PESADO",
     "fechaDeEntrega": "2026-11-30",
     "fechaDeRegistro": "2026-10-28T12:45",
     "descripcionMaterial": "Vigas HEB y placas de anclaje",
-    "descripcionGeneral": "Ampliación de nave industrial"
+    "descripcionGeneral": "Ampliación de nave industrial",
+    "cantidad": 2
   },
   {
     "idTarea": 11,
+    "titulo": "Revestimiento de fachada",
     "categorias": "LIGERO",
     "fechaDeEntrega": "2026-11-12",
     "fechaDeRegistro": "2026-10-29T08:20",
     "descripcionMaterial": "Planchas de aluminio compacto",
-    "descripcionGeneral": "Revestimiento de fachada"
+    "descripcionGeneral": "Revestimiento de fachada",
+    "cantidad": 150
   },
   {
     "idTarea": 12,
+    "titulo": "Estanterías de bodega",
     "categorias": "MEDIANO",
     "fechaDeEntrega": "2026-12-20",
     "fechaDeRegistro": "2026-10-29T17:05",
     "descripcionMaterial": "Perfiles de acero inoxidable",
-    "descripcionGeneral": "Estanterías para bodega refrigerada"
+    "descripcionGeneral": "Estanterías para bodega refrigerada",
+    "cantidad": 24
   }
   ],
   "solicitudes": [

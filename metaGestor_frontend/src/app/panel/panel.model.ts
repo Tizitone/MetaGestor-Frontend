@@ -14,10 +14,18 @@ export type ProcesoRegistro = 'ESPERA' | 'ENPROCESO' | 'TERMINADO';
 export interface Tarea {
   readonly idTarea: number;
   readonly categorias: CategoriaTarea;
+  readonly titulo: string;
   readonly fechaDeEntrega: string;
   readonly fechaDeRegistro: string;
   readonly descripcionMaterial: string;
   readonly descripcionGeneral: string;
+  readonly cantidad: number;
+}
+export interface TareaDetalle {
+  readonly idTarea: number;
+  readonly categorias: CategoriaTarea;
+  readonly titulo: string;
+  readonly fechaDeRegistro: string;
 }
 
 /** Equivale a `ClienteDTO`. */
@@ -70,3 +78,51 @@ export const PROCESO_LABEL: Readonly<Record<ProcesoRegistro, string>> = {
   ENPROCESO: 'En proceso',
   TERMINADO: 'Terminado',
 };
+
+/** Payload de alta de cliente (`CrearClienteDTO`). */
+export interface ClienteCreacion {
+  readonly email: string;
+  readonly contrasenia: string;
+  readonly nombre: string;
+  readonly telefono: string;
+  readonly dni: number;
+}
+
+/** Payload de alta de empleado (`CrearEmpleadoDTO`). */
+export interface EmpleadoCreacion {
+  readonly email: string;
+  readonly contrasenia: string;
+  readonly nombre: string;
+  readonly telefono: string;
+  readonly dni: number;
+}
+
+/** Payload de modificación de empleado (`EmpleadoDTO`, sin contraseña). */
+export interface EmpleadoModificacion {
+  readonly email: string;
+  readonly nombre: string;
+  readonly telefono: string;
+  readonly dni: number;
+  readonly legajo: number;
+  readonly historial: readonly Tarea[];
+}
+
+/** Payload de alta y modificación de tarea (`CrearTareaDTO`). */
+export interface TareaEscritura {
+  readonly titulo: string;
+  readonly categorias: CategoriaTarea;
+  readonly fechaDeEntrega: string;
+  readonly descripcionMaterial: string;
+  readonly descripcionGeneral: string;
+  readonly cant: number;
+}
+
+/** Payload de alta y modificación de registro (`CrearRegistroDTO`). */
+export interface RegistroEscritura {
+  readonly titulo: string;
+  readonly tareaId: number;
+  readonly clienteId: number;
+  readonly proceso: ProcesoRegistro;
+  readonly participantesId: readonly number[];
+  readonly publicado: boolean;
+}

@@ -1,0 +1,44 @@
+<section class="page" aria-labelledby="tareas-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Tareas</p>
+      <h1 id="tareas-title" class="page__title">Tareas</h1>
+      <p class="page__description">
+        Administra las tareas de fabricación: crea, modifica o elimina trabajos y revisa su
+        categoría, fechas, materiales y cantidades.
+      </p>
+    </div>
+  </header>
+
+  <div class="page__actions">
+    <button type="button" class="page__boton" (click)="abrirCreacion()">
+      <span aria-hidden="true">+</span> Nueva tarea
+    </button>
+  </div>
+
+  @if (errorEliminar()) {
+    <p class="page__alerta" role="alert">{{ errorEliminar() }}</p>
+  }
+
+  <app-data-table
+    caption="Tareas"
+    searchPlaceholder="Buscar por título, descripción, material, categoría o fecha…"
+    emptyMessage="No hay tareas que coincidan con la búsqueda."
+    [columns]="columns"
+    [rows]="tareas()"
+    [rowId]="rowId"
+    [mostrarAcciones]="true"
+    (filaModificada)="abrirModificacion($event)"
+    (filaEliminada)="eliminar($event)"
+  />
+
+  @if (modalAbierta()) {
+    <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">
+      <app-form-tarea
+        [tarea]="tareaEnEdicion()"
+        (cancelar)="cerrarModal()"
+        (guardado)="cerrarModal()"
+      />
+    </app-modal>
+  }
+</section>

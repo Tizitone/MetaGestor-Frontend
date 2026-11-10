@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import {
   DataTable,
   type BadgeTone,
   type FilterOption,
   type TableColumn,
-} from '../data-table/data-table';
-import { PanelData } from '../panel-data';
-import { PROCESO_LABEL, type ProcesoRegistro, type Registro } from '../panel.model';
+} from '../../data-table/data-table';
+import { Modal } from '../../modal/modal';
+import { PanelData } from '../../panel-data/panel-data';
+import { PROCESO_LABEL, type ProcesoRegistro, type Registro } from '../../panel.model';
+import { FormRegistro } from './form-registro/form-registro';
 
 /** Registro enriquecido con los nombres que referencia por ID. */
 interface RegistroVista extends Registro {
@@ -41,7 +43,7 @@ function tonePublicado(registro: RegistroVista): BadgeTone {
 
 @Component({
   selector: 'app-registros',
-  imports: [DataTable],
+  imports: [DataTable, FormRegistro, Modal],
   templateUrl: './registros.html',
   styleUrl: '../page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,7 +62,43 @@ export class Registros {
     })),
   );
 
+  // --- Alta y modificación ---
+
+  protected readonly modalAbierta = signal(false);
+  protected readonly registroEnEdicion = signal<Registro | null>(null);
+  protected readonly tituloModal = computed(() =>
+    this.registroEnEdicion() === null ? 'Nuevo registro' : 'Modificar registro',
+  );
+
+  // --- Baja ---
+
+  protected readonly errorEliminar = signal('');
+
   protected readonly rowId = (registro: RegistroVista): number => registro.id;
+
+  protected abrirCreacion(): void {
+    this.registroEnEdicion.set(null);
+    this.modalAbierta.set(true);
+  }
+
+  protected abrirModificacion(registro: RegistroVista): void {
+    this.registroEnEdicion.set(registro);
+    this.modalAbierta.set(true);
+  }
+
+  protected cerrarModal(): void {
+    this.modalAbierta.set(false);
+  }
+
+  protected async eliminar(registro: RegistroVista): Promise<void> {
+    this.errorEliminar.set('');
+
+    try {
+      await this.data.eliminarRegistro(registro.id);
+    } catch {
+      this.errorEliminar.set('No se pudo eliminar el registro. Intenta nuevamente.');
+    }
+  }
 
   protected readonly columns: readonly TableColumn<RegistroVista>[] = [
     {

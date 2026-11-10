@@ -104,6 +104,11 @@
               }
             </th>
           }
+          @if (mostrarAcciones()) {
+            <th scope="col" class="table__acciones">
+              <span class="table__header">Acciones</span>
+            </th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -125,17 +130,46 @@
                     }}</span>
                   }
                   @default {
-                    <span class="table__text" [attr.title]="cellText(column, row)">{{
-                      cellText(column, row)
-                    }}</span>
+                    @if (column.link; as link) {
+                      <a
+                        class="table__link"
+                        [routerLink]="link(row)"
+                        [attr.title]="cellText(column, row)"
+                        >{{ cellText(column, row) }}</a
+                      >
+                    } @else {
+                      <span class="table__text" [attr.title]="cellText(column, row)">{{
+                        cellText(column, row)
+                      }}</span>
+                    }
                   }
                 }
+              </td>
+            }
+            @if (mostrarAcciones()) {
+              <td class="table__acciones">
+                <button
+                  type="button"
+                  class="table__accion"
+                  [attr.aria-label]="'Modificar fila'"
+                  (click)="filaModificada.emit(row)"
+                >
+                  Modificar
+                </button>
+                <button
+                  type="button"
+                  class="table__accion table__accion--peligro"
+                  [attr.aria-label]="'Eliminar fila'"
+                  (click)="filaEliminada.emit(row)"
+                >
+                  Eliminar
+                </button>
               </td>
             }
           </tr>
         } @empty {
           <tr>
-            <td class="table__empty" [attr.colspan]="columns().length">
+            <td class="table__empty" [attr.colspan]="totalColumnas()">
               <span class="table__empty-icon" aria-hidden="true">⌕</span>
               <p>{{ emptyMessage() }}</p>
             </td>

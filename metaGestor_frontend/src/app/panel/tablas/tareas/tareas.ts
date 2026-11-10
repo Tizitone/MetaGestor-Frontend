@@ -1,13 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  DataTable,
-  type BadgeTone,
-  type FilterOption,
-  type TableColumn,
-} from '../data-table/data-table';
-import { formatDate, formatDateTime } from '../format';
-import { PanelData } from '../panel-data';
-import { CATEGORIA_LABEL, type CategoriaTarea, type Tarea } from '../panel.model';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormTarea } from './form-tarea/form-tarea';
+import { PanelData } from '../../panel-data/panel-data';
+import { CATEGORIA_LABEL, CategoriaTarea, Tarea } from '../../panel.model';
+import { BadgeTone, DataTable, FilterOption, TableColumn } from '../../data-table/data-table';
+import { Modal } from '../../modal/modal';
+import { formatDate, formatDateTime } from '../../extras/format';
 
 const CATEGORIA_OPTIONS: readonly FilterOption[] = (
   Object.keys(CATEGORIA_LABEL) as CategoriaTarea[]
@@ -26,7 +23,7 @@ function toneCategoria(tarea: Tarea): BadgeTone {
 
 @Component({
   selector: 'app-tareas',
-  imports: [DataTable],
+  imports: [DataTable, FormTarea, Modal],
   templateUrl: './tareas.html',
   styleUrl: '../page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +33,43 @@ export class Tareas {
 
   protected readonly tareas = this.data.tareas;
 
+  // --- Alta y modificación ---
+
+  protected readonly modalAbierta = signal(false);
+  protected readonly tareaEnEdicion = signal<Tarea | null>(null);
+  protected readonly tituloModal = computed(() =>
+    this.tareaEnEdicion() === null ? 'Nueva tarea' : 'Modificar tarea',
+  );
+
+  // --- Baja ---
+
+  protected readonly errorEliminar = signal('');
+
   protected readonly rowId = (tarea: Tarea): number => tarea.idTarea;
+
+  protected abrirCreacion(): void {
+    this.tareaEnEdicion.set(null);
+    this.modalAbierta.set(true);
+  }
+
+  protected abrirModificacion(tarea: Tarea): void {
+    this.tareaEnEdicion.set(tarea);
+    this.modalAbierta.set(true);
+  }
+
+  protected cerrarModal(): void {
+    this.modalAbierta.set(false);
+  }
+
+  protected async eliminar(tarea: Tarea): Promise<void> {
+    this.errorEliminar.set('');
+
+    try {
+      await this.data.eliminarTarea(tarea.idTarea);
+    } catch {
+      this.errorEliminar.set('No se pudo eliminar la tarea. Intenta nuevamente.');
+    }
+  }
 
   protected readonly columns: readonly TableColumn<Tarea>[] = [
     {
@@ -46,6 +79,14 @@ export class Tareas {
       kind: 'mono',
       align: 'end',
       width: '4.5rem',
+    },
+    {
+      key: 'titulo',
+      header: 'Título',
+      value: (tarea) => tarea.titulo,
+      filter: 'text',
+      filterPlaceholder: 'Nombre del trabajo',
+      width: '14rem',
     },
     {
       key: 'categorias',
@@ -89,6 +130,13 @@ export class Tareas {
       filter: 'text',
       filterPlaceholder: 'Trabajo a realizar',
       width: '18rem',
+    },
+    {
+      key: 'cantidad',
+      header: 'Cantidad',
+      value: (tarea) => String(tarea.cantidad),
+      align: 'end',
+      width: '6.5rem',
     },
   ];
 }

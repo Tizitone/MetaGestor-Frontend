@@ -113,7 +113,7 @@ export class AutenticacionPantalla {
         this.estadoLogin.set('exito');
         this.enviandoLogin.set(false);
         this.modeloLogin.set({ ...LOGIN_VACIO });
-        void this.router.navigate(['/panel/clientes']);
+        void this.router.navigate(['/panel/clientes',this.sesion.idUsuario()]);
       },
       error: (error: unknown) => {
         this.estadoLogin.set('error');

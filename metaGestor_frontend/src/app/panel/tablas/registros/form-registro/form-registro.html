@@ -1,0 +1,129 @@
+<form class="form" novalidate (submit)="enviar($event)">
+  <div class="form__rejilla">
+    <div class="campo campo--completo">
+      <label class="campo__etiqueta" for="registro-titulo">Título</label>
+      <input
+        id="registro-titulo"
+        class="campo__control"
+        type="text"
+        placeholder="Nombre del trabajo"
+        [formField]="formulario.titulo"
+        [class.campo__control--error]="campoConError('titulo')"
+      />
+      @if (campoConError('titulo')) {
+        <p class="campo__error">{{ formulario.titulo().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-tarea">Tarea</label>
+      <select
+        id="registro-tarea"
+        class="campo__control"
+        [formField]="formulario.tareaId"
+        [class.campo__control--error]="campoConError('tareaId')"
+      >
+        <option value="">Selecciona…</option>
+        @for (tarea of tareas(); track tarea.idTarea) {
+          <option [value]="tarea.idTarea">#{{ tarea.idTarea }} · {{ tarea.titulo }}</option>
+        }
+      </select>
+      @if (campoConError('tareaId')) {
+        <p class="campo__error">{{ formulario.tareaId().errors()[0]?.message }}</p>
+      } @else if (tareas().length === 0) {
+        <p class="campo__ayuda">Primero debe existir al menos una tarea.</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-cliente">Cliente</label>
+      <select
+        id="registro-cliente"
+        class="campo__control"
+        [formField]="formulario.clienteId"
+        [class.campo__control--error]="campoConError('clienteId')"
+      >
+        <option value="">Selecciona…</option>
+        @for (cliente of clientes(); track cliente.idCliente) {
+          <option [value]="cliente.idCliente">{{ cliente.nombre }}</option>
+        }
+      </select>
+      @if (campoConError('clienteId')) {
+        <p class="campo__error">{{ formulario.clienteId().errors()[0]?.message }}</p>
+      } @else if (clientes().length === 0) {
+        <p class="campo__ayuda">Primero debe existir al menos un cliente.</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-proceso">Proceso</label>
+      <select
+        id="registro-proceso"
+        class="campo__control"
+        [formField]="formulario.proceso"
+        [class.campo__control--error]="campoConError('proceso')"
+      >
+        <option value="">Selecciona…</option>
+        @for (proceso of procesos; track proceso[0]) {
+          <option [value]="proceso[0]">{{ proceso[1] }}</option>
+        }
+      </select>
+      @if (campoConError('proceso')) {
+        <p class="campo__error">{{ formulario.proceso().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo campo--completo">
+      <span class="campo__etiqueta">Participantes</span>
+      @if (empleados().length === 0) {
+        <p class="opciones opciones--vacia">No hay empleados registrados todavía.</p>
+      } @else {
+        <div class="opciones" role="group" aria-label="Participantes del registro">
+          @for (empleado of empleados(); track empleado.legajo) {
+            <label class="opcion">
+              <input
+                type="checkbox"
+                [checked]="participa(empleado.legajo)"
+                (change)="alternarParticipante(empleado.legajo, $event)"
+              />
+              {{ empleado.nombre }} · {{ empleado.legajo }}
+            </label>
+          }
+        </div>
+      }
+      @if (errorParticipantes()) {
+        <p class="campo__error">Selecciona al menos un participante.</p>
+      } @else {
+        <p class="campo__ayuda">Empleados involucrados en el trabajo.</p>
+      }
+    </div>
+
+    <div class="campo campo--completo">
+      <label class="opcion">
+        <input type="checkbox" [formField]="formulario.publicado" />
+        Publicado en el portal del cliente
+      </label>
+    </div>
+  </div>
+
+  @if (estadoEnvio() === 'error') {
+    <p class="form__aviso" role="alert">
+      No se pudo guardar el registro. Revisa los datos e intenta nuevamente.
+    </p>
+  }
+
+  <div class="form__pie">
+    <button type="button" class="form__boton form__boton--ghost" (click)="cancelar.emit()">
+      Cancelar
+    </button>
+    <button type="submit" class="form__boton" [disabled]="estadoEnvio() === 'enviando'">
+      @if (estadoEnvio() === 'enviando') {
+        Guardando…
+      } @else if (creando()) {
+        Crear registro
+      } @else {
+        Guardar cambios
+      }
+    </button>
+  </div>
+</form>

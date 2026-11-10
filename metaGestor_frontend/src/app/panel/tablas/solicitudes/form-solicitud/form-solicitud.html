@@ -1,0 +1,86 @@
+<form class="form" novalidate (submit)="enviar($event)">
+  <div class="form__rejilla">
+    <div class="campo">
+      <label class="campo__etiqueta" for="solicitud-nombre">Solicitante</label>
+      <input
+        id="solicitud-nombre"
+        class="campo__control"
+        type="text"
+        autocomplete="name"
+        placeholder="Nombre y apellido"
+        [formField]="formulario.nombre"
+        [class.campo__control--error]="campoConError('nombre')"
+      />
+      @if (campoConError('nombre')) {
+        <p class="campo__error">{{ formulario.nombre().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="solicitud-email">Correo electrónico</label>
+      <input
+        id="solicitud-email"
+        class="campo__control"
+        type="email"
+        autocomplete="email"
+        placeholder="nombre@empresa.cl"
+        [formField]="formulario.email"
+        [class.campo__control--error]="campoConError('email')"
+      />
+      @if (campoConError('email')) {
+        <p class="campo__error">{{ formulario.email().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="solicitud-telefono">Teléfono</label>
+      <input
+        id="solicitud-telefono"
+        class="campo__control"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="911234567"
+        [formField]="formulario.telefono"
+        [class.campo__control--error]="campoConError('telefono')"
+      />
+      @if (campoConError('telefono')) {
+        <p class="campo__error">{{ formulario.telefono().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo campo--completo">
+      <label class="campo__etiqueta" for="solicitud-descripcion">Descripción</label>
+      <textarea
+        id="solicitud-descripcion"
+        class="campo__control"
+        rows="5"
+        placeholder="Requerimiento enviado desde el sitio"
+        [formField]="formulario.descripcion"
+        [class.campo__control--error]="campoConError('descripcion')"
+      ></textarea>
+      @if (campoConError('descripcion')) {
+        <p class="campo__error">{{ formulario.descripcion().errors()[0]?.message }}</p>
+      }
+    </div>
+  </div>
+
+  @if (estadoEnvio() === 'error') {
+    <p class="form__aviso" role="alert">
+      No se pudo guardar la solicitud. Revisa los datos e intenta nuevamente.
+    </p>
+  }
+
+  <div class="form__pie">
+    <button type="button" class="form__boton form__boton--ghost" (click)="cancelar.emit()">
+      Cancelar
+    </button>
+    <button type="submit" class="form__boton" [disabled]="estadoEnvio() === 'enviando'">
+      @if (estadoEnvio() === 'enviando') {
+        Guardando…
+      } @else {
+        Guardar cambios
+      }
+    </button>
+  </div>
+</form>

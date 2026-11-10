@@ -1,0 +1,109 @@
+<form class="form" novalidate (submit)="enviar($event)">
+  <div class="form__rejilla">
+    <div class="campo campo--completo">
+      <label class="campo__etiqueta" for="cliente-nombre">Nombre</label>
+      <input
+        id="cliente-nombre"
+        class="campo__control"
+        type="text"
+        autocomplete="name"
+        placeholder="Nombre y apellido"
+        [formField]="formulario.nombre"
+        [class.campo__control--error]="campoConError('nombre')"
+      />
+      @if (campoConError('nombre')) {
+        <p class="campo__error">{{ formulario.nombre().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="cliente-email">Correo electrónico</label>
+      <input
+        id="cliente-email"
+        class="campo__control"
+        type="email"
+        autocomplete="email"
+        placeholder="nombre@empresa.cl"
+        [formField]="formulario.email"
+        [class.campo__control--error]="campoConError('email')"
+      />
+      @if (campoConError('email')) {
+        <p class="campo__error">{{ formulario.email().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="cliente-telefono">Teléfono</label>
+      <input
+        id="cliente-telefono"
+        class="campo__control"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="912345678"
+        [formField]="formulario.telefono"
+        [class.campo__control--error]="campoConError('telefono')"
+      />
+      @if (campoConError('telefono')) {
+        <p class="campo__error">{{ formulario.telefono().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="cliente-dni">DNI</label>
+      <input
+        id="cliente-dni"
+        class="campo__control"
+        type="text"
+        inputmode="numeric"
+        placeholder="12345678"
+        [formField]="formulario.dni"
+        [class.campo__control--error]="campoConError('dni')"
+      />
+      @if (campoConError('dni')) {
+        <p class="campo__error">{{ formulario.dni().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    @if (creando()) {
+      <div class="campo campo--completo">
+        <label class="campo__etiqueta" for="cliente-contrasenia">Contraseña</label>
+        <input
+          id="cliente-contrasenia"
+          class="campo__control"
+          type="password"
+          autocomplete="new-password"
+          placeholder="Mínimo 8 caracteres"
+          [formField]="formulario.contrasenia"
+          [class.campo__control--error]="campoConError('contrasenia')"
+        />
+        @if (campoConError('contrasenia')) {
+          <p class="campo__error">{{ formulario.contrasenia().errors()[0]?.message }}</p>
+        } @else {
+          <p class="campo__ayuda">Se usa para el acceso del cliente al portal.</p>
+        }
+      </div>
+    }
+  </div>
+
+  @if (estadoEnvio() === 'error') {
+    <p class="form__aviso" role="alert">
+      No se pudo guardar el cliente. Revisa los datos e intenta nuevamente.
+    </p>
+  }
+
+  <div class="form__pie">
+    <button type="button" class="form__boton form__boton--ghost" (click)="cancelar.emit()">
+      Cancelar
+    </button>
+    <button type="submit" class="form__boton" [disabled]="estadoEnvio() === 'enviando'">
+      @if (estadoEnvio() === 'enviando') {
+        Guardando…
+      } @else if (creando()) {
+        Crear cliente
+      } @else {
+        Guardar cambios
+      }
+    </button>
+  </div>
+</form>

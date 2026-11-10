@@ -1,0 +1,114 @@
+<form class="form" novalidate (submit)="enviar($event)">
+  <div class="form__rejilla">
+    <div class="campo campo--completo">
+      <label class="campo__etiqueta" for="tarea-titulo">Título</label>
+      <input
+        id="tarea-titulo"
+        class="campo__control"
+        type="text"
+        placeholder="Nombre del trabajo"
+        [formField]="formulario.titulo"
+        [class.campo__control--error]="campoConError('titulo')"
+      />
+      @if (campoConError('titulo')) {
+        <p class="campo__error">{{ formulario.titulo().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="tarea-categoria">Categoría</label>
+      <select
+        id="tarea-categoria"
+        class="campo__control"
+        [formField]="formulario.categorias"
+        [class.campo__control--error]="campoConError('categorias')"
+      >
+        <option value="">Selecciona…</option>
+        @for (categoria of categorias; track categoria[0]) {
+          <option [value]="categoria[0]">{{ categoria[1] }}</option>
+        }
+      </select>
+      @if (campoConError('categorias')) {
+        <p class="campo__error">{{ formulario.categorias().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="tarea-entrega">Fecha de entrega</label>
+      <input
+        id="tarea-entrega"
+        class="campo__control"
+        type="date"
+        [formField]="formulario.fechaDeEntrega"
+        [class.campo__control--error]="campoConError('fechaDeEntrega')"
+      />
+      @if (campoConError('fechaDeEntrega')) {
+        <p class="campo__error">{{ formulario.fechaDeEntrega().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo">
+      <label class="campo__etiqueta" for="tarea-cantidad">Cantidad</label>
+      <input
+        id="tarea-cantidad"
+        class="campo__control"
+        type="text"
+        inputmode="numeric"
+        placeholder="1"
+        [formField]="formulario.cantidad"
+        [class.campo__control--error]="campoConError('cantidad')"
+      />
+      @if (campoConError('cantidad')) {
+        <p class="campo__error">{{ formulario.cantidad().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="campo campo--completo">
+      <label class="campo__etiqueta" for="tarea-material">Material</label>
+      <input
+        id="tarea-material"
+        class="campo__control"
+        type="text"
+        placeholder="Acero, aluminio…"
+        [formField]="formulario.descripcionMaterial"
+      />
+      <p class="campo__ayuda">Opcional: material principal del trabajo.</p>
+    </div>
+
+    <div class="campo campo--completo">
+      <label class="campo__etiqueta" for="tarea-descripcion">Descripción general</label>
+      <textarea
+        id="tarea-descripcion"
+        class="campo__control"
+        rows="4"
+        placeholder="Trabajo a realizar"
+        [formField]="formulario.descripcionGeneral"
+        [class.campo__control--error]="campoConError('descripcionGeneral')"
+      ></textarea>
+      @if (campoConError('descripcionGeneral')) {
+        <p class="campo__error">{{ formulario.descripcionGeneral().errors()[0]?.message }}</p>
+      }
+    </div>
+  </div>
+
+  @if (estadoEnvio() === 'error') {
+    <p class="form__aviso" role="alert">
+      No se pudo guardar la tarea. Revisa los datos e intenta nuevamente.
+    </p>
+  }
+
+  <div class="form__pie">
+    <button type="button" class="form__boton form__boton--ghost" (click)="cancelar.emit()">
+      Cancelar
+    </button>
+    <button type="submit" class="form__boton" [disabled]="estadoEnvio() === 'enviando'">
+      @if (estadoEnvio() === 'enviando') {
+        Guardando…
+      } @else if (creando()) {
+        Crear tarea
+      } @else {
+        Guardar cambios
+      }
+    </button>
+  </div>
+</form>

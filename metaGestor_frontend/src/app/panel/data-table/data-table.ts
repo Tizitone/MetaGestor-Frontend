@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 export type BadgeTone = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 
@@ -15,6 +16,11 @@ export interface TableColumn<T> {
   readonly value: (row: T) => string;
   /** Texto visible; si no se indica se usa `value`. */
   readonly display?: (row: T) => string;
+  /**
+   * Cuando se define, la celda de texto se renderiza como un enlace de
+   * navegación en lugar de un texto plano.
+   */
+  readonly link?: (row: T) => string;
   readonly kind?: 'text' | 'badge' | 'mono';
   readonly tone?: (row: T) => BadgeTone;
   readonly filter?: 'text' | 'select';
@@ -39,6 +45,7 @@ function normalize(value: string): string {
 
 @Component({
   selector: 'app-data-table',
+  imports: [RouterLink],
   templateUrl: './data-table.html',
   styleUrl: './data-table.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +58,12 @@ export class DataTable<T> {
   readonly searchPlaceholder = input('Buscar en los registros…');
   readonly emptyMessage = input('No se encontraron registros con los filtros aplicados.');
   readonly pageSize = input(10);
+  /** Agrega la columna de acciones (modificar / eliminar) al final de cada fila. */
+  readonly mostrarAcciones = input(false);
+  /** Se emite con la fila al pulsar el botón «Modificar». */
+  readonly filaModificada = output<T>();
+  /** Se emite con la fila al pulsar el botón «Eliminar». */
+  readonly filaEliminada = output<T>();
 
   protected readonly filterPanelId = `table-filters-${nextFilterPanelId++}`;
   protected readonly search = signal('');
@@ -62,6 +75,11 @@ export class DataTable<T> {
 
   protected readonly hasColumnFilters = computed(() =>
     this.columns().some((column) => column.filter !== undefined),
+  );
+
+  /** Columnas visibles, incluida la de acciones cuando está activada. */
+  protected readonly totalColumnas = computed(() =>
+    this.columns().length + (this.mostrarAcciones() ? 1 : 0),
   );
 
   protected readonly hasActiveFilters = computed(() => {

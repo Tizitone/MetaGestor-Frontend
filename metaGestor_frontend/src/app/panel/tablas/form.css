@@ -1,0 +1,188 @@
+/*
+ * Estilos compartidos por los formularios de alta y modificación del panel.
+ * Cada componente de formulario lo referencia con `styleUrl: '../../form.css'`.
+ */
+
+:host {
+  display: block;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.form__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.9rem 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.campo--completo {
+  grid-column: 1 / -1;
+}
+
+.campo__etiqueta {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.campo__control {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--surface-raised);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.campo__control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.campo__control:focus-visible,
+.form__boton:focus-visible,
+.opcion input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.campo__control--error {
+  border-color: #f1cbc5;
+  background: #fdf3f1;
+}
+
+.campo__error {
+  margin: 0;
+  color: #9c3b30;
+  font-size: 0.76rem;
+}
+
+.campo__ayuda {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+/* Lista de opciones con casillas (participantes de un registro). */
+.opciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.45rem 1rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--surface-raised);
+}
+
+.opciones--vacia {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.opcion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text);
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+.opcion input {
+  accent-color: var(--accent);
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.form__pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-top: 0.35rem;
+}
+
+.form__boton {
+  padding: 0.62rem 1.1rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.55rem;
+  background: var(--accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.form__boton:hover:not(:disabled) {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+}
+
+.form__boton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.form__boton--ghost {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.form__boton--ghost:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface);
+  color: var(--accent-strong);
+}
+
+.form__aviso {
+  margin: 0;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #f1cbc5;
+  border-radius: 0.55rem;
+  background: #fbe8e5;
+  color: #9c3b30;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 640px) {
+  .form__rejilla {
+    grid-template-columns: 1fr;
+  }
+
+  .form__pie {
+    justify-content: stretch;
+  }
+
+  .form__boton {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form__boton {
+    transition: none;
+  }
+}

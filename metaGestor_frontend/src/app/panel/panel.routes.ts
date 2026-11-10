@@ -18,27 +18,33 @@ export const PANEL_ROUTES: Routes = [
       {
         path: 'clientes',
         title: 'Clientes | MetaGestor',
-        loadComponent: () => import('./clientes/clientes').then((m) => m.Clientes),
+        loadComponent: () => import('./tablas/clientes/clientes').then((m) => m.Clientes),
+      },
+      {
+        path: 'clientes/:idCliente',
+        title: 'Perfil de cliente | MetaGestor',
+        loadComponent: () =>
+          import('./tablas/clientes/perfil-cliente/perfil-cliente').then((m) => m.PerfilCliente),
       },
       {
         path: 'empleados',
         title: 'Empleados | MetaGestor',
-        loadComponent: () => import('./empleados/empleados').then((m) => m.Empleados),
+        loadComponent: () => import('./tablas/empleados/empleados').then((m) => m.Empleados),
       },
       {
         path: 'tareas',
         title: 'Tareas | MetaGestor',
-        loadComponent: () => import('./tareas/tareas').then((m) => m.Tareas),
+        loadComponent: () => import('./tablas/tareas/tareas').then((m) => m.Tareas),
       },
       {
         path: 'solicitudes',
         title: 'Solicitudes | MetaGestor',
-        loadComponent: () => import('./solicitudes/solicitudes').then((m) => m.Solicitudes),
+        loadComponent: () => import('./tablas/solicitudes/solicitudes').then((m) => m.Solicitudes),
       },
       {
         path: 'registros',
         title: 'Registros | MetaGestor',
-        loadComponent: () => import('./registros/registros').then((m) => m.Registros),
+        loadComponent: () => import('./tablas/registros/registros').then((m) => m.Registros),
       },
     ],
   },

@@ -1,0 +1,48 @@
+<section class="page" aria-labelledby="registros-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Registros</p>
+      <h1 id="registros-title" class="page__title">Registros</h1>
+      <p class="page__description">
+        Administra el seguimiento de trabajos: crea, modifica o elimina registros por cliente,
+        tarea y estado del proceso. Los identificadores se resuelven con los nombres de clientes y
+        empleados.
+      </p>
+    </div>
+    <p class="page__summary">
+      <strong>{{ registros().length }}</strong> registros de trabajo
+    </p>
+  </header>
+
+  <div class="page__actions">
+    <button type="button" class="page__boton" (click)="abrirCreacion()">
+      <span aria-hidden="true">+</span> Nuevo registro
+    </button>
+  </div>
+
+  @if (errorEliminar()) {
+    <p class="page__alerta" role="alert">{{ errorEliminar() }}</p>
+  }
+
+  <app-data-table
+    caption="Registros"
+    searchPlaceholder="Buscar por título, cliente, tarea, participantes o estado…"
+    emptyMessage="No hay registros que coincidan con la búsqueda."
+    [columns]="columns"
+    [rows]="registros()"
+    [rowId]="rowId"
+    [mostrarAcciones]="true"
+    (filaModificada)="abrirModificacion($event)"
+    (filaEliminada)="eliminar($event)"
+  />
+
+  @if (modalAbierta()) {
+    <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">
+      <app-form-registro
+        [registro]="registroEnEdicion()"
+        (cancelar)="cerrarModal()"
+        (guardado)="cerrarModal()"
+      />
+    </app-modal>
+  }
+</section>
