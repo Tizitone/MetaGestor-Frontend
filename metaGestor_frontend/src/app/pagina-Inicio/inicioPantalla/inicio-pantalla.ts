@@ -4,6 +4,7 @@ import { DescripcionComponent } from '../componentes/descripcionComponent/descri
 import { ComentariosComponent } from '../componentes/comentariosComponent/comentarios-component';
 import { ContactoComponente } from '../componentes/contactoComponente/contacto-componente';
 import { FooterComponente } from '../componentes/footerComponente/footer-componente';
+import { SesionService } from '../../pagina-Auth/servicios/sesion-service';
 
 @Component({
   selector: 'app-inicio-pantalla',
@@ -15,13 +16,21 @@ import { FooterComponente } from '../componentes/footerComponente/footer-compone
 export class InicioPantalla {
   private readonly documento = inject(DOCUMENT);
   private readonly router = inject(Router);
+  private readonly sesion = inject(SesionService);
 
   protected alInicio(): void {
     this.documento.defaultView?.scrollTo({ top: 0, behavior: this.comportamientoDesplazamiento() });
   }
 
   protected alIniciarSesion(): void {
-    void this.router.navigate(['/login']);
+    if(this.sesion.token.toString())
+    {
+      this.router.navigate(['/panel']);
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
+    
   }
 
   protected alContactar(): void {
