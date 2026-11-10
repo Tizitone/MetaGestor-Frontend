@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { URL_API } from '../compartido/url-api';
@@ -35,6 +35,7 @@ function normalizarEmpleado({ historial, ...empleado }: EmpleadoJpa): Empleado {
 export class PanelData {
   private readonly http = inject(HttpClient);
   private readonly urlApi = inject(URL_API);
+  idActual = signal<number>(0);
 
   readonly clientes = toSignal(this.http.get<Cliente[]>(`${this.urlApi}/clientes/buscar/all`), {
     initialValue: [],
@@ -46,6 +47,14 @@ export class PanelData {
       .pipe(map((empleados) => empleados.map(normalizarEmpleado))),
     { initialValue: [] },
   );
+
+  readonly buscarRegistrosCliente = toSignal(this.http.get<Registro[]>(`${this.urlApi}/registros/buscar/cliente/${this.idActual}`),{
+    initialValue: [],
+  });
+
+  readonly buscarHistorialEmpleados = toSignal(this.http.get<Tarea[]>(`${this.urlApi}/empleados/historial`),{
+    initialValue: [],
+  });
 
   readonly tareas = toSignal(this.http.get<Tarea[]>(`${this.urlApi}/tareas/buscar/all`), {
     initialValue: [],
