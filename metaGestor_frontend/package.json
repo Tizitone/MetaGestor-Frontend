@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "api-test": "json-server api-test/db.json --routes api-test/routes.json --port 3000 --watch --read-only",
+    "start:api-test": "ng serve --proxy-config api-test/proxy.conf.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

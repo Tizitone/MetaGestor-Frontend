@@ -43,17 +43,15 @@
           </p>
         </div>
 
-        <form class="auth__formulario" [formRoot]="formularioLogin">
+        <form class="auth__formulario" (submit)="enviarLogin($event)">
           <div class="campo">
-            <label class="campo__etiqueta" for="login-email">Correo electr&oacute;nico</label>
+            <label class="campo__etiqueta" for="login-email">Correo electronico</label>
             <input
               id="login-email"
               type="email"
               [formField]="formularioLogin.email"
               autocomplete="email"
               placeholder="nombre@empresa.cl"
-              [attr.aria-invalid]="errorLogin('email')"
-              [attr.aria-describedby]="errorLogin('email') ? 'login-email-error' : null"
             />
             @if (formularioLogin.email().invalid() && formularioLogin.email().touched()) {
               <p id="login-email-error" class="campo__error">
@@ -63,24 +61,19 @@
           </div>
 
           <div class="campo">
-            <label class="campo__etiqueta" for="login-contrasenia">Contrase&ntilde;a</label>
+            <label class="campo__etiqueta" for="login-contrasenia">Contraseña</label>
             <div class="campo__contenedor">
               <input
                 id="login-contrasenia"
                 [type]="mostrarContraseniaLogin() ? 'text' : 'password'"
                 [formField]="formularioLogin.contrasenia"
                 autocomplete="current-password"
-                placeholder="Tu contrase&ntilde;a"
-                [attr.aria-invalid]="errorLogin('contrasenia')"
-                [attr.aria-describedby]="
-                  errorLogin('contrasenia') ? 'login-contrasenia-error' : null
-                "
+                placeholder="Tu contraseña"
               />
               <button
                 class="campo__ver"
                 type="button"
-                aria-label="Mostrar u ocultar contrase&ntilde;a"
-                [attr.aria-pressed]="mostrarContraseniaLogin()"
+                aria-label="Mostrar u ocultar contraseña"
                 (click)="alternarContraseniaLogin()"
               >
                 {{ mostrarContraseniaLogin() ? 'Ocultar' : 'Mostrar' }}
@@ -98,9 +91,9 @@
           <button
             class="auth__enviar"
             type="submit"
-            [disabled]="formularioLogin().invalid() || formularioLogin().submitting()"
+            [disabled]="formularioLogin().invalid() || enviandoLogin()"
           >
-            @if (formularioLogin().submitting()) {
+            @if (enviandoLogin()) {
               Ingresando...
             } @else {
               Ingresar
@@ -109,14 +102,14 @@
 
           @if (estadoLogin() === 'exito') {
             <p class="auth__aviso auth__aviso--exito" role="status">
-              Sesi&oacute;n iniciada correctamente.
+              Sesion iniciada correctamente.
             </p>
           } @else if (estadoLogin() === 'error') {
             <p class="auth__aviso auth__aviso--error" role="alert">{{ mensajeErrorLogin() }}</p>
           }
 
           <p class="auth__alternativa">
-            &iquest;A&uacute;n no tienes cuenta?
+            Aun no tienes cuenta?
             <button class="auth__enlace" type="button" (click)="cambiarModo('registro')">
               Crear una cuenta
             </button>
@@ -140,10 +133,6 @@
               [formField]="formularioRegistro.nombreCompleto"
               autocomplete="name"
               placeholder="Nombre y apellido"
-              [attr.aria-invalid]="errorRegistro('nombreCompleto')"
-              [attr.aria-describedby]="
-                errorRegistro('nombreCompleto') ? 'registro-nombre-error' : null
-              "
             />
             @if (
               formularioRegistro.nombreCompleto().invalid() &&
@@ -156,15 +145,13 @@
           </div>
 
           <div class="campo">
-            <label class="campo__etiqueta" for="registro-email">Correo electr&oacute;nico</label>
+            <label class="campo__etiqueta" for="registro-email">Correo electronico</label>
             <input
               id="registro-email"
               type="email"
               [formField]="formularioRegistro.email"
               autocomplete="email"
               placeholder="nombre@empresa.cl"
-              [attr.aria-invalid]="errorRegistro('email')"
-              [attr.aria-describedby]="errorRegistro('email') ? 'registro-email-error' : null"
             />
             @if (formularioRegistro.email().invalid() && formularioRegistro.email().touched()) {
               <p id="registro-email-error" class="campo__error">
@@ -175,7 +162,7 @@
 
           <div class="auth__rejilla">
             <div class="campo">
-              <label class="campo__etiqueta" for="registro-telefono">Tel&eacute;fono</label>
+              <label class="campo__etiqueta" for="registro-telefono">Telefono</label>
               <input
                 id="registro-telefono"
                 type="tel"
@@ -183,10 +170,6 @@
                 autocomplete="tel"
                 inputmode="tel"
                 placeholder="1123456789"
-                [attr.aria-invalid]="errorRegistro('telefono')"
-                [attr.aria-describedby]="
-                  errorRegistro('telefono') ? 'registro-telefono-error' : null
-                "
               />
               @if (
                 formularioRegistro.telefono().invalid() && formularioRegistro.telefono().touched()
@@ -205,8 +188,6 @@
                 [formField]="formularioRegistro.dni"
                 inputmode="numeric"
                 placeholder="12345678"
-                [attr.aria-invalid]="errorRegistro('dni')"
-                [attr.aria-describedby]="errorRegistro('dni') ? 'registro-dni-error' : null"
               />
               @if (formularioRegistro.dni().invalid() && formularioRegistro.dni().touched()) {
                 <p id="registro-dni-error" class="campo__error">
@@ -217,24 +198,19 @@
           </div>
 
           <div class="campo">
-            <label class="campo__etiqueta" for="registro-contrasenia">Contrase&ntilde;a</label>
+            <label class="campo__etiqueta" for="registro-contrasenia">Contraseña</label>
             <div class="campo__contenedor">
               <input
                 id="registro-contrasenia"
                 [type]="mostrarContraseniaRegistro() ? 'text' : 'password'"
                 [formField]="formularioRegistro.contrasenia"
                 autocomplete="new-password"
-                placeholder="M&iacute;nimo 8 caracteres"
-                [attr.aria-invalid]="errorRegistro('contrasenia')"
-                [attr.aria-describedby]="
-                  errorRegistro('contrasenia') ? 'registro-contrasenia-error' : null
-                "
+                placeholder="Minimo 8 caracteres"
               />
               <button
                 class="campo__ver"
                 type="button"
-                aria-label="Mostrar u ocultar contrase&ntilde;a"
-                [attr.aria-pressed]="mostrarContraseniaRegistro()"
+                aria-label="Mostrar u ocultar contraseña"
                 (click)="alternarContraseniaRegistro()"
               >
                 {{ mostrarContraseniaRegistro() ? 'Ocultar' : 'Mostrar' }}
@@ -266,7 +242,7 @@
             <p class="auth__aviso auth__aviso--exito" role="status">
               Cuenta creada correctamente.
               <button class="auth__enlace" type="button" (click)="cambiarModo('login')">
-                Inicia sesi&oacute;n
+                Inicia sesion
               </button>
             </p>
           } @else if (estadoRegistro() === 'error') {
@@ -276,9 +252,9 @@
           }
 
           <p class="auth__alternativa">
-            &iquest;Ya tienes una cuenta?
+           ¿Ya tienes una cuenta?
             <button class="auth__enlace" type="button" (click)="cambiarModo('login')">
-              Iniciar sesi&oacute;n
+              Iniciar sesion
             </button>
           </p>
         </form>
@@ -287,6 +263,6 @@
   </main>
 
   <footer class="auth__pie">
-    <p>MetaGestor &middot; Soluciones metal&uacute;rgicas personalizadas</p>
+    <p>Baltec Soluciones metalurgicas personalizadas</p>
   </footer>
 </div>

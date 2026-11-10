@@ -74,9 +74,9 @@ describe('ContactoComponente', () => {
         error.textContent?.trim(),
       ),
     ).toEqual([
-      'Ingresa tu nombre.',
-      'Ingresa tu correo electrónico.',
-      'Ingresa tu teléfono.',
+      'Se necesita un nombre',
+      'Se necesita un correo electronico',
+      'Ingresa tu telefono',
       'Cuéntanos qué necesitas.',
     ]);
     expect(compilado.querySelector('.contacto__exito')).toBeNull();

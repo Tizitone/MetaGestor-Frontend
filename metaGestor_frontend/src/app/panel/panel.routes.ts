@@ -1,15 +1,17 @@
 import type { Routes } from '@angular/router';
+import { authGuard } from '../pagina-Auth/guards/auth-guard';
 
 /**
  * Rutas del panel de gestión.
  *
  * Se cargan de forma perezosa desde `app.routes.ts` y cada sección se carga
- * solo cuando el usuario navega a ella.
+ * solo cuando el usuario navega a ella. Todas exigen una sesión iniciada.
  */
 export const PANEL_ROUTES: Routes = [
   {
     path: '',
     title: 'Panel de gestión | MetaGestor',
+    canActivate: [authGuard],
     loadComponent: () => import('./panel').then((m) => m.Panel),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'clientes' },
