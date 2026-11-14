@@ -40,7 +40,7 @@ export class Panel {
         { path: '/panel/registros', label: 'Registros', count: this.data.registros().length },
       ];
     }
-    
+
     if (currentRol.includes('GERENTE')) {
       return [
         { path: '/panel/clientes', label: 'Clientes', count: this.data.clientes().length },
@@ -49,13 +49,23 @@ export class Panel {
         { path: '/panel/registros', label: 'Registros', count: this.data.registros().length },
       ];
     }
-    
+
     if (currentRol.includes('EMPLEADO')) {
+      const idUsuario = this.sesion.idUsuario();
+
       return [
-        { path: '/panel/tareas', label: 'Tareas', count: this.data.buscarHistorialEmpleados().length },
+        // El empleado siempre puede volver a su perfil desde cualquier sección.
+        ...(idUsuario
+          ? [{ path: `/panel/empleados/${idUsuario}`, label: 'Mi perfil' } as const]
+          : []),
+        {
+          path: '/panel/tareas',
+          label: 'Tareas',
+          count: this.data.buscarHistorialEmpleados().length,
+        },
       ];
     }
-    
+
     if (currentRol.includes('CLIENTE')) {
       const idUsuario = this.sesion.idUsuario();
 
