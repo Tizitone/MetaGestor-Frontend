@@ -33,14 +33,6 @@ export const PANEL_ROUTES: Routes = [
         loadComponent: () => import('./tablas/empleados/empleados').then((m) => m.Empleados),
       },
       {
-        path: 'empleados/:legajo',
-        title: 'Perfil de empleado | MetaGestor',
-        loadComponent: () =>
-          import('./tablas/empleados/perfil-empleado/perfil-empleado').then(
-            (m) => m.PerfilEmpleado,
-          ),
-      },
-      {
         path: 'tareas',
         title: 'Tareas | MetaGestor',
         loadComponent: () => import('./tablas/tareas/tareas').then((m) => m.Tareas),
