@@ -110,5 +110,14 @@ export class Empleados {
       align: 'end',
       width: '7rem',
     },
+    {
+      key: 'perfil',
+      header: 'Perfil',
+      value: (empleado) => String(empleado.legajo),
+      display: () => 'Ver perfil',
+      link: (empleado) => `/panel/empleados/${empleado.legajo}`,
+      sortable: false,
+      width: '7.5rem',
+    },
   ];
 }

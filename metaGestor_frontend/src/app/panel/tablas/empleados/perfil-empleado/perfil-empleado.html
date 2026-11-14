@@ -1,0 +1,150 @@
+<section class="page" aria-labelledby="perfil-empleado-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Empleados</p>
+      <h1 id="perfil-empleado-title" class="page__title">
+        {{ empleado()?.nombre ?? 'Empleado #' + legajo() }}
+      </h1>
+      <p class="page__description">
+        Consulta las tareas asignadas al empleado y actualiza el estado de los registros
+        vinculados a esas tareas.
+      </p>
+    </div>
+    <p class="page__summary">
+      <strong>{{ registros().length }}</strong> registros asociados
+    </p>
+  </header>
+
+  @if (empleado(); as empleadoActual) {
+    @if (esEmpleado) {
+      <a class="perfil__volver" routerLink="/panel/tareas">← Volver a mis tareas</a>
+    } @else {
+      <a class="perfil__volver" routerLink="/panel/empleados">← Volver a empleados</a>
+    }
+
+    <section class="perfil__panel" aria-labelledby="perfil-datos-title">
+      <h2 id="perfil-datos-title" class="perfil__seccion-titulo">Datos del empleado</h2>
+      <dl class="perfil__campos">
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Legajo</dt>
+          <dd class="perfil__valor perfil__valor--mono">#{{ empleadoActual.legajo }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Correo</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ empleadoActual.email }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Teléfono</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ empleadoActual.telefono }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">DNI</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ empleadoActual.dni }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="perfil-tareas-title">
+      <h2 id="perfil-tareas-title" class="perfil__seccion-titulo">
+        Tareas asignadas ({{ tareas().length }})
+      </h2>
+      @if (tareas().length > 0) {
+        <ul class="perfil__tareas">
+          @for (tarea of tareas(); track tarea.idTarea) {
+            <li class="tarea">
+              <p class="tarea__titulo">{{ tarea.titulo || tarea.descripcionGeneral }}</p>
+              <p class="tarea__detalle">
+                <strong>Categoría:</strong> {{ categoriaLabel[tarea.categorias] }}
+                <span aria-hidden="true">·</span>
+                <strong>Entrega:</strong> {{ fechaEntrega(tarea) }}
+                <span aria-hidden="true">·</span>
+                <strong>Cantidad:</strong> {{ tarea.cantidad }}
+              </p>
+              <p class="tarea__detalle">
+                <strong>Material:</strong> {{ tarea.descripcionMaterial }}
+              </p>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="perfil__vacio" role="status">
+          <span class="perfil__vacio-icono" aria-hidden="true">⌕</span>
+          <p class="perfil__vacio-texto">Sin tareas asignadas</p>
+        </div>
+      }
+    </section>
+
+    <section aria-labelledby="perfil-registros-title">
+      <h2 id="perfil-registros-title" class="perfil__seccion-titulo">Registros asociados</h2>
+
+      @if (error()) {
+        <p class="page__alerta" role="alert">{{ error() }}</p>
+      }
+      @if (aviso()) {
+        <p class="perfil__aviso" role="status">{{ aviso() }}</p>
+      }
+
+      @if (registros().length > 0) {
+        <ul class="perfil__registros">
+          @for (registro of registros(); track registro.id) {
+            <li class="registro">
+              <div class="registro__cuerpo">
+                <p class="registro__titulo">{{ registro.titulo }}</p>
+                <p class="registro__detalle">
+                  <strong>Tarea:</strong>
+                  {{ resumenTarea(registro.tareaId) }}
+                </p>
+                <p class="registro__detalle">
+                  <strong>Publicado:</strong>
+                  {{ registro.publicado ? 'Sí' : 'No' }}
+                </p>
+              </div>
+              <div class="registro__meta">
+                <span [class]="'perfil__badge perfil__badge--' + tonoProceso(registro.proceso)">{{
+                  procesoLabel[registro.proceso]
+                }}</span>
+                <label class="registro__estado">
+                  <span class="visually-hidden">Estado del registro {{ registro.id }}</span>
+                  <select
+                    class="registro__select"
+                    [value]="procesoDe(registro)"
+                    [disabled]="guardando() !== null"
+                    (change)="seleccionar(registro, $event)"
+                  >
+                    @for (proceso of procesos; track proceso) {
+                      <option [value]="proceso">{{ procesoLabel[proceso] }}</option>
+                    }
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  class="perfil__boton"
+                  [disabled]="guardando() !== null || procesoDe(registro) === registro.proceso"
+                  (click)="guardar(registro)"
+                >
+                  {{ guardando() === registro.id ? 'Guardando…' : 'Guardar estado' }}
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="perfil__vacio" role="status">
+          <span class="perfil__vacio-icono" aria-hidden="true">⌕</span>
+          <p class="perfil__vacio-texto">Sin registros asociados</p>
+        </div>
+      }
+    </section>
+  } @else {
+    <section class="perfil__no-encontrado" role="alert">
+      <p class="perfil__no-encontrado-texto">
+        No encontramos el empleado <strong>#{{ legajo() }}</strong>.
+      </p>
+      @if (esEmpleado) {
+        <a class="perfil__volver" routerLink="/panel/tareas">← Volver a mis tareas</a>
+      } @else {
+        <a class="perfil__volver" routerLink="/panel/empleados">← Volver a empleados</a>
+      }
+    </section>
+  }
+</section>

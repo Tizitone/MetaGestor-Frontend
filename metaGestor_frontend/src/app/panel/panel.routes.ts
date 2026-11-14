@@ -1,4 +1,8 @@
 import type { Routes } from '@angular/router';
+import {
+  perfilEmpleadoGuard,
+  sinAbmEmpleadoGuard,
+} from '../pagina-Auth/guards/empleado-guard';
 import { authGuard } from '../pagina-Auth/guards/auth-guard';
 import { redireccionInicioPanel } from '../pagina-Auth/guards/redireccion-por-rol';
 
@@ -19,18 +23,30 @@ export const PANEL_ROUTES: Routes = [
       {
         path: 'clientes',
         title: 'Clientes | MetaGestor',
+        canActivate: [sinAbmEmpleadoGuard],
         loadComponent: () => import('./tablas/clientes/clientes').then((m) => m.Clientes),
       },
       {
         path: 'clientes/:idCliente',
         title: 'Perfil de cliente | MetaGestor',
+        canActivate: [sinAbmEmpleadoGuard],
         loadComponent: () =>
           import('./tablas/clientes/perfil-cliente/perfil-cliente').then((m) => m.PerfilCliente),
       },
       {
         path: 'empleados',
         title: 'Empleados | MetaGestor',
+        canActivate: [sinAbmEmpleadoGuard],
         loadComponent: () => import('./tablas/empleados/empleados').then((m) => m.Empleados),
+      },
+      {
+        path: 'empleados/:legajo',
+        title: 'Perfil de empleado | MetaGestor',
+        canActivate: [perfilEmpleadoGuard],
+        loadComponent: () =>
+          import('./tablas/empleados/perfil-empleado/perfil-empleado').then(
+            (m) => m.PerfilEmpleado,
+          ),
       },
       {
         path: 'tareas',
@@ -40,11 +56,13 @@ export const PANEL_ROUTES: Routes = [
       {
         path: 'solicitudes',
         title: 'Solicitudes | MetaGestor',
+        canActivate: [sinAbmEmpleadoGuard],
         loadComponent: () => import('./tablas/solicitudes/solicitudes').then((m) => m.Solicitudes),
       },
       {
         path: 'registros',
         title: 'Registros | MetaGestor',
+        canActivate: [sinAbmEmpleadoGuard],
         loadComponent: () => import('./tablas/registros/registros').then((m) => m.Registros),
       },
     ],

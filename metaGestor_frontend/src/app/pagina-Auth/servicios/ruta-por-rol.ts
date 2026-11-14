@@ -16,7 +16,8 @@ export function rutaInicioPorRol(
   }
 
   if (rolActual.includes('EMPLEADO')) {
-    return ['/panel/tareas'];
+    // El perfil es el único lugar donde el empleado puede actualizar registros.
+    return idUsuario ? ['/panel/empleados', String(idUsuario)] : ['/panel/tareas'];
   }
 
   // ADMIN y GERENTE administran el panel desde la lista de clientes.

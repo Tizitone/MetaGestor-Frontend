@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormTarea } from './form-tarea/form-tarea';
 import { PanelData } from '../../panel-data/panel-data';
 import { CATEGORIA_LABEL, CategoriaTarea, Tarea } from '../../panel.model';
 import { BadgeTone, DataTable, FilterOption, TableColumn } from '../../data-table/data-table';
 import { Modal } from '../../modal/modal';
 import { formatDate, formatDateTime } from '../../extras/format';
+import { SesionService } from '../../../pagina-Auth/servicios/sesion-service';
 
 const CATEGORIA_OPTIONS: readonly FilterOption[] = (
   Object.keys(CATEGORIA_LABEL) as CategoriaTarea[]
@@ -23,15 +25,28 @@ function toneCategoria(tarea: Tarea): BadgeTone {
 
 @Component({
   selector: 'app-tareas',
-  imports: [DataTable, FormTarea, Modal],
+  imports: [DataTable, FormTarea, Modal, RouterLink],
   templateUrl: './tareas.html',
   styleUrl: '../page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tareas {
   private readonly data = inject(PanelData);
+  private readonly sesion = inject(SesionService);
 
-  protected readonly tareas = this.data.tareas;
+  /**
+   * El empleado solo consulta las tareas de su historial. La creación,
+   * modificación y baja quedan reservadas a los roles de gestión.
+   */
+  protected readonly esEmpleado = computed(() =>
+    (this.sesion.rol() ?? '').toUpperCase().includes('EMPLEADO'),
+  );
+
+  protected readonly idUsuario = this.sesion.idUsuario;
+
+  protected readonly tareas = computed<readonly Tarea[]>(() =>
+    this.esEmpleado() ? this.data.buscarHistorialEmpleados() : this.data.tareas(),
+  );
 
   // --- Alta y modificación ---
 
@@ -83,7 +98,8 @@ export class Tareas {
     {
       key: 'titulo',
       header: 'Título',
-      value: (tarea) => tarea.titulo,
+      value: (tarea) => tarea.titulo || tarea.descripcionGeneral,
+      display: (tarea) => tarea.titulo || tarea.descripcionGeneral,
       filter: 'text',
       filterPlaceholder: 'Nombre del trabajo',
       width: '14rem',

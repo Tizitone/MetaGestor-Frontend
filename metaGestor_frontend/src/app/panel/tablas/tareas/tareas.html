@@ -4,20 +4,33 @@
       <p class="page__eyebrow">Gestión · Tareas</p>
       <h1 id="tareas-title" class="page__title">Tareas</h1>
       <p class="page__description">
-        Administra las tareas de fabricación: crea, modifica o elimina trabajos y revisa su
-        categoría, fechas, materiales y cantidades.
+        @if (esEmpleado()) {
+          Revisa las tareas asignadas a tu perfil. Para actualizar el estado de un registro,
+          entra a tu perfil.
+        } @else {
+          Administra las tareas de fabricación: crea, modifica o elimina trabajos y revisa su
+          categoría, fechas, materiales y cantidades.
+        }
       </p>
     </div>
   </header>
 
-  <div class="page__actions">
-    <button type="button" class="page__boton" (click)="abrirCreacion()">
-      <span aria-hidden="true">+</span> Nueva tarea
-    </button>
-  </div>
+  @if (esEmpleado()) {
+    @if (idUsuario(); as id) {
+      <div class="page__actions">
+        <a class="page__boton" [routerLink]="['/panel/empleados', id]">Mi perfil</a>
+      </div>
+    }
+  } @else {
+    <div class="page__actions">
+      <button type="button" class="page__boton" (click)="abrirCreacion()">
+        <span aria-hidden="true">+</span> Nueva tarea
+      </button>
+    </div>
 
-  @if (errorEliminar()) {
-    <p class="page__alerta" role="alert">{{ errorEliminar() }}</p>
+    @if (errorEliminar()) {
+      <p class="page__alerta" role="alert">{{ errorEliminar() }}</p>
+    }
   }
 
   <app-data-table
@@ -27,12 +40,12 @@
     [columns]="columns"
     [rows]="tareas()"
     [rowId]="rowId"
-    [mostrarAcciones]="true"
+    [mostrarAcciones]="!esEmpleado()"
     (filaModificada)="abrirModificacion($event)"
     (filaEliminada)="eliminar($event)"
   />
 
-  @if (modalAbierta()) {
+  @if (!esEmpleado() && modalAbierta()) {
     <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">
       <app-form-tarea
         [tarea]="tareaEnEdicion()"

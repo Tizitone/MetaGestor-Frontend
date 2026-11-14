@@ -93,6 +93,9 @@ export class PanelData {
   /** `true` cuando la sesión pertenece a un cliente. */
   readonly esCliente = this.rol === 'CLIENTE';
 
+  /** `true` cuando la sesión pertenece a un empleado. */
+  readonly esEmpleado = this.rol === 'EMPLEADO';
+
   idActual = signal<number>(0);
   private readonly idActual$ = toObservable(this.idActual);
   /**
@@ -178,6 +181,27 @@ export class PanelData {
       ),
     ),
     { initialValue: [] },
+  );
+
+  /** Legajo del empleado que se está consultando en su perfil. */
+  legajoActual = signal<number>(0);
+  private readonly legajoActual$ = toObservable(this.legajoActual);
+
+  /**
+   * Empleado leído desde `empleados/{legajo}`. Si el endpoint falla se degrada
+   * a `null` y el perfil recurre a la colección cargada.
+   */
+  private readonly empleadoRemoto = toSignal(
+    this.legajoActual$.pipe(
+      filter((legajo) => legajo > 0),
+      switchMap((legajo) =>
+        this.http.get<EmpleadoJpa>(`${this.urlApi}/empleados/${legajo}`).pipe(
+          map(normalizarEmpleado),
+          catchError(() => of(null)),
+        ),
+      ),
+    ),
+    { initialValue: null },
   );
 
   /**
@@ -428,5 +452,22 @@ export class PanelData {
     return (
       this.participantes().find((empleado) => empleado.legajo === legajo)?.nombre ?? `Legajo #${legajo}`
     );
+  }
+
+  /**
+   * Empleado consultado en el perfil. Usa `GET /api/empleados/{legajo}` y, si
+   * esa consulta aún no respondió o falló, resuelve desde la colección cargada.
+   */
+  buscarEmpleado(legajo: number): Empleado | null {
+    if (legajo <= 0) {
+      return null;
+    }
+
+    const remoto = this.empleadoRemoto();
+    if (remoto?.legajo === legajo) {
+      return remoto;
+    }
+
+    return this.empleados().find((empleado) => empleado.legajo === legajo) ?? null;
   }
 }

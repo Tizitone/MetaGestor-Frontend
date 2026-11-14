@@ -51,8 +51,18 @@ export class Panel {
     }
     
     if (currentRol.includes('EMPLEADO')) {
+      const idUsuario = this.sesion.idUsuario();
+
       return [
-        { path: '/panel/tareas', label: 'Tareas', count: this.data.buscarHistorialEmpleados().length },
+        // El empleado administra el estado de sus registros desde su perfil.
+        ...(idUsuario
+          ? [{ path: `/panel/empleados/${idUsuario}`, label: 'Mi perfil' } as const]
+          : []),
+        {
+          path: '/panel/tareas',
+          label: 'Tareas',
+          count: this.data.buscarHistorialEmpleados().length,
+        },
       ];
     }
     
