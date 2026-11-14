@@ -32,7 +32,7 @@ describe('InicioPantalla', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('.portada__titulo')?.textContent).toContain('Baltec');
+    expect(compiled.querySelector('.portada__titulo')?.textContent).toContain('MetaGestor');
     expect(compiled.querySelector('.portada__subtitulo')?.textContent).toContain(
       'Soluciones metalúrgicas personalizadas',
     );
