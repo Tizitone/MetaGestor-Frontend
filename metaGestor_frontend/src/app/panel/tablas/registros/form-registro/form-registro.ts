@@ -65,7 +65,7 @@ export class FormRegistro {
   /** Colecciones que alimentan los selects de tarea, cliente y participantes. */
   protected readonly tareas = this.data.tareas;
   protected readonly clientes = this.data.clientes;
-  protected readonly empleados = this.data.empleados;
+  protected readonly empleados = this.data.participantes;
 
   protected readonly estadoEnvio = signal<EstadoEnvio>('inicial');
   protected readonly creando = computed(() => this.registro() === null);

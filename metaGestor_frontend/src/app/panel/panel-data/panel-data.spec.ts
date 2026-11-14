@@ -60,6 +60,17 @@ describe('PanelData', () => {
       },
     ]);
 
+    // `registros/participantes` es la fuente de nombres para la tabla.
+    http.expectOne(`${urlApi}/registros/buscar/participantes`).flush([
+      {
+        legajo: 1001,
+        nombre: 'Luis Martínez',
+        email: 'lmartinez@metagestor.cl',
+        telefono: '911223344',
+        dni: 16001122,
+      },
+    ]);
+
     http.expectOne(`${urlApi}/tareas/buscar/all`).flush([
       {
         idTarea: 1,

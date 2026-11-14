@@ -4,6 +4,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { URL_API } from '../compartido/url-api';
+import { CLAVE_SESION } from '../pagina-Auth/servicios/sesion-service';
 import { Panel } from './panel';
 import { PANEL_ROUTES } from './panel.routes';
 
@@ -13,6 +14,11 @@ describe('Panel', () => {
   let http: HttpTestingController;
 
   beforeEach(async () => {
+    sessionStorage.setItem(
+      CLAVE_SESION,
+      JSON.stringify({ token: 'jwt', rol: 'ADMIN', idUsuario: 1 }),
+    );
+
     await TestBed.configureTestingModule({
       imports: [Panel],
       providers: [
@@ -34,6 +40,7 @@ describe('Panel', () => {
   });
 
   afterEach(() => {
+    sessionStorage.removeItem(CLAVE_SESION);
     http.verify();
   });
 

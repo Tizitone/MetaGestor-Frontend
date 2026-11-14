@@ -1,5 +1,6 @@
 import type { Routes } from '@angular/router';
 import { authGuard } from '../pagina-Auth/guards/auth-guard';
+import { redireccionInicioPanel } from '../pagina-Auth/guards/redireccion-por-rol';
 
 /**
  * Rutas del panel de gestión.
@@ -14,7 +15,7 @@ export const PANEL_ROUTES: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./panel').then((m) => m.Panel),
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'clientes' },
+      { path: '', pathMatch: 'full', redirectTo: redireccionInicioPanel },
       {
         path: 'clientes',
         title: 'Clientes | MetaGestor',

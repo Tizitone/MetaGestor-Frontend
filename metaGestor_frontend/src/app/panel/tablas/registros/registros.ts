@@ -51,11 +51,14 @@ function tonePublicado(registro: RegistroVista): BadgeTone {
 export class Registros {
   private readonly data = inject(PanelData);
 
+  /** Un cliente solo consulta sus registros; no puede crear, editar ni borrar. */
+  protected readonly esCliente = this.data.esCliente;
+
   protected readonly registros = computed<readonly RegistroVista[]>(() =>
     this.data.registros().map((registro) => ({
       ...registro,
       clienteNombre: this.data.nombreDeCliente(registro.clienteId),
-      tareaDescripcion: this.data.resumenDeTarea(registro.tareaId),
+      tareaDescripcion: this.data.resumenDeTareaDeRegistro(registro),
       participantes:
         registro.participantesId.map((legajo) => this.data.nombreDeEmpleado(legajo)).join(', ') ||
         'Sin participantes',

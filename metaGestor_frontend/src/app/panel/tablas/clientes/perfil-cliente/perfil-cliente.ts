@@ -74,7 +74,7 @@ private readonly data = inject(PanelData);
       .buscarRegistrosCliente() // Usamos la señal optimizada del servicio
       .map((registro) => ({
         ...registro,
-        tareaDescripcion: this.data.resumenDeTarea(registro.tareaId),
+        tareaDescripcion: this.data.resumenDeTareaDeRegistro(registro),
         participantes:
           registro.participantesId.map((legajo) => this.data.nombreDeEmpleado(legajo)).join(', ') ||
           'Sin participantes',

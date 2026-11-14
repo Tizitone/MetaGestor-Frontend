@@ -15,7 +15,9 @@
           [attr.aria-current]="link.isActive ? 'page' : null"
         >
           <span>{{ section.label }}</span>
-          <span class="nav__count">{{ section.count }}</span>
+          @if (section.count !== undefined) {
+            <span class="nav__count">{{ section.count }}</span>
+          }
         </a>
       }
     </nav>

@@ -1,7 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Service, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { filter, firstValueFrom, map, startWith, Subject, switchMap } from 'rxjs';
+import {
+  catchError,
+  filter,
+  firstValueFrom,
+  forkJoin,
+  map,
+  of,
+  startWith,
+  Subject,
+  switchMap,
+} from 'rxjs';
+import type { Observable } from 'rxjs';
+import { SesionService } from '../../pagina-Auth/servicios/sesion-service';
 import { URL_API } from '../../compartido/url-api';
 import type {
   CategoriaTarea,
@@ -30,12 +42,30 @@ interface TareaJpa {
   cantidad: number;
 }
 
-type EmpleadoJpa = Omit<Empleado, 'historial'> & { historial: TareaJpa[] };
+/**
+ * Empleado tal como lo devuelve el backend.
+ *
+ * `empleados/buscar/all` incluye el historial como entidad JPA, mientras que
+ * `registros/buscar/participantes` devuelve solo los datos del empleado. Por eso
+ * el historial es opcional.
+ */
+type EmpleadoJpa = Omit<Empleado, 'historial'> & { historial?: readonly TareaJpa[] };
 
-function normalizarEmpleado({ historial, ...empleado }: EmpleadoJpa): Empleado {
+function normalizarEmpleado({
+  legajo,
+  nombre,
+  email,
+  telefono,
+  dni,
+  historial,
+}: EmpleadoJpa): Empleado {
   return {
-    ...empleado,
-    historial: historial.map((tarea) => ({
+    legajo,
+    nombre,
+    email,
+    telefono,
+    dni,
+    historial: (historial ?? []).map((tarea) => ({
       idTarea: tarea.id,
       categorias: tarea.categorias,
       titulo: tarea.titulo,
@@ -52,7 +82,18 @@ function normalizarEmpleado({ historial, ...empleado }: EmpleadoJpa): Empleado {
 export class PanelData {
   private readonly http = inject(HttpClient);
   private readonly urlApi = inject(URL_API);
- idActual = signal<number>(0);
+  private readonly sesion = inject(SesionService);
+
+  /**
+   * Rol de la sesión actual. El servicio se provee a nivel del panel, por lo
+   * que se crea después del login y no cambia mientras el panel está abierto.
+   */
+  private readonly rol = (this.sesion.rol() ?? '').toUpperCase();
+
+  /** `true` cuando la sesión pertenece a un cliente. */
+  readonly esCliente = this.rol === 'CLIENTE';
+
+  idActual = signal<number>(0);
   private readonly idActual$ = toObservable(this.idActual);
   /**
    * Emite cada vez que una operación de escritura termina con éxito para
@@ -61,53 +102,199 @@ export class PanelData {
   private readonly refresco$ = new Subject<void>();
   private readonly cambios$ = this.refresco$.pipe(startWith(undefined));
 
+  /**
+   * El backend autoriza cada colección según el rol. Cuando no hay rol (por
+   * ejemplo en las pruebas) se mantiene el comportamiento permisivo anterior.
+   */
+  private permite(...roles: string[]): boolean {
+    return this.rol === '' || roles.includes(this.rol);
+  }
+
+  constructor() {
+    // Un cliente siempre debe ver sus propios registros, incluso si recarga la
+    // página en una sección distinta a su perfil.
+    if (this.esCliente) {
+      const idUsuario = this.sesion.idUsuario();
+      if (idUsuario) {
+        this.idActual.set(idUsuario);
+      }
+    }
+  }
+
   readonly clientes = toSignal(
     this.cambios$.pipe(
-      switchMap(() => this.http.get<Cliente[]>(`${this.urlApi}/clientes/buscar/all`)),
-    ),
-    { initialValue: [] },
-  );
-
-readonly buscarCliente = toSignal(
-    this.idActual$.pipe(
-      filter(id => id > 0), // Opcional: evita buscar si el ID es 0
-      switchMap(id => this.http.get<Cliente>(`${this.urlApi}/clientes/${id}`))
-    ),
-    { initialValue: null } // Un cliente individual, no un array
-  );
-  readonly empleados = toSignal(
-    this.cambios$.pipe(
       switchMap(() =>
-        this.http
-          .get<EmpleadoJpa[]>(`${this.urlApi}/empleados/buscar/all`)
-          .pipe(map((empleados) => empleados.map(normalizarEmpleado))),
+        this.permite('ADMIN', 'GERENTE')
+          ? this.http.get<Cliente[]>(`${this.urlApi}/clientes/buscar/all`)
+          : of<Cliente[]>([]),
       ),
     ),
     { initialValue: [] },
   );
 
-  readonly buscarRegistrosCliente = toSignal(this.http.get<Registro[]>(`${this.urlApi}/registros/buscar/cliente/${this.idActual()}`),{
-    initialValue: [],
-  });
-
-  readonly buscarHistorialEmpleados = toSignal(this.http.get<Tarea[]>(`${this.urlApi}/empleados/historial`),{
-    initialValue: [],
-  });
-
-  readonly tareas = toSignal(this.http.get<Tarea[]>(`${this.urlApi}/tareas/buscar/all`),{
-    initialValue: [],
-    }
+  /**
+   * Cliente leído desde `clientes/{id}`. Ese endpoint solo está habilitado para
+   * el rol CLIENTE; los demás roles resuelven el cliente desde la colección.
+   */
+  private readonly clienteRemoto = toSignal(
+    this.idActual$.pipe(
+      filter((id) => id > 0),
+      switchMap((id) =>
+        this.esCliente
+          ? this.http
+              .get<Cliente>(`${this.urlApi}/clientes/${id}`)
+              .pipe(catchError(() => of(null)))
+          : of(null),
+      ),
+    ),
+    { initialValue: null },
   );
 
+  readonly buscarCliente = computed<Cliente | null>(() => {
+    const id = this.idActual();
+    if (id <= 0) {
+      return null;
+    }
 
+    return (
+      this.clienteRemoto() ??
+      this.clientes().find((cliente) => cliente.idCliente === id) ??
+      null
+    );
+  });
+
+  readonly empleados = toSignal(
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('EMPLEADO', 'GERENTE', 'ADMIN')
+          ? this.http
+              .get<EmpleadoJpa[]>(`${this.urlApi}/empleados/buscar/all`)
+              .pipe(
+                map((empleados) => empleados.map(normalizarEmpleado)),
+                // Una colección inaccesible no debe romper las tablas.
+                catchError(() => of<Empleado[]>([])),
+              )
+          : of<Empleado[]>([]),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  /**
+   * `registros/buscar/participantes` está reservado al rol CLIENTE por el
+   * `SecurityConfig` del backend. Los demás roles obtienen los mismos nombres
+   * desde `empleados/buscar/all`, al que sí tienen acceso.
+   */
+  private readonly usarParticipantes = this.rol === '' || this.esCliente;
+
+  private readonly participantesRemotos = toSignal(
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('CLIENTE')
+          ? this.http
+              .get<EmpleadoJpa[]>(`${this.urlApi}/registros/buscar/participantes`)
+              .pipe(
+                map((empleados) => empleados.map(normalizarEmpleado)),
+                // Un 403 no debe romper las tablas: se degrada a lista vacía.
+                catchError(() => of<Empleado[]>([])),
+              )
+          : of<Empleado[]>([]),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  /**
+   * Nombres de empleados para resolver los participantes de un registro. El
+   * cliente los lee del endpoint de participantes; el resto de los roles
+   * reutiliza la colección completa de empleados.
+   */
+  readonly participantes = computed<readonly Empleado[]>(() =>
+    this.usarParticipantes ? this.participantesRemotos() : this.empleados(),
+  );
+
+  readonly buscarRegistrosCliente = toSignal(
+    this.idActual$.pipe(
+      filter((id) => id > 0),
+      switchMap((id) =>
+        this.http
+          .get<Registro[]>(`${this.urlApi}/registros/buscar/cliente/${id}`)
+          .pipe(catchError(() => of<Registro[]>([]))),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  /**
+   * Título de la tarea de cada registro del cliente.
+   *
+   * El rol CLIENTE no puede consultar `tareas/buscar/all`, pero sí
+   * `registros/buscar/tareas/{idRegistro}`. Los demás roles resuelven la tarea
+   * desde la colección completa.
+   */
+  private readonly tareasDeRegistrosCliente = toSignal(
+    toObservable(this.buscarRegistrosCliente).pipe(
+      switchMap((registros) => {
+        if (!this.esCliente || registros.length === 0) {
+          return of(new Map<number, Tarea>());
+        }
+
+        return this.cargarTareasDeRegistros(registros);
+      }),
+    ),
+    { initialValue: new Map<number, Tarea>() },
+  );
+
+  readonly buscarHistorialEmpleados = toSignal(
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('EMPLEADO')
+          ? this.http.get<Tarea[]>(`${this.urlApi}/empleados/historial`)
+          : of<Tarea[]>([]),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  readonly tareas = toSignal(
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('EMPLEADO', 'GERENTE', 'ADMIN')
+          ? this.http.get<Tarea[]>(`${this.urlApi}/tareas/buscar/all`)
+          : of<Tarea[]>([]),
+      ),
+    ),
+    { initialValue: [] },
+  );
 
   readonly solicitudes = toSignal(
-     this.http.get<Solicitud[]>(`${this.urlApi}/solicitudes/buscar/all`),
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('ADMIN', 'GERENTE')
+          ? this.http.get<Solicitud[]>(`${this.urlApi}/solicitudes/buscar/all`)
+          : of<Solicitud[]>([]),
+      ),
+    ),
     { initialValue: [] },
   );
 
-  readonly registros = toSignal(this.http.get<Registro[]>(`${this.urlApi}/registros/buscar/all`),
+  private readonly registrosTodos = toSignal(
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('EMPLEADO', 'GERENTE', 'ADMIN')
+          ? this.http.get<Registro[]>(`${this.urlApi}/registros/buscar/all`)
+          : of<Registro[]>([]),
+      ),
+    ),
     { initialValue: [] },
+  );
+
+  /**
+   * Para un cliente, la tabla de registros muestra únicamente los suyos. El
+   * resto de roles sigue viendo la colección completa.
+   */
+  readonly registros = computed<readonly Registro[]>(() =>
+    this.esCliente ? this.buscarRegistrosCliente() : this.registrosTodos(),
   );
 
   // --- Mutaciones: cada operación recarga las colecciones al terminar. ---
@@ -191,20 +378,55 @@ readonly buscarCliente = toSignal(
   private refrescar(): void {
     this.refresco$.next();
   }
-  nombreDeCliente(id: number): string {
 
-    return this.clientes().find((cliente) => cliente.idCliente === id)?.nombre ?? `Cliente #${id}`;
+  private cargarTareasDeRegistros(registros: readonly Registro[]): Observable<Map<number, Tarea>> {
+    const peticiones = registros.map((registro) =>
+      this.http.get<Tarea[]>(`${this.urlApi}/registros/buscar/tareas/${registro.id}`).pipe(
+        map((tareas) => ({ id: registro.id, tarea: tareas[0] ?? null })),
+        catchError(() => of({ id: registro.id, tarea: null as Tarea | null })),
+      ),
+    );
+
+    return forkJoin(peticiones).pipe(
+      map((resultados) => {
+        const tareas = new Map<number, Tarea>();
+        for (const { id, tarea } of resultados) {
+          if (tarea) {
+            tareas.set(id, tarea);
+          }
+        }
+        return tareas;
+      }),
+    );
   }
 
+  nombreDeCliente(id: number): string {
+    const cliente = this.clientes().find((actual) => actual.idCliente === id);
+    if (cliente) {
+      return cliente.nombre;
+    }
 
-  resumenDeTarea(id: number): string {
-    const tarea = this.tareas().find((actual) => actual.idTarea === id);
-    return tarea?.titulo || tarea?.descripcionGeneral || `Tarea #${id}`;
+    const clienteActual = this.buscarCliente();
+    return clienteActual?.idCliente === id ? clienteActual.nombre : `Cliente #${id}`;
+  }
+
+  resumenDeTarea(idTarea: number): string {
+    const tarea = this.tareas().find((actual) => actual.idTarea === idTarea);
+    return tarea?.titulo || tarea?.descripcionGeneral || `Tarea #${idTarea}`;
+  }
+
+  /** Resuelve la tarea de un registro usando la vía permitida para cada rol. */
+  resumenDeTareaDeRegistro(registro: Registro): string {
+    const tarea =
+      this.tareasDeRegistrosCliente().get(registro.id) ??
+      this.tareas().find((actual) => actual.idTarea === registro.tareaId);
+
+    return tarea?.titulo || tarea?.descripcionGeneral || `Tarea #${registro.tareaId}`;
   }
 
   nombreDeEmpleado(legajo: number): string {
     return (
-      this.empleados().find((empleado) => empleado.legajo === legajo)?.nombre ?? `Legajo #${legajo}`
+      this.participantes().find((empleado) => empleado.legajo === legajo)?.nombre ?? `Legajo #${legajo}`
     );
   }
 }

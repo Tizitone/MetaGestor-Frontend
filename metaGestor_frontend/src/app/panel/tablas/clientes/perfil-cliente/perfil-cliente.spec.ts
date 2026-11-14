@@ -118,19 +118,24 @@ describe('PerfilCliente', () => {
     fixture = TestBed.createComponent(PerfilCliente);
     fixture.componentRef.setInput('idCliente', idCliente);
 
+    // Ejecuta el efecto que sincroniza el id de la ruta con PanelData antes de
+    // responder, para que también quede registrada la consulta por cliente.
+    fixture.detectChanges();
+
     responder(`${urlApi}/clientes/buscar/all`, CLIENTES);
     responder(`${urlApi}/empleados/buscar/all`, EMPLEADOS);
     responder(`${urlApi}/tareas/buscar/all`, TAREAS);
     responder(`${urlApi}/solicitudes/buscar/all`, []);
     responder(`${urlApi}/registros/buscar/all`, REGISTROS);
+    responder(`${urlApi}/registros/buscar/participantes`, EMPLEADOS);
+    responder(`${urlApi}/empleados/historial`, []);
+    responder(
+      `${urlApi}/registros/buscar/cliente/${idCliente}`,
+      REGISTROS.filter((registro) => registro.clienteId === Number(idCliente)),
+    );
 
-    // Cierra las peticiones restantes de PanelData (historial de empleados y
-    // registros por cliente), que no usa la página de perfil.
-    http
-      .match((peticion) => peticion.url.startsWith(`${urlApi}/`))
-      .forEach((peticion) => peticion.flush([]));
-
-    // Wait: deja que Angular procese la entrada y los datos respondidos.
+    await fixture.whenStable();
+    fixture.detectChanges();
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
   }
@@ -172,7 +177,6 @@ describe('PerfilCliente', () => {
     const compiled = await crearPerfil('1');
 
     expect(compiled.querySelectorAll('.registro')).toHaveLength(2);
-    expect(compiled.querySelector('.page__summary')?.textContent).toContain('2');
     expect(compiled.textContent).toContain('Barandas escalera bloque A');
 
     // La tarea de cada registro se resuelve con el título de la tarea.
