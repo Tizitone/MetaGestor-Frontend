@@ -7,7 +7,12 @@ import {
 } from '../../data-table/data-table';
 import { Modal } from '../../modal/modal';
 import { PanelData } from '../../panel-data/panel-data';
-import { PROCESO_LABEL, type ProcesoRegistro, type Registro } from '../../panel.model';
+import {
+  PROCESO_LABEL,
+  type ProcesoRegistro,
+  type Registro,
+  type Tarea,
+} from '../../panel.model';
 import { FormRegistro } from './form-registro/form-registro';
 
 /** Registro enriquecido con los nombres que referencia por ID. */
@@ -73,6 +78,16 @@ export class Registros {
     this.registroEnEdicion() === null ? 'Nuevo registro' : 'Modificar registro',
   );
 
+  // --- Detalle ---
+
+  protected readonly detalleAbierto = signal(false);
+  protected readonly registroDetalle = signal<RegistroVista | null>(null);
+  protected readonly tareaDetalle = computed<Tarea | null>(() => {
+    const registro = this.registroDetalle();
+    return registro ? this.data.tareaDeRegistro(registro) : null;
+  });
+  protected readonly procesoLabel = PROCESO_LABEL;
+
   // --- Baja ---
 
   protected readonly errorEliminar = signal('');
@@ -91,6 +106,15 @@ export class Registros {
 
   protected cerrarModal(): void {
     this.modalAbierta.set(false);
+  }
+
+  protected verDetalle(registro: RegistroVista): void {
+    this.registroDetalle.set(registro);
+    this.detalleAbierto.set(true);
+  }
+
+  protected cerrarDetalle(): void {
+    this.detalleAbierto.set(false);
   }
 
   protected async eliminar(registro: RegistroVista): Promise<void> {
@@ -118,7 +142,7 @@ export class Registros {
       value: (registro) => registro.titulo,
       filter: 'text',
       filterPlaceholder: 'Nombre del trabajo',
-      width: '15rem',
+      width: '16rem',
     },
     {
       key: 'clienteNombre',
@@ -126,45 +150,18 @@ export class Registros {
       value: (registro) => registro.clienteNombre,
       filter: 'text',
       filterPlaceholder: 'Cliente',
-      width: '12rem',
-    },
-    {
-      key: 'tareaDescripcion',
-      header: 'Tarea',
-      value: (registro) => registro.tareaDescripcion,
-      filter: 'text',
-      filterPlaceholder: 'Descripción de tarea',
-      width: '16rem',
+      width: '14rem',
     },
     {
       key: 'proceso',
-      header: 'Proceso',
+      header: 'Estado',
       value: (registro) => registro.proceso,
       display: (registro) => PROCESO_LABEL[registro.proceso],
       kind: 'badge',
       tone: toneProceso,
       filter: 'select',
       filterOptions: PROCESO_OPTIONS,
-      width: '8.5rem',
-    },
-    {
-      key: 'participantes',
-      header: 'Participantes',
-      value: (registro) => registro.participantes,
-      filter: 'text',
-      filterPlaceholder: 'Empleado',
-      width: '16rem',
-    },
-    {
-      key: 'publicado',
-      header: 'Publicado',
-      value: (registro) => String(registro.publicado),
-      display: (registro) => (registro.publicado ? 'Sí' : 'No'),
-      kind: 'badge',
-      tone: tonePublicado,
-      filter: 'select',
-      filterOptions: PUBLICADO_OPTIONS,
-      width: '7.5rem',
+      width: '9rem',
     },
   ];
 }

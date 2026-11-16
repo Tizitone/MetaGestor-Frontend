@@ -104,7 +104,7 @@
               }
             </th>
           }
-          @if (mostrarAcciones()) {
+          @if (mostrarAcciones() || mostrarDetalle()) {
             <th scope="col" class="table__acciones">
               <span class="table__header">Acciones</span>
             </th>
@@ -146,24 +146,36 @@
                 }
               </td>
             }
-            @if (mostrarAcciones()) {
+            @if (mostrarAcciones() || mostrarDetalle()) {
               <td class="table__acciones">
-                <button
-                  type="button"
-                  class="table__accion"
-                  [attr.aria-label]="'Modificar fila'"
-                  (click)="filaModificada.emit(row)"
-                >
-                  Modificar
-                </button>
-                <button
-                  type="button"
-                  class="table__accion table__accion--peligro"
-                  [attr.aria-label]="'Eliminar fila'"
-                  (click)="filaEliminada.emit(row)"
-                >
-                  Eliminar
-                </button>
+                @if (mostrarDetalle()) {
+                  <button
+                    type="button"
+                    class="table__accion"
+                    [attr.aria-label]="'Ver detalle'"
+                    (click)="filaDetalle.emit(row)"
+                  >
+                    Ver detalle
+                  </button>
+                }
+                @if (mostrarAcciones()) {
+                  <button
+                    type="button"
+                    class="table__accion"
+                    [attr.aria-label]="'Modificar fila'"
+                    (click)="filaModificada.emit(row)"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    type="button"
+                    class="table__accion table__accion--peligro"
+                    [attr.aria-label]="'Eliminar fila'"
+                    (click)="filaEliminada.emit(row)"
+                  >
+                    Eliminar
+                  </button>
+                }
               </td>
             }
           </tr>

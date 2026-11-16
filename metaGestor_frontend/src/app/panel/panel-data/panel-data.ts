@@ -467,11 +467,18 @@ export class PanelData {
     return tarea?.titulo || tarea?.descripcionGeneral || `Tarea #${idTarea}`;
   }
 
+  /** Tarea asociada a un registro, usando la vía permitida para cada rol. */
+  tareaDeRegistro(registro: Registro): Tarea | null {
+    return (
+      this.tareasDeRegistrosCliente().get(registro.id) ??
+      this.tareas().find((actual) => actual.idTarea === registro.tareaId) ??
+      null
+    );
+  }
+
   /** Resuelve la tarea de un registro usando la vía permitida para cada rol. */
   resumenDeTareaDeRegistro(registro: Registro): string {
-    const tarea =
-      this.tareasDeRegistrosCliente().get(registro.id) ??
-      this.tareas().find((actual) => actual.idTarea === registro.tareaId);
+    const tarea = this.tareaDeRegistro(registro);
 
     return tarea?.titulo || tarea?.descripcionGeneral || `Tarea #${registro.tareaId}`;
   }
