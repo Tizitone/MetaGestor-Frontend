@@ -3,6 +3,7 @@ import {
   perfilEmpleadoGuard,
   sinAbmEmpleadoGuard,
 } from '../pagina-Auth/guards/empleado-guard';
+import { perfilGerenteGuard } from '../pagina-Auth/guards/gerente-guard';
 import { authGuard } from '../pagina-Auth/guards/auth-guard';
 import { redireccionInicioPanel } from '../pagina-Auth/guards/redireccion-por-rol';
 
@@ -46,6 +47,15 @@ export const PANEL_ROUTES: Routes = [
         loadComponent: () =>
           import('./tablas/empleados/perfil-empleado/perfil-empleado').then(
             (m) => m.PerfilEmpleado,
+          ),
+      },
+      {
+        path: 'gerentes/:legajo',
+        title: 'Perfil de gerente | MetaGestor',
+        canActivate: [perfilGerenteGuard],
+        loadComponent: () =>
+          import('./tablas/gerentes/perfil-gerente/perfil-gerente').then(
+            (m) => m.PerfilGerente,
           ),
       },
       {
