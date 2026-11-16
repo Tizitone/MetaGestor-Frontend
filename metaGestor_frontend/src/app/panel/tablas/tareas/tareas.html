@@ -35,15 +35,52 @@
 
   <app-data-table
     caption="Tareas"
-    searchPlaceholder="Buscar por título, descripción, material, categoría o fecha…"
+    searchPlaceholder="Buscar por título, categoría o fecha de entrega…"
     emptyMessage="No hay tareas que coincidan con la búsqueda."
     [columns]="columns"
     [rows]="tareas()"
     [rowId]="rowId"
+    [mostrarDetalle]="true"
     [mostrarAcciones]="!esEmpleado()"
+    (filaDetalle)="verDetalle($event)"
     (filaModificada)="abrirModificacion($event)"
     (filaEliminada)="eliminar($event)"
   />
+
+  @if (detalleAbierto() && tareaDetalle(); as tarea) {
+    <app-modal titulo="Detalle de la tarea" (cerrar)="cerrarDetalle()">
+      <dl class="detalle">
+        <div class="detalle__item">
+          <dt>Título</dt>
+          <dd>{{ tarea.titulo || tarea.descripcionGeneral }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Categoría</dt>
+          <dd>{{ categoriaLabel[tarea.categorias] }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Entrega</dt>
+          <dd>{{ formatearFecha(tarea.fechaDeEntrega) }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Cantidad</dt>
+          <dd>{{ tarea.cantidad }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Descripción general</dt>
+          <dd>{{ tarea.descripcionGeneral }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Material</dt>
+          <dd>{{ tarea.descripcionMaterial }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Fecha de registro</dt>
+          <dd>{{ formatearFechaHora(tarea.fechaDeRegistro) }}</dd>
+        </div>
+      </dl>
+    </app-modal>
+  }
 
   @if (!esEmpleado() && modalAbierta()) {
     <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">

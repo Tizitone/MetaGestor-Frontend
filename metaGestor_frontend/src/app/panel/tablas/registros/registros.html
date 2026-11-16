@@ -28,15 +28,44 @@
 
   <app-data-table
     caption="Registros"
-    searchPlaceholder="Buscar por título, cliente, tarea, participantes o estado…"
+    searchPlaceholder="Buscar por título, cliente o estado…"
     emptyMessage="No hay registros que coincidan con la búsqueda."
     [columns]="columns"
     [rows]="registros()"
     [rowId]="rowId"
+    [mostrarDetalle]="true"
     [mostrarAcciones]="!esCliente"
+    (filaDetalle)="verDetalle($event)"
     (filaModificada)="abrirModificacion($event)"
     (filaEliminada)="eliminar($event)"
   />
+
+  @if (detalleAbierto() && registroDetalle(); as registro) {
+    <app-modal titulo="Detalle del registro" (cerrar)="cerrarDetalle()">
+      <dl class="detalle">
+        <div class="detalle__item">
+          <dt>Título de la tarea</dt>
+          <dd>{{ tareaDetalle()?.titulo || registro.tareaDescripcion }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Descripción</dt>
+          <dd>{{ tareaDetalle()?.descripcionGeneral || 'Sin descripción' }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Cantidad</dt>
+          <dd>{{ tareaDetalle()?.cantidad ?? '—' }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Participantes</dt>
+          <dd>{{ registro.participantes }}</dd>
+        </div>
+        <div class="detalle__item">
+          <dt>Proceso</dt>
+          <dd>{{ procesoLabel[registro.proceso] }}</dd>
+        </div>
+      </dl>
+    </app-modal>
+  }
 
   @if (modalAbierta()) {
     <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">

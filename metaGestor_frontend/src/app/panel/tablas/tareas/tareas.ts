@@ -56,6 +56,14 @@ export class Tareas {
     this.tareaEnEdicion() === null ? 'Nueva tarea' : 'Modificar tarea',
   );
 
+  // --- Detalle ---
+
+  protected readonly detalleAbierto = signal(false);
+  protected readonly tareaDetalle = signal<Tarea | null>(null);
+  protected readonly categoriaLabel = CATEGORIA_LABEL;
+  protected readonly formatearFecha = formatDate;
+  protected readonly formatearFechaHora = formatDateTime;
+
   // --- Baja ---
 
   protected readonly errorEliminar = signal('');
@@ -74,6 +82,15 @@ export class Tareas {
 
   protected cerrarModal(): void {
     this.modalAbierta.set(false);
+  }
+
+  protected verDetalle(tarea: Tarea): void {
+    this.tareaDetalle.set(tarea);
+    this.detalleAbierto.set(true);
+  }
+
+  protected cerrarDetalle(): void {
+    this.detalleAbierto.set(false);
   }
 
   protected async eliminar(tarea: Tarea): Promise<void> {
@@ -102,7 +119,7 @@ export class Tareas {
       display: (tarea) => tarea.titulo || tarea.descripcionGeneral,
       filter: 'text',
       filterPlaceholder: 'Nombre del trabajo',
-      width: '14rem',
+      width: '16rem',
     },
     {
       key: 'categorias',
@@ -113,7 +130,7 @@ export class Tareas {
       tone: toneCategoria,
       filter: 'select',
       filterOptions: CATEGORIA_OPTIONS,
-      width: '8rem',
+      width: '8.5rem',
     },
     {
       key: 'fechaDeEntrega',
@@ -123,29 +140,6 @@ export class Tareas {
       filter: 'text',
       filterPlaceholder: 'AAAA-MM-DD',
       width: '8.5rem',
-    },
-    {
-      key: 'fechaDeRegistro',
-      header: 'Registro',
-      value: (tarea) => tarea.fechaDeRegistro,
-      display: (tarea) => formatDateTime(tarea.fechaDeRegistro),
-      width: '11rem',
-    },
-    {
-      key: 'descripcionMaterial',
-      header: 'Material',
-      value: (tarea) => tarea.descripcionMaterial,
-      filter: 'text',
-      filterPlaceholder: 'Acero, aluminio…',
-      width: '15rem',
-    },
-    {
-      key: 'descripcionGeneral',
-      header: 'Descripción',
-      value: (tarea) => tarea.descripcionGeneral,
-      filter: 'text',
-      filterPlaceholder: 'Trabajo a realizar',
-      width: '18rem',
     },
     {
       key: 'cantidad',

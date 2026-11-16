@@ -60,6 +60,10 @@ export class DataTable<T> {
   readonly pageSize = input(10);
   /** Agrega la columna de acciones (modificar / eliminar) al final de cada fila. */
   readonly mostrarAcciones = input(false);
+  /** Agrega el botón «Ver detalle» en la columna de acciones. */
+  readonly mostrarDetalle = input(false);
+  /** Se emite con la fila al pulsar el botón «Ver detalle». */
+  readonly filaDetalle = output<T>();
   /** Se emite con la fila al pulsar el botón «Modificar». */
   readonly filaModificada = output<T>();
   /** Se emite con la fila al pulsar el botón «Eliminar». */
@@ -79,7 +83,7 @@ export class DataTable<T> {
 
   /** Columnas visibles, incluida la de acciones cuando está activada. */
   protected readonly totalColumnas = computed(() =>
-    this.columns().length + (this.mostrarAcciones() ? 1 : 0),
+    this.columns().length + (this.mostrarAcciones() || this.mostrarDetalle() ? 1 : 0),
   );
 
   protected readonly hasActiveFilters = computed(() => {
