@@ -62,6 +62,8 @@
 .filters__control:focus-visible,
 .button:focus-visible,
 .table__sort:focus-visible,
+.table__link:focus-visible,
+.table__accion:focus-visible,
 .pager__button:focus-visible,
 .table__scroll:focus-visible {
   outline: 2px solid var(--accent);
@@ -186,6 +188,44 @@
   text-align: right !important;
 }
 
+.table__acciones {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.table__acciones .table__header {
+  text-transform: uppercase;
+}
+
+.table__accion {
+  padding: 0.34rem 0.68rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.table__accion:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.table__accion--peligro:hover {
+  border-color: #f1cbc5;
+  background: #fbe8e5;
+  color: #9c3b30;
+}
+
 .table__header {
   display: inline-block;
 }
@@ -219,10 +259,21 @@
 }
 
 .table__text,
-.table__mono {
+.table__mono,
+.table__link {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.table__link {
+  color: var(--accent-strong);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.table__link:hover {
+  text-decoration: underline;
 }
 
 .table__mono {
@@ -380,6 +431,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .button,
+  .table__accion,
   .table__grid tbody tr {
     transition: none;
   }

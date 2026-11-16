@@ -1,0 +1,23 @@
+<div class="modal">
+  <div class="modal__fondo" (click)="cerrar.emit()" aria-hidden="true"></div>
+
+  <div
+    #dialogo
+    class="modal__dialogo"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-labelledby]="idTitulo"
+  >
+    <header class="modal__encabezado">
+      <h2 class="modal__titulo" [id]="idTitulo">{{ titulo() }}</h2>
+      <button type="button" class="modal__cerrar" aria-label="Cerrar" (click)="cerrar.emit()">
+        ✕
+      </button>
+    </header>
+
+    <div class="modal__cuerpo">
+      <ng-content />
+    </div>
+  </div>
+</div>

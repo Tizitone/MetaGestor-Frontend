@@ -12,6 +12,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import type { CredencialesInicioSesion } from '../modelos/credenciales';
 import { AutenticacionService } from '../servicios/autenticacion-service';
+import { rutaInicioPorRol } from '../servicios/ruta-por-rol';
 import { SesionService } from '../servicios/sesion-service';
 
 type Modo = 'login' | 'registro';
@@ -113,7 +114,7 @@ export class AutenticacionPantalla {
         this.estadoLogin.set('exito');
         this.enviandoLogin.set(false);
         this.modeloLogin.set({ ...LOGIN_VACIO });
-        void this.router.navigate(['/panel/clientes']);
+        void this.router.navigate(rutaInicioPorRol(respuesta.rol, respuesta.idUsuario));
       },
       error: (error: unknown) => {
         this.estadoLogin.set('error');

@@ -11,4 +11,8 @@ export const routes: Routes = [
         (modulo) => modulo.AutenticacionPantalla,
       ),
   },
+  {
+    path: 'panel',
+    loadChildren: () => import('./panel/panel.routes').then((modulo) => modulo.PANEL_ROUTES),
+  },
 ];

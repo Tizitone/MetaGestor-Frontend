@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DescripcionComponent } from '../componentes/descripcionComponent/descripcion-component';
 import { ComentariosComponent } from '../componentes/comentariosComponent/comentarios-component';
 import { ContactoComponente } from '../componentes/contactoComponente/contacto-componente';
 import { FooterComponente } from '../componentes/footerComponente/footer-componente';
+import { rutaInicioPorRol } from '../../pagina-Auth/servicios/ruta-por-rol';
 import { SesionService } from '../../pagina-Auth/servicios/sesion-service';
 
 @Component({
@@ -18,19 +19,22 @@ export class InicioPantalla {
   private readonly router = inject(Router);
   private readonly sesion = inject(SesionService);
 
+  /** `true` mientras haya una sesión iniciada (hasta pulsar "Cerrar sesión"). */
+  protected readonly sesionIniciada = computed(() => this.sesion.token() !== null);
+
   protected alInicio(): void {
     this.documento.defaultView?.scrollTo({ top: 0, behavior: this.comportamientoDesplazamiento() });
   }
 
   protected alIniciarSesion(): void {
-    if(this.sesion.token.toString())
-    {
-      this.router.navigate(['/panel']);
+    if (!this.sesionIniciada()) {
+      void this.router.navigate(['/login']);
+      return;
     }
-    else{
-      this.router.navigate(['/login']);
-    }
-    
+
+    // Con la sesión abierta, el botón "Mi cuenta" devuelve a cada rol a su
+    // pantalla principal (el cliente va directo a su perfil).
+    void this.router.navigate(rutaInicioPorRol(this.sesion.rol(), this.sesion.idUsuario()));
   }
 
   protected alContactar(): void {
