@@ -6,10 +6,16 @@ import {
   inject,
   input,
   numberAttribute,
+  signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Modal } from '../../../modal/modal';
 import { PanelData } from '../../../panel-data/panel-data';
 import { PROCESO_LABEL, type ProcesoRegistro, type Registro } from '../../../panel.model';
+import {
+  FormSolicitud,
+  type DatosSolicitudInicial,
+} from '../../solicitudes/form-solicitud/form-solicitud';
 
 /** Registro del cliente enriquecido con los nombres que referencia por ID. */
 interface RegistroCliente extends Registro {
@@ -37,13 +43,13 @@ function tonoPublicado(publicado: boolean): TonoBadge {
 
 @Component({
   selector: 'app-perfil-cliente',
-  imports: [RouterLink],
+  imports: [FormSolicitud, Modal, RouterLink],
   templateUrl: './perfil-cliente.html',
   styleUrls: ['../../page.css', './perfil-cliente.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerfilCliente {
-private readonly data = inject(PanelData);
+  private readonly data = inject(PanelData);
 
   readonly idCliente = input.required<number, string>({
     transform: numberAttribute,
@@ -55,7 +61,7 @@ private readonly data = inject(PanelData);
 
   protected readonly tonoPublicado = tonoPublicado;
 
-  
+  protected readonly pedidoAbierto = signal(false);
 
   constructor() {
     // Sincronizamos el input de la ruta con el servicio cada vez que cambie
@@ -66,6 +72,28 @@ private readonly data = inject(PanelData);
 
   // Ahora el servicio buscará automáticamente el cliente correcto gracias a idActual
   protected readonly cliente = computed(() => this.data.buscarCliente());
+
+  protected readonly datosPedido = computed<DatosSolicitudInicial | null>(() => {
+    const cliente = this.cliente();
+    if (!cliente) {
+      return null;
+    }
+
+    return {
+      nombre: cliente.nombre,
+      email: cliente.email,
+      telefono: cliente.telefono,
+      descripcion: '',
+    };
+  });
+
+  protected abrirPedido(): void {
+    this.pedidoAbierto.set(true);
+  }
+
+  protected cerrarPedido(): void {
+    this.pedidoAbierto.set(false);
+  }
 
   // Y podemos usar la lista de registros que el servicio ya filtra por cliente,
   // mapeando sus nombres tal como lo estabas haciendo:

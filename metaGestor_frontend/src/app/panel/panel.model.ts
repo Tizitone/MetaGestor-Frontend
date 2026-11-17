@@ -54,6 +54,7 @@ export interface Solicitud {
   readonly email: string;
   readonly telefono: string;
   readonly descripcion: string;
+  readonly atendido: boolean;
 }
 
 /** Equivale a `RegistroDTO`. */

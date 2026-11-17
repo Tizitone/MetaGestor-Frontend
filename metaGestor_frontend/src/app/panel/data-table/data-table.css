@@ -193,6 +193,11 @@
   white-space: nowrap;
 }
 
+.table__grid th.table__acciones,
+.table__grid td.table__acciones {
+  text-align: center;
+}
+
 .table__acciones .table__header {
   text-transform: uppercase;
 }
@@ -214,16 +219,39 @@
     border-color 150ms ease;
 }
 
+/* Separación entre los botones de una misma fila. */
+.table__accion + .table__accion {
+  margin-left: 0.5rem;
+}
+
 .table__accion:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent-strong);
 }
 
-.table__accion--peligro:hover {
+.table__accion--editar {
+  border-color: #f0dcb6;
+  background: #fbf1de;
+  color: #8a5a13;
+}
+
+.table__accion--editar:hover {
+  border-color: #e2c489;
+  background: #f7e8c9;
+  color: #6f4708;
+}
+
+.table__accion--peligro {
   border-color: #f1cbc5;
   background: #fbe8e5;
   color: #9c3b30;
+}
+
+.table__accion--peligro:hover {
+  border-color: #e3a79e;
+  background: #f7d9d4;
+  color: #7d2b22;
 }
 
 .table__header {
@@ -280,6 +308,35 @@
   color: var(--text-muted);
   font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
   font-size: 0.79rem;
+}
+
+.table__checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.28rem;
+  background-color: var(--surface-raised);
+  vertical-align: middle;
+}
+
+/* Check activo en verde; se dibuja a mano porque el estilo nativo de
+   `disabled` ignora `accent-color` y lo muestra gris en varios navegadores. */
+.table__checkbox:checked {
+  border-color: #1f6b53;
+  background-color: #1f6b53;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0.72rem;
+}
+
+/* El estado deshabilitado no debe atenuar el verde del check. */
+.table__checkbox:disabled {
+  opacity: 1;
 }
 
 .badge {

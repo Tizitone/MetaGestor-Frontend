@@ -124,7 +124,7 @@
           </p>
         </div>
 
-        <form class="auth__formulario" [formRoot]="formularioRegistro">
+        <form class="auth__formulario" [formRoot]="formularioRegistro" (submit)="enviarRegistro($event)">
           <div class="campo">
             <label class="campo__etiqueta" for="registro-nombre">Nombre completo</label>
             <input
@@ -229,9 +229,9 @@
           <button
             class="auth__enviar"
             type="submit"
-            [disabled]="formularioRegistro().invalid() || formularioRegistro().submitting()"
+            [disabled]="formularioRegistro().invalid() || estadoRegistro() === 'enviando'"
           >
-            @if (formularioRegistro().submitting()) {
+            @if (estadoRegistro() === 'enviando') {
               Creando cuenta...
             } @else {
               Crear cuenta

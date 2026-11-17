@@ -85,12 +85,25 @@ export class Solicitudes {
       width: '9rem',
     },
     {
+      key: 'atendido',
+      header: 'Atendida',
+      value: (solicitud) => String(solicitud.atendido === true),
+      display: (solicitud) => (solicitud.atendido === true ? 'Sí' : 'No'),
+      kind: 'checkbox',
+      filter: 'select',
+      filterOptions: [
+        { value: 'true', label: 'Atendida' },
+        { value: 'false', label: 'No atendida' },
+      ],
+      width: '7rem',
+    },
+    {
       key: 'descripcion',
       header: 'Descripción',
       value: (solicitud) => solicitud.descripcion,
       filter: 'text',
       filterPlaceholder: 'Palabra clave',
-      width: '26rem',
+      width: '24rem',
     },
   ];
 }
