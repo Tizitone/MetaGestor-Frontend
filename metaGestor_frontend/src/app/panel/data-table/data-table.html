@@ -129,6 +129,15 @@
                       cellText(column, row)
                     }}</span>
                   }
+                  @case ('checkbox') {
+                    <input
+                      class="table__checkbox"
+                      type="checkbox"
+                      [checked]="isChecked(column, row)"
+                      disabled
+                      [attr.aria-label]="column.header + ': ' + (isChecked(column, row) ? 'Sí' : 'No')"
+                    />
+                  }
                   @default {
                     @if (column.link; as link) {
                       <a
@@ -161,7 +170,7 @@
                 @if (mostrarAcciones()) {
                   <button
                     type="button"
-                    class="table__accion"
+                    class="table__accion table__accion--editar"
                     [attr.aria-label]="'Modificar fila'"
                     (click)="filaModificada.emit(row)"
                   >

@@ -19,6 +19,7 @@ interface ModeloSolicitud {
   email: string;
   telefono: string;
   descripcion: string;
+  atendido: boolean;
 }
 
 const MODELO_VACIO: ModeloSolicitud = {
@@ -26,15 +27,24 @@ const MODELO_VACIO: ModeloSolicitud = {
   email: '',
   telefono: '',
   descripcion: '',
+  atendido: false,
 };
 
 type CampoSolicitud = keyof ModeloSolicitud;
 
+export interface DatosSolicitudInicial {
+  readonly nombre: string;
+  readonly email: string;
+  readonly telefono: string;
+  readonly descripcion?: string;
+}
+
 /**
- * Formulario de modificación de solicitudes.
+ * Formulario de creación y modificación de solicitudes.
  *
- * Las solicitudes nacen del formulario de contacto del sitio público, así
- * que el panel solo permite editarlas o eliminarlas (`PUT /api/solicitudes/{id}`).
+ * Con `solicitud` se edita una solicitud existente (`PUT /api/solicitudes/{id}`).
+ * Sin `solicitud` se crea una nueva (`POST /api/solicitudes/crear`), usando
+ * `datosIniciales` para precargar los datos del solicitante.
  */
 @Component({
   selector: 'app-form-solicitud',
@@ -44,14 +54,17 @@ type CampoSolicitud = keyof ModeloSolicitud;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSolicitud {
-  /** Solicitud a modificar. */
-  readonly solicitud = input.required<Solicitud>();
+  /** Solicitud a modificar; `null` para crear una nueva. */
+  readonly solicitud = input<Solicitud | null>(null);
+  /** Valores iniciales al crear una solicitud (p. ej. datos del cliente). */
+  readonly datosIniciales = input<DatosSolicitudInicial | null>(null);
   readonly cancelar = output<void>();
   readonly guardado = output<void>();
 
   private readonly data = inject(PanelData);
 
   protected readonly estadoEnvio = signal<EstadoEnvio>('inicial');
+  protected readonly creando = signal(true);
 
   private readonly modelo = signal<ModeloSolicitud>({ ...MODELO_VACIO });
 
@@ -74,17 +87,38 @@ export class FormSolicitud {
   });
 
   constructor() {
-    // Al abrir el modal se reinicia el modelo con los datos de la fila.
+    // Al abrir el modal se reinicia el modelo con los datos de la solicitud o con los iniciales.
     effect(() => {
       const solicitud = this.solicitud();
-      this.modelo.set({
-        nombre: solicitud.nombre,
-        email: solicitud.email,
-        telefono: solicitud.telefono,
-        descripcion: solicitud.descripcion,
-      });
+      const iniciales = this.datosIniciales();
+
+      if (solicitud) {
+        this.creando.set(false);
+        this.modelo.set({
+          nombre: solicitud.nombre,
+          email: solicitud.email,
+          telefono: solicitud.telefono,
+          descripcion: solicitud.descripcion,
+          atendido: solicitud.atendido ?? false,
+        });
+      } else {
+        this.creando.set(true);
+        this.modelo.set({
+          nombre: iniciales?.nombre ?? '',
+          email: iniciales?.email ?? '',
+          telefono: iniciales?.telefono ?? '',
+          descripcion: iniciales?.descripcion ?? '',
+          atendido: false,
+        });
+      }
+
       this.estadoEnvio.set('inicial');
     });
+  }
+
+  protected actualizarAtendido(evento: Event): void {
+    const marcado = (evento.target as HTMLInputElement).checked;
+    this.modelo.update((actual) => ({ ...actual, atendido: marcado }));
   }
 
   protected campoConError(campo: CampoSolicitud): boolean {
@@ -109,15 +143,27 @@ export class FormSolicitud {
     this.estadoEnvio.set('enviando');
 
     const datos = this.modelo();
+    const solicitud = this.solicitud();
 
     try {
-      await this.data.modificarSolicitud(this.solicitud().id, {
-        id: this.solicitud().id,
-        nombre: datos.nombre,
-        email: datos.email,
-        telefono: datos.telefono,
-        descripcion: datos.descripcion,
-      });
+      if (solicitud) {
+        await this.data.modificarSolicitud(solicitud.id, {
+          id: solicitud.id,
+          nombre: datos.nombre,
+          email: datos.email,
+          telefono: datos.telefono,
+          descripcion: datos.descripcion,
+          atendido: datos.atendido,
+        });
+      } else {
+        await this.data.crearSolicitud({
+          nombre: datos.nombre,
+          email: datos.email,
+          telefono: datos.telefono,
+          descripcion: datos.descripcion,
+          atendido: false,
+        });
+      }
 
       this.guardado.emit();
     } catch {

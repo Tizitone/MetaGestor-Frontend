@@ -21,7 +21,7 @@ export interface TableColumn<T> {
    * navegación en lugar de un texto plano.
    */
   readonly link?: (row: T) => string;
-  readonly kind?: 'text' | 'badge' | 'mono';
+  readonly kind?: 'text' | 'badge' | 'mono' | 'checkbox';
   readonly tone?: (row: T) => BadgeTone;
   readonly filter?: 'text' | 'select';
   readonly filterOptions?: readonly FilterOption[];
@@ -192,6 +192,11 @@ export class DataTable<T> {
 
   protected cellText(column: TableColumn<T>, row: T): string {
     return column.display?.(row) ?? column.value(row);
+  }
+
+  /** Las columnas `checkbox` se marcan cuando el valor de la fila es `'true'`. */
+  protected isChecked(column: TableColumn<T>, row: T): boolean {
+    return column.value(row) === 'true';
   }
 
   protected toneFor(column: TableColumn<T>, row: T): BadgeTone {

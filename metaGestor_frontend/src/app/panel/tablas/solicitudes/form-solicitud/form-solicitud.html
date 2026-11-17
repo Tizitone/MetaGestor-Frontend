@@ -63,6 +63,20 @@
         <p class="campo__error">{{ formulario.descripcion().errors()[0]?.message }}</p>
       }
     </div>
+
+    @if (!creando()) {
+      <div class="campo campo--completo">
+        <label class="campo__etiqueta" for="solicitud-atendido">
+          <input
+            id="solicitud-atendido"
+            type="checkbox"
+            [checked]="formulario.atendido().value()"
+            (change)="actualizarAtendido($event)"
+          />
+          Atendida
+        </label>
+      </div>
+    }
   </div>
 
   @if (estadoEnvio() === 'error') {
@@ -78,6 +92,8 @@
     <button type="submit" class="form__boton" [disabled]="estadoEnvio() === 'enviando'">
       @if (estadoEnvio() === 'enviando') {
         Guardando…
+      } @else if (creando()) {
+        Enviar solicitud
       } @else {
         Guardar cambios
       }

@@ -387,6 +387,13 @@ export class PanelData {
     this.refrescar();
   }
 
+  async crearSolicitud(solicitud: Omit<Solicitud, 'id'>): Promise<void> {
+    await firstValueFrom(
+      this.http.post(`${this.urlApi}/solicitudes/crear`, solicitud),
+    );
+    this.refrescar();
+  }
+
   async modificarSolicitud(id: number, solicitud: Solicitud): Promise<void> {
     await firstValueFrom(
       this.http.put<Solicitud>(`${this.urlApi}/solicitudes/${id}`, solicitud),

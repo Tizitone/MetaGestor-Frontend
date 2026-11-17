@@ -177,6 +177,39 @@ describe('DataTable', () => {
     expect(search.value).toBe('');
   });
 
+  it('marks checkbox columns only when the row value is "true"', async () => {
+    const columns: readonly TableColumn<Person>[] = [
+      {
+        key: 'active',
+        header: 'Activo',
+        value: (row) => String(row.status === 'active'),
+        display: (row) => (row.status === 'active' ? 'Sí' : 'No'),
+        kind: 'checkbox',
+      },
+    ];
+
+    const fixture = TestBed.createComponent(DataTable<Person>);
+    fixture.componentRef.setInput('columns', columns);
+    fixture.componentRef.setInput('rows', ROWS);
+    fixture.componentRef.setInput('rowId', (row: Person) => row.id);
+    fixture.componentRef.setInput('caption', 'Personas');
+
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const checkboxes = Array.from(
+      compiled.querySelectorAll<HTMLInputElement>('tbody input[type="checkbox"]'),
+    );
+
+    expect(checkboxes.map((checkbox) => checkbox.checked)).toEqual([
+      true,
+      false,
+      true,
+      true,
+      false,
+    ]);
+  });
+
   it('renders link columns as navigation anchors', async () => {
     const columns: readonly TableColumn<Person>[] = [
       {

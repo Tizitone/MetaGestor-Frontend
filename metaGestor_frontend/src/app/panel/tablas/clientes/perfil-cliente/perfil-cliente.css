@@ -38,6 +38,19 @@
   box-shadow: 0 22px 48px -40px rgba(16, 42, 51, 0.55);
 }
 
+.perfil__panel-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.8rem;
+}
+
+.perfil__panel-cabecera .perfil__seccion-titulo {
+  margin: 0;
+}
+
 .perfil__campos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));

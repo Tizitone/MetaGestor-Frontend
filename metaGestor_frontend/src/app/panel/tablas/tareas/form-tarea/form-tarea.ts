@@ -84,18 +84,20 @@ export class FormTarea {
 
   constructor() {
     // Al abrir el modal se reinicia el modelo con los datos de la fila (o vacío).
+    // Se normalizan valores nulos de registros antiguos para evitar estados inválidos
+    // (p. ej. String(null) -> "null" en cantidad) y permitir completar lo faltante.
     effect(() => {
       const tarea = this.tarea();
       this.modelo.set(
         tarea === null
           ? { ...MODELO_VACIO }
           : {
-              titulo: tarea.titulo,
-              categorias: tarea.categorias,
-              fechaDeEntrega: tarea.fechaDeEntrega,
-              descripcionMaterial: tarea.descripcionMaterial,
-              descripcionGeneral: tarea.descripcionGeneral,
-              cantidad: String(tarea.cantidad),
+              titulo: tarea.titulo ?? '',
+              categorias: tarea.categorias ?? '',
+              fechaDeEntrega: tarea.fechaDeEntrega ?? '',
+              descripcionMaterial: tarea.descripcionMaterial ?? '',
+              descripcionGeneral: tarea.descripcionGeneral ?? '',
+              cantidad: tarea.cantidad != null ? String(tarea.cantidad) : '',
             },
       );
       this.estadoEnvio.set('inicial');

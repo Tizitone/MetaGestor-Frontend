@@ -19,7 +19,10 @@
     <a class="perfil__volver" routerLink="/panel/clientes">Volver a clientes</a>
 
     <section class="perfil__panel" aria-labelledby="perfil-datos-title">
-      <h2 id="perfil-datos-title" class="perfil__seccion-titulo">Datos del cliente</h2>
+      <div class="perfil__panel-cabecera">
+        <h2 id="perfil-datos-title" class="perfil__seccion-titulo">Datos del cliente</h2>
+        <button type="button" class="page__boton" (click)="abrirPedido()">Hacer pedido</button>
+      </div>
       <dl class="perfil__campos">
         <div class="perfil__campo">
           <dt class="perfil__campo-label">Identificador</dt>
@@ -39,6 +42,17 @@
         </div>
       </dl>
     </section>
+
+    @if (pedidoAbierto()) {
+      <app-modal titulo="Hacer pedido" (cerrar)="cerrarPedido()">
+        <app-form-solicitud
+          [solicitud]="null"
+          [datosIniciales]="datosPedido()"
+          (cancelar)="cerrarPedido()"
+          (guardado)="cerrarPedido()"
+        />
+      </app-modal>
+    }
 
     <section aria-labelledby="perfil-registros-title">
       <h2 id="perfil-registros-title" class="perfil__seccion-titulo">Registros</h2>
