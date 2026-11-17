@@ -16,6 +16,7 @@ import type { Observable } from 'rxjs';
 import { SesionService } from '../../pagina-Auth/servicios/sesion-service';
 import { URL_API } from '../../compartido/url-api';
 import type {
+  CategoriaEmpleado,
   CategoriaTarea,
   Cliente,
   ClienteCreacion,
@@ -50,7 +51,10 @@ interface TareaJpa {
  * `registros/buscar/participantes` devuelve solo los datos del empleado. Por eso
  * el historial es opcional.
  */
-type EmpleadoJpa = Omit<Empleado, 'historial'> & { historial?: readonly TareaJpa[] };
+type EmpleadoJpa = Omit<Empleado, 'historial' | 'categoriaEmpleado'> & {
+  historial?: readonly TareaJpa[];
+  categoriaEmpleado?: CategoriaEmpleado | null;
+};
 
 function normalizarEmpleado({
   legajo,
@@ -58,6 +62,7 @@ function normalizarEmpleado({
   email,
   telefono,
   dni,
+  categoriaEmpleado,
   historial,
 }: EmpleadoJpa): Empleado {
   return {
@@ -66,6 +71,7 @@ function normalizarEmpleado({
     email,
     telefono,
     dni,
+    categoriaEmpleado: categoriaEmpleado ?? 'SIN_CATEGORIA',
     historial: (historial ?? []).map((tarea) => ({
       idTarea: tarea.id,
       categorias: tarea.categorias,

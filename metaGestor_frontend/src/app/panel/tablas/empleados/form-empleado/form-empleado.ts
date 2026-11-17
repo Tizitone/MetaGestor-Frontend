@@ -10,7 +10,13 @@ import {
 } from '@angular/core';
 import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
 import { PanelData } from '../../../panel-data/panel-data';
-import type { Empleado, EmpleadoCreacion, EmpleadoModificacion } from '../../../panel.model';
+import {
+  CATEGORIA_EMPLEADO_LABEL,
+  type CategoriaEmpleado,
+  type Empleado,
+  type EmpleadoCreacion,
+  type EmpleadoModificacion,
+} from '../../../panel.model';
 
 type EstadoEnvio = 'inicial' | 'enviando' | 'error';
 
@@ -20,6 +26,7 @@ interface ModeloEmpleado {
   email: string;
   telefono: string;
   dni: string;
+  categoriaEmpleado: CategoriaEmpleado;
   contrasenia: string;
 }
 
@@ -28,6 +35,7 @@ const MODELO_VACIO: ModeloEmpleado = {
   email: '',
   telefono: '',
   dni: '',
+  categoriaEmpleado: 'SIN_CATEGORIA',
   contrasenia: '',
 };
 
@@ -57,6 +65,10 @@ export class FormEmpleado {
 
   protected readonly estadoEnvio = signal<EstadoEnvio>('inicial');
   protected readonly creando = computed(() => this.empleado() === null);
+  protected readonly categorias = Object.entries(CATEGORIA_EMPLEADO_LABEL) as readonly [
+    CategoriaEmpleado,
+    string,
+  ][];
 
   private readonly modelo = signal<ModeloEmpleado>({ ...MODELO_VACIO });
 
@@ -96,6 +108,7 @@ export class FormEmpleado {
               email: empleado.email,
               telefono: empleado.telefono,
               dni: String(empleado.dni),
+              categoriaEmpleado: empleado.categoriaEmpleado,
               contrasenia: '',
             },
       );
@@ -136,6 +149,7 @@ export class FormEmpleado {
           email: datos.email,
           telefono: datos.telefono,
           dni,
+          categoriaEmpleado: datos.categoriaEmpleado,
           contrasenia: datos.contrasenia,
         };
 
@@ -147,6 +161,7 @@ export class FormEmpleado {
           telefono: datos.telefono,
           dni,
           legajo: empleado.legajo,
+          categoriaEmpleado: datos.categoriaEmpleado,
           historial: empleado.historial,
         };
 

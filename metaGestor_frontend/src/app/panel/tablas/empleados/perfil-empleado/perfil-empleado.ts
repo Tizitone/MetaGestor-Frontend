@@ -12,8 +12,10 @@ import { RouterLink } from '@angular/router';
 import { formatDate } from '../../../extras/format';
 import { PanelData } from '../../../panel-data/panel-data';
 import {
+  CATEGORIA_EMPLEADO_LABEL,
   CATEGORIA_LABEL,
   PROCESO_LABEL,
+  type CategoriaEmpleado,
   type ProcesoRegistro,
   type Registro,
   type Tarea,
@@ -30,6 +32,20 @@ function tonoProceso(proceso: ProcesoRegistro): TonoBadge {
       return 'info';
     default:
       return 'warning';
+  }
+}
+
+/** Mismo criterio de colores que la tabla de Empleados. */
+function tonoCategoriaEmpleado(categoria: CategoriaEmpleado): TonoBadge {
+  switch (categoria) {
+    case 'TORNERO':
+      return 'info';
+    case 'SOLDADOR':
+      return 'warning';
+    case 'CORTADOR':
+      return 'success';
+    default:
+      return 'neutral';
   }
 }
 
@@ -55,9 +71,11 @@ export class PerfilEmpleado {
   });
 
   protected readonly categoriaLabel = CATEGORIA_LABEL;
+  protected readonly categoriaEmpleadoLabel = CATEGORIA_EMPLEADO_LABEL;
   protected readonly procesoLabel = PROCESO_LABEL;
   protected readonly procesos = Object.keys(PROCESO_LABEL) as readonly ProcesoRegistro[];
   protected readonly tonoProceso = tonoProceso;
+  protected readonly tonoCategoriaEmpleado = tonoCategoriaEmpleado;
 
   /** Los empleados vuelven a sus tareas; los roles de gestión, a la tabla. */
   protected readonly esEmpleado = this.data.esEmpleado;

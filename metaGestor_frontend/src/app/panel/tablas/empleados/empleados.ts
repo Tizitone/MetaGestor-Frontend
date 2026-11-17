@@ -1,10 +1,33 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { DataTable, type TableColumn } from '../../data-table/data-table';
+import { BadgeTone, DataTable, FilterOption, type TableColumn } from '../../data-table/data-table';
 import { Modal } from '../../modal/modal';
 import { PanelData } from '../../panel-data/panel-data';
-import type { Empleado } from '../../panel.model';
+import {
+  CATEGORIA_EMPLEADO_LABEL,
+  type CategoriaEmpleado,
+  type Empleado,
+} from '../../panel.model';
 import { FormEmpleado } from './form-empleado/form-empleado';
 import { pluralize } from '../../extras/format';
+
+const CATEGORIA_EMPLEADO_OPTIONS: readonly FilterOption[] = (
+  Object.keys(CATEGORIA_EMPLEADO_LABEL) as CategoriaEmpleado[]
+).map((value) => ({ value, label: CATEGORIA_EMPLEADO_LABEL[value] }));
+
+function toneCategoriaEmpleado(empleado: Empleado): BadgeTone {
+  switch (empleado.categoriaEmpleado) {
+    case 'TORNERO':
+      return 'info';
+    case 'SOLDADOR':
+      return 'warning';
+    case 'CORTADOR':
+      return 'success';
+    case 'AYUDANTE':
+      return 'neutral';
+    default:
+      return 'neutral';
+  }
+}
 
 @Component({
   selector: 'app-empleados',
@@ -73,6 +96,17 @@ export class Empleados {
       filter: 'text',
       filterPlaceholder: 'Nombre o apellido',
       width: '13rem',
+    },
+    {
+      key: 'categoriaEmpleado',
+      header: 'Tipo',
+      value: (empleado) => empleado.categoriaEmpleado,
+      display: (empleado) => CATEGORIA_EMPLEADO_LABEL[empleado.categoriaEmpleado],
+      kind: 'badge',
+      tone: toneCategoriaEmpleado,
+      filter: 'select',
+      filterOptions: CATEGORIA_EMPLEADO_OPTIONS,
+      width: '8.5rem',
     },
     {
       key: 'email',

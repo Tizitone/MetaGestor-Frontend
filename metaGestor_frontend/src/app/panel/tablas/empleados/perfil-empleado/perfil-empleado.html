@@ -41,6 +41,18 @@
           <dt class="perfil__campo-label">DNI</dt>
           <dd class="perfil__valor perfil__valor--mono">{{ empleadoActual.dni }}</dd>
         </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Tipo</dt>
+          <dd class="perfil__valor">
+            <span
+              [class]="
+                'perfil__badge perfil__badge--' +
+                tonoCategoriaEmpleado(empleadoActual.categoriaEmpleado)
+              "
+              >{{ categoriaEmpleadoLabel[empleadoActual.categoriaEmpleado] }}</span
+            >
+          </dd>
+        </div>
       </dl>
     </section>
 

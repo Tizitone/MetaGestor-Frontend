@@ -65,6 +65,19 @@
       }
     </div>
 
+    <div class="campo">
+      <label class="campo__etiqueta" for="empleado-categoria">Tipo de empleado</label>
+      <select
+        id="empleado-categoria"
+        class="campo__control"
+        [formField]="formulario.categoriaEmpleado"
+      >
+        @for (categoria of categorias; track categoria[0]) {
+          <option [value]="categoria[0]">{{ categoria[1] }}</option>
+        }
+      </select>
+    </div>
+
     @if (creando()) {
       <div class="campo campo--completo">
         <label class="campo__etiqueta" for="empleado-contrasenia">Contraseña</label>

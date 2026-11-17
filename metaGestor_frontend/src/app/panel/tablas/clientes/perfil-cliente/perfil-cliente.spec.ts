@@ -31,6 +31,7 @@ const EMPLEADOS: readonly Empleado[] = [
     email: 'lmartinez@metagestor.cl',
     telefono: '911223344',
     dni: 16001122,
+    categoriaEmpleado: 'TORNERO',
     historial: [],
   },
   {
@@ -39,6 +40,7 @@ const EMPLEADOS: readonly Empleado[] = [
     email: 'cfuentes@metagestor.cl',
     telefono: '922334455',
     dni: 17112233,
+    categoriaEmpleado: 'SOLDADOR',
     historial: [],
   },
   {
@@ -47,6 +49,7 @@ const EMPLEADOS: readonly Empleado[] = [
     email: 'projas@metagestor.cl',
     telefono: '933445566',
     dni: 18223344,
+    categoriaEmpleado: 'CORTADOR',
     historial: [],
   },
 ];

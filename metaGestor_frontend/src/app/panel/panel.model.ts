@@ -10,6 +10,13 @@ export type CategoriaTarea = 'LIGERO' | 'MEDIANO' | 'PESADO';
 
 export type ProcesoRegistro = 'ESPERA' | 'ENPROCESO' | 'TERMINADO';
 
+export type CategoriaEmpleado =
+  | 'SIN_CATEGORIA'
+  | 'TORNERO'
+  | 'SOLDADOR'
+  | 'CORTADOR'
+  | 'AYUDANTE';
+
 /** Equivale a `TareaDTO`. */
 export interface Tarea {
   readonly idTarea: number;
@@ -44,6 +51,7 @@ export interface Empleado {
   readonly email: string;
   readonly telefono: string;
   readonly dni: number;
+  readonly categoriaEmpleado: CategoriaEmpleado;
   readonly historial: readonly Tarea[];
 }
 
@@ -83,6 +91,14 @@ export const CATEGORIA_LABEL: Readonly<Record<CategoriaTarea, string>> = {
   PESADO: 'Pesado',
 };
 
+export const CATEGORIA_EMPLEADO_LABEL: Readonly<Record<CategoriaEmpleado, string>> = {
+  SIN_CATEGORIA: 'Sin categoría',
+  TORNERO: 'Tornero',
+  SOLDADOR: 'Soldador',
+  CORTADOR: 'Cortador',
+  AYUDANTE: 'Ayudante',
+};
+
 export const PROCESO_LABEL: Readonly<Record<ProcesoRegistro, string>> = {
   ESPERA: 'En espera',
   ENPROCESO: 'En proceso',
@@ -105,6 +121,7 @@ export interface EmpleadoCreacion {
   readonly nombre: string;
   readonly telefono: string;
   readonly dni: number;
+  readonly categoriaEmpleado: CategoriaEmpleado;
 }
 
 /** Payload de modificación de empleado (`EmpleadoDTO`, sin contraseña). */
@@ -114,6 +131,7 @@ export interface EmpleadoModificacion {
   readonly telefono: string;
   readonly dni: number;
   readonly legajo: number;
+  readonly categoriaEmpleado: CategoriaEmpleado;
   readonly historial: readonly Tarea[];
 }
 

@@ -15,6 +15,7 @@ const EMPLEADOS = [
     email: 'lmartinez@metagestor.cl',
     telefono: '911223344',
     dni: 16001122,
+    categoriaEmpleado: 'TORNERO',
     historial: [
       {
         id: 1,
@@ -44,6 +45,7 @@ const EMPLEADOS = [
     email: 'cfuentes@metagestor.cl',
     telefono: '922334455',
     dni: 17112233,
+    categoriaEmpleado: 'SOLDADOR',
     historial: [],
   },
 ];
@@ -204,6 +206,7 @@ describe('PerfilEmpleado', () => {
     expect(valores.join(' ')).toContain('lmartinez@metagestor.cl');
     expect(valores.join(' ')).toContain('911223344');
     expect(valores.join(' ')).toContain('16001122');
+    expect(valores.join(' ')).toContain('Tornero');
   });
 
   it('lists only the tasks of the employee history', async () => {
