@@ -35,6 +35,7 @@ export class Panel {
       return [
         { path: '/panel/clientes', label: 'Clientes', count: this.data.clientes().length },
         { path: '/panel/empleados', label: 'Empleados', count: this.data.empleados().length },
+        { path: '/panel/gerentes', label: 'Gerentes', count: this.data.gerentes().length },
         { path: '/panel/tareas', label: 'Tareas', count: this.data.tareas().length },
         { path: '/panel/solicitudes', label: 'Solicitudes', count: this.data.solicitudes().length },
         { path: '/panel/registros', label: 'Registros', count: this.data.registros().length },

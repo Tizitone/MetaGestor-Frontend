@@ -173,6 +173,22 @@
     "historial": []
   }
   ],
+  "gerentes": [
+    {
+      "legajo": 2001,
+      "nombre": "Roberto Sánchez",
+      "email": "rsanchez@metagestor.cl",
+      "telefono": "911998877",
+      "dni": 15112233
+    },
+    {
+      "legajo": 2002,
+      "nombre": "Patricia Molina",
+      "email": "pmolina@metagestor.cl",
+      "telefono": "922887766",
+      "dni": 16223344
+    }
+  ],
   "tareas": [
     {
     "idTarea": 1,

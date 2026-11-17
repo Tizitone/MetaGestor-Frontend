@@ -21,7 +21,9 @@
     <section class="perfil__panel" aria-labelledby="perfil-datos-title">
       <div class="perfil__panel-cabecera">
         <h2 id="perfil-datos-title" class="perfil__seccion-titulo">Datos del cliente</h2>
-        <button type="button" class="page__boton" (click)="abrirPedido()">Hacer pedido</button>
+        @if (esCliente) {
+          <button type="button" class="page__boton" (click)="abrirPedido()">Hacer pedido</button>
+        }
       </div>
       <dl class="perfil__campos">
         <div class="perfil__campo">

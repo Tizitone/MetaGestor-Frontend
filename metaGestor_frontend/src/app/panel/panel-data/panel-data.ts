@@ -24,6 +24,8 @@ import type {
   EmpleadoCreacion,
   EmpleadoModificacion,
   Gerente,
+  GerenteCreacion,
+  GerenteModificacion,
   Registro,
   RegistroEscritura,
   Solicitud,
@@ -140,6 +142,23 @@ export class PanelData {
         this.permite('ADMIN', 'GERENTE')
           ? this.http.get<Cliente[]>(`${this.urlApi}/clientes/buscar/all`)
           : of<Cliente[]>([]),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  /** Gerentes registrados. Solo el administrador administra esta colección. */
+  readonly gerentes = toSignal(
+    this.cambios$.pipe(
+      switchMap(() =>
+        this.permite('ADMIN')
+          ? this.http
+              .get<Gerente[]>(`${this.urlApi}/gerentes/buscar/all`)
+              .pipe(
+                // Una colección inaccesible no debe romper las tablas.
+                catchError(() => of<Gerente[]>([])),
+              )
+          : of<Gerente[]>([]),
       ),
     ),
     { initialValue: [] },
@@ -369,6 +388,23 @@ export class PanelData {
 
   async eliminarCliente(idCliente: number): Promise<void> {
     await firstValueFrom(this.http.delete<void>(`${this.urlApi}/clientes/${idCliente}`));
+    this.refrescar();
+  }
+
+  async crearGerente(gerente: GerenteCreacion): Promise<void> {
+    await firstValueFrom(this.http.post<GerenteCreacion>(`${this.urlApi}/gerentes`, gerente));
+    this.refrescar();
+  }
+
+  async modificarGerente(legajo: number, gerente: GerenteModificacion): Promise<void> {
+    await firstValueFrom(
+      this.http.put<GerenteModificacion>(`${this.urlApi}/gerentes/${legajo}`, gerente),
+    );
+    this.refrescar();
+  }
+
+  async eliminarGerente(legajo: number): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${this.urlApi}/gerentes/${legajo}`));
     this.refrescar();
   }
 

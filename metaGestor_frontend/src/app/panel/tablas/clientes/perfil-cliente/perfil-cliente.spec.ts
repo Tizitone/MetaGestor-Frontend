@@ -4,6 +4,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { URL_API } from '../../../../compartido/url-api';
+import { CLAVE_SESION } from '../../../../pagina-Auth/servicios/sesion-service';
 import type { Cliente, Empleado, Registro, Tarea } from '../../../panel.model';
 import { PerfilCliente } from './perfil-cliente';
 
@@ -127,6 +128,7 @@ describe('PerfilCliente', () => {
 
     responder(`${urlApi}/clientes/buscar/all`, CLIENTES);
     responder(`${urlApi}/empleados/buscar/all`, EMPLEADOS);
+    responder(`${urlApi}/gerentes/buscar/all`, []);
     responder(`${urlApi}/tareas/buscar/all`, TAREAS);
     responder(`${urlApi}/solicitudes/buscar/all`, []);
     responder(`${urlApi}/registros/buscar/all`, REGISTROS);
@@ -136,8 +138,18 @@ describe('PerfilCliente', () => {
       `${urlApi}/registros/buscar/cliente/${idCliente}`,
       REGISTROS.filter((registro) => registro.clienteId === Number(idCliente)),
     );
+    responder(
+      `${urlApi}/clientes/${idCliente}`,
+      CLIENTES.find((cliente) => cliente.idCliente === Number(idCliente)) ?? null,
+    );
 
     await fixture.whenStable();
+
+    // El rol CLIENTE resuelve la tarea de cada registro por una vía propia.
+    http
+      .match((peticion) => peticion.url.startsWith(`${urlApi}/registros/buscar/tareas/`))
+      .forEach((peticion) => peticion.flush([]));
+
     fixture.detectChanges();
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
@@ -158,7 +170,39 @@ describe('PerfilCliente', () => {
   });
 
   afterEach(() => {
+    sessionStorage.removeItem(CLAVE_SESION);
     http.verify();
+  });
+
+  function iniciarSesion(rol: string, idUsuario: number): void {
+    sessionStorage.setItem(
+      CLAVE_SESION,
+      JSON.stringify({ token: 'jwt', rol, idUsuario }),
+    );
+  }
+
+  for (const rol of ['ADMIN', 'GERENTE']) {
+    it(`does not offer "Hacer pedido" to a ${rol}`, async () => {
+      iniciarSesion(rol, 3);
+
+      const compiled = await crearPerfil('1');
+      const botones = Array.from(compiled.querySelectorAll('button')).map((boton) =>
+        boton.textContent?.trim() ?? '',
+      );
+
+      expect(botones).not.toContain('Hacer pedido');
+    });
+  }
+
+  it('offers "Hacer pedido" to the client', async () => {
+    iniciarSesion('CLIENTE', 1);
+
+    const compiled = await crearPerfil('1');
+    const boton = Array.from(compiled.querySelectorAll('button')).find(
+      (actual) => actual.textContent?.trim() === 'Hacer pedido',
+    );
+
+    expect(boton).toBeTruthy();
   });
 
   it('renders the client information and details', async () => {

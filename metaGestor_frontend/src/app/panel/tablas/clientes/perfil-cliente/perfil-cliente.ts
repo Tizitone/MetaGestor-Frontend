@@ -61,6 +61,12 @@ export class PerfilCliente {
 
   protected readonly tonoPublicado = tonoPublicado;
 
+  /**
+   * Solo el propio cliente puede hacer un pedido desde su ficha. El
+   * administrador y el gerente consultan el perfil, pero no crean solicitudes.
+   */
+  protected readonly esCliente = this.data.esCliente;
+
   protected readonly pedidoAbierto = signal(false);
 
   constructor() {

@@ -83,6 +83,7 @@ describe('PerfilGerente', () => {
   function responderColecciones(): void {
     responder(`${urlApi}/clientes/buscar/all`, []);
     responder(`${urlApi}/empleados/buscar/all`, EMPLEADOS);
+    responder(`${urlApi}/gerentes/buscar/all`, []);
     responder(`${urlApi}/registros/buscar/participantes`, EMPLEADOS);
     responder(`${urlApi}/tareas/buscar/all`, TAREAS);
     responder(`${urlApi}/solicitudes/buscar/all`, []);

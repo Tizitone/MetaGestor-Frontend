@@ -46,6 +46,7 @@ describe('PanelData con rol ADMIN', () => {
         historial: [],
       },
     ]);
+    http.expectOne(`${urlApi}/gerentes/buscar/all`).flush([]);
     http.expectOne(`${urlApi}/tareas/buscar/all`).flush([]);
     http.expectOne(`${urlApi}/solicitudes/buscar/all`).flush([]);
     http.expectOne(`${urlApi}/registros/buscar/all`).flush([]);

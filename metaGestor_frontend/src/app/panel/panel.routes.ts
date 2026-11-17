@@ -5,6 +5,7 @@ import {
 } from '../pagina-Auth/guards/empleado-guard';
 import { perfilGerenteGuard } from '../pagina-Auth/guards/gerente-guard';
 import { authGuard } from '../pagina-Auth/guards/auth-guard';
+import { soloAdminGuard } from '../pagina-Auth/guards/admin-guard';
 import { redireccionInicioPanel } from '../pagina-Auth/guards/redireccion-por-rol';
 
 /**
@@ -48,6 +49,12 @@ export const PANEL_ROUTES: Routes = [
           import('./tablas/empleados/perfil-empleado/perfil-empleado').then(
             (m) => m.PerfilEmpleado,
           ),
+      },
+      {
+        path: 'gerentes',
+        title: 'Gerentes | MetaGestor',
+        canActivate: [soloAdminGuard],
+        loadComponent: () => import('./tablas/gerentes/gerentes').then((m) => m.Gerentes),
       },
       {
         path: 'gerentes/:legajo',

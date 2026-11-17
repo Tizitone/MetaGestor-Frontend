@@ -176,14 +176,16 @@
                   >
                     Modificar
                   </button>
-                  <button
-                    type="button"
-                    class="table__accion table__accion--peligro"
-                    [attr.aria-label]="'Eliminar fila'"
-                    (click)="filaEliminada.emit(row)"
-                  >
-                    Eliminar
-                  </button>
+                  @if (puedeEliminar()) {
+                    <button
+                      type="button"
+                      class="table__accion table__accion--peligro"
+                      [attr.aria-label]="'Eliminar fila'"
+                      (click)="filaEliminada.emit(row)"
+                    >
+                      Eliminar
+                    </button>
+                  }
                 }
               </td>
             }

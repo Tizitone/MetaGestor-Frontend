@@ -64,6 +64,24 @@ export interface Gerente {
   readonly dni: number;
 }
 
+/** Payload de alta de gerente (`CrearGerenteDTO`). */
+export interface GerenteCreacion {
+  readonly email: string;
+  readonly contrasenia: string;
+  readonly nombre: string;
+  readonly telefono: string;
+  readonly dni: number;
+}
+
+/** Payload de modificación de gerente (`GerenteDTO`, sin contraseña). */
+export interface GerenteModificacion {
+  readonly email: string;
+  readonly nombre: string;
+  readonly telefono: string;
+  readonly dni: number;
+  readonly legajo: number;
+}
+
 /** Equivale a `SolicitudDTO`. */
 export interface Solicitud {
   readonly id: number;

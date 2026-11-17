@@ -60,6 +60,16 @@ describe('PanelData', () => {
       },
     ]);
 
+    http.expectOne(`${urlApi}/gerentes/buscar/all`).flush([
+      {
+        legajo: 3,
+        nombre: 'Roberto Sánchez',
+        email: 'gerente@metagestor.cl',
+        telefono: '1199887766',
+        dni: 11223344,
+      },
+    ]);
+
     // `registros/participantes` es la fuente de nombres para la tabla.
     http.expectOne(`${urlApi}/registros/buscar/participantes`).flush([
       {
@@ -130,11 +140,12 @@ describe('PanelData', () => {
     responderPeticionesAuxiliares();
   }
 
-  it('loads the five collections from the backend', () => {
+  it('loads the six collections from the backend', () => {
     responderTodo();
 
     expect(data.clientes()).toHaveLength(1);
     expect(data.empleados()).toHaveLength(1);
+    expect(data.gerentes()).toHaveLength(1);
     expect(data.tareas()).toHaveLength(1);
     expect(data.solicitudes()).toHaveLength(1);
     expect(data.registros()).toHaveLength(1);
@@ -194,7 +205,32 @@ describe('PanelData', () => {
 
     await operacion;
 
-    // La operación exitosa vuelve a pedir las cinco colecciones.
+    // La operación exitosa vuelve a pedir las seis colecciones.
+    responderTodo();
+  });
+
+  it('creates a manager and reloads the collections', async () => {
+    responderTodo();
+
+    const operacion = data.crearGerente({
+      email: 'nuevo.gerente@metagestor.cl',
+      contrasenia: 'clave1234',
+      nombre: 'Nuevo Gerente',
+      telefono: '912345678',
+      dni: 20334455,
+    });
+
+    const peticion = http.expectOne({ method: 'POST', url: `${urlApi}/gerentes` });
+    expect(peticion.request.body).toEqual({
+      email: 'nuevo.gerente@metagestor.cl',
+      contrasenia: 'clave1234',
+      nombre: 'Nuevo Gerente',
+      telefono: '912345678',
+      dni: 20334455,
+    });
+    peticion.flush({});
+
+    await operacion;
     responderTodo();
   });
 

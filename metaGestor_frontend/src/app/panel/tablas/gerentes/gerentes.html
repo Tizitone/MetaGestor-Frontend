@@ -1,0 +1,47 @@
+<section class="page" aria-labelledby="gerentes-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Gerencia</p>
+      <h1 id="gerentes-title" class="page__title">Gerentes</h1>
+      <p class="page__description">
+        Administra a los gerentes registrados: crea, modifica o elimina sus fichas y abre el
+        perfil de cada uno para revisar los registros en los que participa.
+      </p>
+    </div>
+    <p class="page__summary">
+      <strong>{{ gerentes().length }}</strong> gerentes registrados
+    </p>
+  </header>
+
+  <div class="page__actions">
+    <button type="button" class="page__boton" (click)="abrirCreacion()">
+      <span aria-hidden="true">+</span> Nuevo gerente
+    </button>
+  </div>
+
+  @if (errorEliminar()) {
+    <p class="page__alerta" role="alert">{{ errorEliminar() }}</p>
+  }
+
+  <app-data-table
+    caption="Gerentes"
+    searchPlaceholder="Buscar por legajo, nombre, correo, teléfono o DNI…"
+    emptyMessage="No hay gerentes que coincidan con la búsqueda."
+    [columns]="columns"
+    [rows]="gerentes()"
+    [rowId]="rowId"
+    [mostrarAcciones]="true"
+    (filaModificada)="abrirModificacion($event)"
+    (filaEliminada)="eliminar($event)"
+  />
+
+  @if (modalAbierta()) {
+    <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">
+      <app-form-gerente
+        [gerente]="gerenteEnEdicion()"
+        (cancelar)="cerrarModal()"
+        (guardado)="cerrarModal()"
+      />
+    </app-modal>
+  }
+</section>

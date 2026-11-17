@@ -67,6 +67,7 @@ describe('PanelData con rol CLIENTE', () => {
     for (const prohibida of [
       '/clientes/buscar/all',
       '/empleados/buscar/all',
+      '/gerentes/buscar/all',
       '/tareas/buscar/all',
       '/empleados/historial',
       '/solicitudes/buscar/all',

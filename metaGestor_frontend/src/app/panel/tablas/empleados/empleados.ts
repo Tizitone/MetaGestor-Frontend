@@ -41,6 +41,12 @@ export class Empleados {
 
   protected readonly empleados = this.data.empleados;
 
+  /**
+   * El gerente puede consultar y editar empleados, pero no eliminarlos. El
+   * backend también debe validar esta regla con el rol de la sesión.
+   */
+  protected readonly puedeEliminar = !this.data.esGerente;
+
   // --- Alta y modificación ---
 
   protected readonly modalAbierta = signal(false);
@@ -70,6 +76,10 @@ export class Empleados {
   }
 
   protected async eliminar(empleado: Empleado): Promise<void> {
+    if (!this.puedeEliminar) {
+      return;
+    }
+
     this.errorEliminar.set('');
 
     try {

@@ -60,6 +60,8 @@ export class DataTable<T> {
   readonly pageSize = input(10);
   /** Agrega la columna de acciones (modificar / eliminar) al final de cada fila. */
   readonly mostrarAcciones = input(false);
+  /** Permite ocultar solo el botón «Eliminar» cuando el rol no puede borrar. */
+  readonly puedeEliminar = input(true);
   /** Agrega el botón «Ver detalle» en la columna de acciones. */
   readonly mostrarDetalle = input(false);
   /** Se emite con la fila al pulsar el botón «Ver detalle». */
