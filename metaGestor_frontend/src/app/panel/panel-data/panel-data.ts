@@ -22,6 +22,7 @@ import type {
   Empleado,
   EmpleadoCreacion,
   EmpleadoModificacion,
+  Gerente,
   Registro,
   RegistroEscritura,
   Solicitud,
@@ -95,6 +96,9 @@ export class PanelData {
 
   /** `true` cuando la sesión pertenece a un empleado. */
   readonly esEmpleado = this.rol === 'EMPLEADO';
+
+  /** `true` cuando la sesión pertenece a un gerente. */
+  readonly esGerente = this.rol === 'GERENTE';
 
   idActual = signal<number>(0);
   private readonly idActual$ = toObservable(this.idActual);
@@ -202,6 +206,30 @@ export class PanelData {
       ),
     ),
     { initialValue: null },
+  );
+
+  /** Legajo del gerente que se está consultando en su perfil. */
+  gerenteActual = signal<number>(0);
+  private readonly gerenteActual$ = toObservable(this.gerenteActual);
+
+  /**
+   * Gerente leído desde `gerentes/{legajo}`. Queda en `undefined` mientras la
+   * consulta está en curso y en `null` si falla o no existe.
+   */
+  private readonly gerenteRemoto = toSignal(
+    this.gerenteActual$.pipe(
+      filter((legajo) => legajo > 0),
+      switchMap((legajo) =>
+        this.permite('GERENTE', 'ADMIN')
+          ? this.http.get<Gerente>(`${this.urlApi}/gerentes/${legajo}`).pipe(
+              // Al cambiar de legajo se vuelve al estado de carga.
+              startWith(undefined),
+              catchError(() => of(null)),
+            )
+          : of(null),
+      ),
+    ),
+    { initialValue: undefined },
   );
 
   /**
@@ -483,5 +511,23 @@ export class PanelData {
     }
 
     return this.empleados().find((empleado) => empleado.legajo === legajo) ?? null;
+  }
+
+  /**
+   * Gerente consultado en su perfil.
+   *
+   * Devuelve `undefined` mientras la consulta está en curso, `null` si no
+   * existe y el gerente cuando el endpoint respondió.
+   */
+  buscarGerente(legajo: number): Gerente | null | undefined {
+    if (legajo <= 0) {
+      return null;
+    }
+
+    if (this.gerenteActual() !== legajo) {
+      return undefined;
+    }
+
+    return this.gerenteRemoto();
   }
 }

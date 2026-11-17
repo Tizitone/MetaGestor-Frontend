@@ -107,12 +107,13 @@
                   <span class="visually-hidden">Estado del registro {{ registro.id }}</span>
                   <select
                     class="registro__select"
-                    [value]="procesoDe(registro)"
                     [disabled]="guardando() !== null"
                     (change)="seleccionar(registro, $event)"
                   >
                     @for (proceso of procesos; track proceso) {
-                      <option [value]="proceso">{{ procesoLabel[proceso] }}</option>
+                      <option [value]="proceso" [selected]="proceso === procesoDe(registro)">
+                        {{ procesoLabel[proceso] }}
+                      </option>
                     }
                   </select>
                 </label>

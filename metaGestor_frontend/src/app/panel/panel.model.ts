@@ -47,6 +47,15 @@ export interface Empleado {
   readonly historial: readonly Tarea[];
 }
 
+/** Equivale a `GerenteDTO`. */
+export interface Gerente {
+  readonly legajo: number;
+  readonly nombre: string;
+  readonly email: string;
+  readonly telefono: string;
+  readonly dni: number;
+}
+
 /** Equivale a `SolicitudDTO`. */
 export interface Solicitud {
   readonly id: number;

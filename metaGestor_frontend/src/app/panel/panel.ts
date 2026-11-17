@@ -42,10 +42,17 @@ export class Panel {
     }
     
     if (currentRol.includes('GERENTE')) {
+      const idUsuario = this.sesion.idUsuario();
+
       return [
+        // El gerente accede a su propia ficha desde el menú.
+        ...(idUsuario
+          ? [{ path: `/panel/gerentes/${idUsuario}`, label: 'Mi perfil' } as const]
+          : []),
         { path: '/panel/clientes', label: 'Clientes', count: this.data.clientes().length },
-        { path: '/panel/solicitudes', label: 'Solicitudes', count: this.data.solicitudes().length },
+        { path: '/panel/empleados', label: 'Empleados', count: this.data.empleados().length },
         { path: '/panel/tareas', label: 'Tareas', count: this.data.tareas().length },
+        { path: '/panel/solicitudes', label: 'Solicitudes', count: this.data.solicitudes().length },
         { path: '/panel/registros', label: 'Registros', count: this.data.registros().length },
       ];
     }
