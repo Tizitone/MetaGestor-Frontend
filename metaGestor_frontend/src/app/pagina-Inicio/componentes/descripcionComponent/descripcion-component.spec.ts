@@ -19,9 +19,7 @@ describe('DescripcionComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.querySelector('#titulo-descripcion')?.textContent).toContain('Sobre nosotros');
-    expect(compiled.querySelector('.descripcion__introduccion')?.textContent).toContain(
-      'MetaGestor',
-    );
+    expect(compiled.querySelector('.descripcion__introduccion')?.textContent).toContain('Baltec');
   });
 
   it('should render the benefits and the comparison table', () => {

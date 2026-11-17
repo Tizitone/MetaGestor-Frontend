@@ -5,7 +5,7 @@
 
       <div class="barra-navegacion__acciones">
         <button class="boton boton--contorno" type="button" (click)="alIniciarSesion()">
-          Iniciar sesión
+          {{ sesionIniciada() ? 'Mi cuenta' : 'Iniciar sesión' }}
         </button>
         <button class="boton boton--primario" type="button" (click)="alContactar()">
           Contáctanos

@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { DataTable, type TableColumn } from './data-table';
 
 interface Person {
@@ -75,7 +76,10 @@ async function typeInto(
 
 describe('DataTable', () => {
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [DataTable] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [DataTable],
+      providers: [provideRouter([])],
+    }).compileComponents();
   });
 
   it('renders the columns and every row', async () => {
@@ -171,5 +175,88 @@ describe('DataTable', () => {
 
     expect(bodyRows(fixture)).toHaveLength(5);
     expect(search.value).toBe('');
+  });
+
+  it('marks checkbox columns only when the row value is "true"', async () => {
+    const columns: readonly TableColumn<Person>[] = [
+      {
+        key: 'active',
+        header: 'Activo',
+        value: (row) => String(row.status === 'active'),
+        display: (row) => (row.status === 'active' ? 'Sí' : 'No'),
+        kind: 'checkbox',
+      },
+    ];
+
+    const fixture = TestBed.createComponent(DataTable<Person>);
+    fixture.componentRef.setInput('columns', columns);
+    fixture.componentRef.setInput('rows', ROWS);
+    fixture.componentRef.setInput('rowId', (row: Person) => row.id);
+    fixture.componentRef.setInput('caption', 'Personas');
+
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const checkboxes = Array.from(
+      compiled.querySelectorAll<HTMLInputElement>('tbody input[type="checkbox"]'),
+    );
+
+    expect(checkboxes.map((checkbox) => checkbox.checked)).toEqual([
+      true,
+      false,
+      true,
+      true,
+      false,
+    ]);
+  });
+
+  it('hides only the delete action when the role cannot delete rows', async () => {
+    const fixture = TestBed.createComponent(DataTable<Person>);
+    fixture.componentRef.setInput('columns', COLUMNS);
+    fixture.componentRef.setInput('rows', ROWS);
+    fixture.componentRef.setInput('rowId', (row: Person) => row.id);
+    fixture.componentRef.setInput('caption', 'Personas');
+    fixture.componentRef.setInput('mostrarAcciones', true);
+    fixture.componentRef.setInput('puedeEliminar', false);
+
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const acciones = Array.from(compiled.querySelectorAll('.table__acciones .table__accion')).map(
+      (boton) => boton.textContent?.trim() ?? '',
+    );
+
+    expect(acciones).toHaveLength(ROWS.length);
+    expect(acciones.every((texto) => texto === 'Modificar')).toBe(true);
+  });
+
+  it('renders link columns as navigation anchors', async () => {
+    const columns: readonly TableColumn<Person>[] = [
+      {
+        key: 'name',
+        header: 'Nombre',
+        value: (row) => row.name,
+        link: (row) => `/personas/${row.id}`,
+      },
+    ];
+
+    const fixture = TestBed.createComponent(DataTable<Person>);
+    fixture.componentRef.setInput('columns', columns);
+    fixture.componentRef.setInput('rows', ROWS);
+    fixture.componentRef.setInput('rowId', (row: Person) => row.id);
+    fixture.componentRef.setInput('caption', 'Personas');
+
+    // Act + Wait: deja que Angular renderice los enlaces de la columna.
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const links = Array.from(
+      compiled.querySelectorAll<HTMLAnchorElement>('tbody a.table__link'),
+    );
+
+    expect(links).toHaveLength(5);
+    expect(links[0].getAttribute('href')).toBe('/personas/1');
+    expect(links[0].textContent).toContain('Ana Torres');
+    expect(compiled.querySelector('tbody .table__text')).toBeFalsy();
   });
 });

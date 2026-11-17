@@ -1,0 +1,118 @@
+<section class="page" aria-labelledby="perfil-gerente-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Gerencia</p>
+      <h1 id="perfil-gerente-title" class="page__title">
+        {{ gerente()?.nombre ?? 'Gerente #' + legajo() }}
+      </h1>
+      <p class="page__description">
+        Ficha del gerente con sus datos de contacto y los registros de trabajo en los que
+        participa.
+      </p>
+    </div>
+    <p class="page__summary">
+      <strong>{{ registros().length }}</strong> registros asociados
+    </p>
+  </header>
+
+  @if (gerente(); as gerenteActual) {
+    <a class="perfil__volver" routerLink="/panel/clientes">← Volver al panel</a>
+
+    <section class="perfil__panel" aria-labelledby="perfil-datos-title">
+      <h2 id="perfil-datos-title" class="perfil__seccion-titulo">Datos del gerente</h2>
+      <dl class="perfil__campos">
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Legajo</dt>
+          <dd class="perfil__valor perfil__valor--mono">#{{ gerenteActual.legajo }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Correo</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ gerenteActual.email }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">Teléfono</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ gerenteActual.telefono }}</dd>
+        </div>
+        <div class="perfil__campo">
+          <dt class="perfil__campo-label">DNI</dt>
+          <dd class="perfil__valor perfil__valor--mono">{{ gerenteActual.dni }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="perfil-registros-title">
+      <h2 id="perfil-registros-title" class="perfil__seccion-titulo">Registros donde participa</h2>
+
+      @if (error()) {
+        <p class="page__alerta" role="alert">{{ error() }}</p>
+      }
+      @if (aviso()) {
+        <p class="perfil__aviso" role="status">{{ aviso() }}</p>
+      }
+
+      @if (registros().length > 0) {
+        <ul class="perfil__registros">
+          @for (registro of registros(); track registro.id) {
+            <li class="registro">
+              <div class="registro__cuerpo">
+                <p class="registro__titulo">{{ registro.titulo }}</p>
+                <p class="registro__detalle">
+                  <strong>Tarea:</strong>
+                  {{ resumenTarea(registro.tareaId) }}
+                </p>
+                <p class="registro__detalle">
+                  <strong>Publicado:</strong>
+                  {{ registro.publicado ? 'Sí' : 'No' }}
+                </p>
+              </div>
+              <div class="registro__meta">
+                <span [class]="'perfil__badge perfil__badge--' + tonoProceso(registro.proceso)">{{
+                  procesoLabel[registro.proceso]
+                }}</span>
+                <label class="registro__estado">
+                  <span class="visually-hidden">Estado del registro {{ registro.id }}</span>
+                  <select
+                    class="registro__select"
+                    [disabled]="guardando() !== null"
+                    (change)="seleccionar(registro, $event)"
+                  >
+                    @for (proceso of procesos; track proceso) {
+                      <option [value]="proceso" [selected]="proceso === procesoDe(registro)">
+                        {{ procesoLabel[proceso] }}
+                      </option>
+                    }
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  class="perfil__boton"
+                  [disabled]="guardando() !== null || procesoDe(registro) === registro.proceso"
+                  (click)="guardar(registro)"
+                >
+                  {{ guardando() === registro.id ? 'Guardando…' : 'Guardar estado' }}
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="perfil__vacio" role="status">
+          <span class="perfil__vacio-icono" aria-hidden="true">⌕</span>
+          <p class="perfil__vacio-texto">Sin registros asignados</p>
+        </div>
+      }
+    </section>
+  } @else if (cargando()) {
+    <div class="perfil__cargando" role="status">
+      <span class="perfil__vacio-icono" aria-hidden="true">⌛</span>
+      <p class="perfil__vacio-texto">Cargando perfil…</p>
+    </div>
+  } @else {
+    <section class="perfil__no-encontrado" role="alert">
+      <p class="perfil__no-encontrado-texto">
+        No encontramos el gerente <strong>#{{ legajo() }}</strong>.
+      </p>
+      <a class="perfil__volver" routerLink="/panel/clientes">← Volver al panel</a>
+    </section>
+  }
+</section>

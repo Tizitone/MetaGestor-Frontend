@@ -4,6 +4,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { URL_API } from '../compartido/url-api';
+import { CLAVE_SESION } from '../pagina-Auth/servicios/sesion-service';
 import { Panel } from './panel';
 import { PANEL_ROUTES } from './panel.routes';
 
@@ -13,6 +14,11 @@ describe('Panel', () => {
   let http: HttpTestingController;
 
   beforeEach(async () => {
+    sessionStorage.setItem(
+      CLAVE_SESION,
+      JSON.stringify({ token: 'jwt', rol: 'ADMIN', idUsuario: 1 }),
+    );
+
     await TestBed.configureTestingModule({
       imports: [Panel],
       providers: [
@@ -34,19 +40,22 @@ describe('Panel', () => {
   });
 
   afterEach(() => {
+    sessionStorage.removeItem(CLAVE_SESION);
     http.verify();
   });
 
-  it('renders the five management sections with their counts', () => {
+  it('renders the six management sections with their counts', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const labels = Array.from(compiled.querySelectorAll('.nav__link')).map((link) =>
       link.textContent?.replace(/\s+/g, ' ').trim(),
     );
 
-    expect(labels).toHaveLength(5);
+    expect(labels).toHaveLength(6);
     expect(labels[0]).toContain('Clientes');
-    expect(labels[4]).toContain('Registros');
-    expect(compiled.querySelectorAll('.nav__count')).toHaveLength(5);
+    expect(labels[1]).toContain('Empleados');
+    expect(labels[2]).toContain('Gerentes');
+    expect(labels[5]).toContain('Registros');
+    expect(compiled.querySelectorAll('.nav__count')).toHaveLength(6);
   });
 
   it('renders the router outlet for the section pages', () => {

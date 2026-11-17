@@ -10,8 +10,9 @@ import {
   required,
 } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
-import type { CredencialesInicioSesion } from '../modelos/credenciales';
+import type { CredencialesInicioSesion, NuevoCliente } from '../modelos/credenciales';
 import { AutenticacionService } from '../servicios/autenticacion-service';
+import { rutaInicioPorRol } from '../servicios/ruta-por-rol';
 import { SesionService } from '../servicios/sesion-service';
 
 type Modo = 'login' | 'registro';
@@ -113,12 +114,44 @@ export class AutenticacionPantalla {
         this.estadoLogin.set('exito');
         this.enviandoLogin.set(false);
         this.modeloLogin.set({ ...LOGIN_VACIO });
-        void this.router.navigate(['/panel/clientes']);
+        void this.router.navigate(rutaInicioPorRol(respuesta.rol, respuesta.idUsuario));
       },
       error: (error: unknown) => {
         this.estadoLogin.set('error');
         this.mensajeErrorLogin.set(this.mensajeDeError(error, 'login'));
         this.enviandoLogin.set(false);
+      },
+    });
+  }
+
+  protected enviarRegistro(evento: Event): void {
+    evento.preventDefault();
+
+    if (this.formularioRegistro().invalid() || this.estadoRegistro() === 'enviando') {
+      this.formularioRegistro().markAsTouched();
+      return;
+    }
+
+    this.estadoRegistro.set('enviando');
+    this.mensajeErrorRegistro.set('');
+
+    const datos = this.modeloRegistro();
+    const cliente: NuevoCliente = {
+      nombre: datos.nombreCompleto.trim(),
+      email: datos.email.trim(),
+      telefono: datos.telefono.trim(),
+      dni: Number(datos.dni),
+      contrasenia: datos.contrasenia,
+    };
+
+    this.autenticacion.registrarCliente(cliente).subscribe({
+      next: () => {
+        this.modeloRegistro.set({ ...REGISTRO_VACIO });
+        this.cambiarModo('login');
+      },
+      error: (error: unknown) => {
+        this.estadoRegistro.set('error');
+        this.mensajeErrorRegistro.set(this.mensajeDeError(error, 'registro'));
       },
     });
   }

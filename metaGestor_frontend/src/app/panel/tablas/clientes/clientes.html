@@ -1,0 +1,47 @@
+<section class="page" aria-labelledby="clientes-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Clientes</p>
+      <h1 id="clientes-title" class="page__title">Clientes</h1>
+      <p class="page__description">
+        Administra la cartera de clientes: crea, modifica o elimina registros, filtra por datos de
+        contacto y abre el perfil de cada cliente para revisar sus trabajos.
+      </p>
+    </div>
+    <p class="page__summary">
+      <strong>{{ clientes().length }}</strong> clientes registrados
+    </p>
+  </header>
+
+  <div class="page__actions">
+    <button type="button" class="page__boton" (click)="abrirCreacion()">
+      <span aria-hidden="true">+</span> Nuevo cliente
+    </button>
+  </div>
+
+  @if (errorEliminar()) {
+    <p class="page__alerta" role="alert">{{ errorEliminar() }}</p>
+  }
+
+  <app-data-table
+    caption="Clientes"
+    searchPlaceholder="Buscar por nombre, correo, teléfono o DNI…"
+    emptyMessage="No hay clientes que coincidan con la búsqueda."
+    [columns]="columns"
+    [rows]="clientes()"
+    [rowId]="rowId"
+    [mostrarAcciones]="true"
+    (filaModificada)="abrirModificacion($event)"
+    (filaEliminada)="eliminar($event)"
+  />
+
+  @if (modalAbierta()) {
+    <app-modal [titulo]="tituloModal()" (cerrar)="cerrarModal()">
+      <app-form-cliente
+        [cliente]="clienteEnEdicion()"
+        (cancelar)="cerrarModal()"
+        (guardado)="cerrarModal()"
+      />
+    </app-modal>
+  }
+</section>
