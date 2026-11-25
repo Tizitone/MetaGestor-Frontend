@@ -43,6 +43,7 @@ export class Tareas {
   );
 
   protected readonly idUsuario = this.sesion.idUsuario;
+  protected readonly puedeExportar = this.data.puedeExportar;
 
   protected readonly tareas = computed<readonly Tarea[]>(() =>
     this.esEmpleado() ? this.data.buscarHistorialEmpleados() : this.data.tareas(),

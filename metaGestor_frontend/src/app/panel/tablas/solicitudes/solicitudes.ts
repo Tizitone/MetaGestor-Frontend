@@ -16,6 +16,7 @@ export class Solicitudes {
   private readonly data = inject(PanelData);
 
   protected readonly solicitudes = this.data.solicitudes;
+  protected readonly puedeExportar = this.data.puedeExportar;
 
   // --- Modificación ---
 

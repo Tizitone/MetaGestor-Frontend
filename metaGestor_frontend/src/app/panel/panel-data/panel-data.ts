@@ -108,6 +108,9 @@ export class PanelData {
   /** `true` cuando la sesión pertenece a un gerente. */
   readonly esGerente = this.rol === 'GERENTE';
 
+  /** `true` cuando el rol de la sesión puede exportar los listados a CSV. */
+  readonly puedeExportar = this.rol === 'ADMIN' || this.rol === 'GERENTE';
+
   idActual = signal<number>(0);
   private readonly idActual$ = toObservable(this.idActual);
   /**

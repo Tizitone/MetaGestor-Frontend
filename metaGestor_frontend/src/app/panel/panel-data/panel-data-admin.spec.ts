@@ -57,5 +57,6 @@ describe('PanelData con rol ADMIN', () => {
 
     expect(data.nombreDeEmpleado(1001)).toBe('Luis Martínez');
     expect(data.nombreDeEmpleado(999)).toBe('Legajo #999');
+    expect(data.puedeExportar).toBe(true);
   });
 });

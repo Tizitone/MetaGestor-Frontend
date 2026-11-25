@@ -74,6 +74,40 @@ async function typeInto(
   await fixture.whenStable();
 }
 
+async function descargarCsv(accion: () => void): Promise<{ contenido: string; nombre: string }> {
+  const crearOriginal = URL.createObjectURL;
+  const revocarOriginal = URL.revokeObjectURL;
+  const clickOriginal = HTMLAnchorElement.prototype.click;
+  let blob: Blob | null = null;
+  let nombre = '';
+
+  URL.createObjectURL = (objeto: Blob | MediaSource) => {
+    blob = objeto as Blob;
+    return 'blob:prueba';
+  };
+  URL.revokeObjectURL = () => {};
+  HTMLAnchorElement.prototype.click = function (this: HTMLAnchorElement) {
+    nombre = this.download;
+  };
+
+  try {
+    accion();
+  } finally {
+    URL.createObjectURL = crearOriginal;
+    URL.revokeObjectURL = revocarOriginal;
+    HTMLAnchorElement.prototype.click = clickOriginal;
+  }
+
+  const contenido = await new Promise<string>((resolve, reject) => {
+    const lector = new FileReader();
+    lector.onload = () => resolve(String(lector.result));
+    lector.onerror = () => reject(lector.error);
+    lector.readAsText(blob as Blob, 'UTF-8');
+  });
+
+  return { contenido, nombre };
+}
+
 describe('DataTable', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -258,5 +292,75 @@ describe('DataTable', () => {
     expect(links[0].getAttribute('href')).toBe('/personas/1');
     expect(links[0].textContent).toContain('Ana Torres');
     expect(compiled.querySelector('tbody .table__text')).toBeFalsy();
+  });
+
+  it('does not show the CSV button until export is enabled', async () => {
+    const fixture = await createTable();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('.button--exportar')).toBeFalsy();
+
+    fixture.componentRef.setInput('puedeExportar', true);
+    await fixture.whenStable();
+
+    expect(compiled.querySelector('.button--exportar')?.textContent).toContain('Exportar CSV');
+  });
+
+  it('exports the filtered rows with displayed values and escaped quotes', async () => {
+    const fixture = await createTable();
+    fixture.componentRef.setInput('rows', [
+      { id: 1, name: 'Ana "La" Torres', city: 'Santiago', status: 'active' as const },
+      ...ROWS.slice(1),
+    ]);
+    fixture.componentRef.setInput('puedeExportar', true);
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const search = compiled.querySelector('.search__input') as HTMLInputElement;
+    await typeInto(fixture, search, 'santiago', 'input');
+
+    const descarga = await descargarCsv(() => {
+      (compiled.querySelector('.button--exportar') as HTMLButtonElement).click();
+    });
+
+    expect(descarga.nombre).toMatch(/^Personas_\d{2}-\d{2}-\d{4}_\d{4}\.csv$/);
+    expect(descarga.contenido).toContain('"ID";"Nombre";"Ciudad";"Estado"');
+    expect(descarga.contenido).toContain('"1";"Ana ""La"" Torres";"Santiago";"Activo"');
+    expect(descarga.contenido).toContain('"3";"Carla Rojas";"Santiago";"Activo"');
+    expect(descarga.contenido).not.toContain('Bruno Salas');
+  });
+
+  it('keeps export-disabled columns in the table but out of the CSV', async () => {
+    const columnas: readonly TableColumn<Person>[] = [
+      { key: 'name', header: 'Nombre', value: (row) => row.name },
+      {
+        key: 'perfil',
+        header: 'Perfil',
+        exportar: false,
+        value: () => 'Ver perfil',
+        link: (row) => `/personas/${row.id}`,
+        sortable: false,
+      },
+    ];
+
+    const fixture = TestBed.createComponent(DataTable<Person>);
+    fixture.componentRef.setInput('columns', columnas);
+    fixture.componentRef.setInput('rows', ROWS.slice(0, 1));
+    fixture.componentRef.setInput('rowId', (row: Person) => row.id);
+    fixture.componentRef.setInput('caption', 'Personas');
+    fixture.componentRef.setInput('puedeExportar', true);
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelectorAll('thead th')).toHaveLength(2);
+    expect(compiled.textContent).toContain('Ver perfil');
+
+    const descarga = await descargarCsv(() => {
+      (compiled.querySelector('.button--exportar') as HTMLButtonElement).click();
+    });
+
+    expect(descarga.contenido).toContain('"Nombre"');
+    expect(descarga.contenido).not.toContain('Perfil');
+    expect(descarga.contenido).not.toContain('Ver perfil');
   });
 });

@@ -32,6 +32,11 @@
       @if (hasActiveFilters()) {
         <button type="button" class="button button--ghost" (click)="resetFilters()">Limpiar</button>
       }
+      @if (puedeExportar()) {
+        <button type="button" class="button button--exportar" (click)="exportarCsv()">
+          Exportar CSV
+        </button>
+      }
     </div>
   </div>
 

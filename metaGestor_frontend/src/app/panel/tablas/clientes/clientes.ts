@@ -16,6 +16,7 @@ export class Clientes {
   private readonly data = inject(PanelData);
 
   protected readonly clientes = this.data.clientes;
+  protected readonly puedeExportar = this.data.puedeExportar;
 
   // --- Alta y modificación ---
 
@@ -103,6 +104,7 @@ export class Clientes {
     {
       key: 'perfil',
       header: 'Perfil',
+      exportar: false,
       value: () => 'Ver perfil',
       link: (cliente) => `/panel/clientes/${cliente.idCliente}`,
       sortable: false,

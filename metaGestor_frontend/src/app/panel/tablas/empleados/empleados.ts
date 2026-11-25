@@ -40,6 +40,7 @@ export class Empleados {
   private readonly data = inject(PanelData);
 
   protected readonly empleados = this.data.empleados;
+  protected readonly puedeExportar = this.data.puedeExportar;
 
   /**
    * El gerente puede consultar y editar empleados, pero no eliminarlos. El
@@ -157,6 +158,7 @@ export class Empleados {
     {
       key: 'perfil',
       header: 'Perfil',
+      exportar: false,
       value: (empleado) => String(empleado.legajo),
       display: () => 'Ver perfil',
       link: (empleado) => `/panel/empleados/${empleado.legajo}`,

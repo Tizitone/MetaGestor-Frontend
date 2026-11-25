@@ -16,6 +16,7 @@ export class Gerentes {
   private readonly data = inject(PanelData);
 
   protected readonly gerentes = this.data.gerentes;
+  protected readonly puedeExportar = this.data.puedeExportar;
 
   // --- Alta y modificación ---
 
@@ -104,6 +105,7 @@ export class Gerentes {
     {
       key: 'perfil',
       header: 'Perfil',
+      exportar: false,
       value: (gerente) => String(gerente.legajo),
       display: () => 'Ver perfil',
       link: (gerente) => `/panel/gerentes/${gerente.legajo}`,

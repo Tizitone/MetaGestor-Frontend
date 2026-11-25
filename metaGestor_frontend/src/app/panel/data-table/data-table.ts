@@ -29,6 +29,8 @@ export interface TableColumn<T> {
   readonly sortable?: boolean;
   readonly align?: 'start' | 'end';
   readonly width?: string;
+  /** Permite excluir la columna del CSV sin ocultarla de la tabla. */
+  readonly exportar?: boolean;
 }
 
 const collator = new Intl.Collator('es', { numeric: true, sensitivity: 'base' });
@@ -62,6 +64,8 @@ export class DataTable<T> {
   readonly mostrarAcciones = input(false);
   /** Permite ocultar solo el botón «Eliminar» cuando el rol no puede borrar. */
   readonly puedeEliminar = input(true);
+  /** Muestra el botón para descargar las filas filtradas como CSV. */
+  readonly puedeExportar = input(false);
   /** Agrega el botón «Ver detalle» en la columna de acciones. */
   readonly mostrarDetalle = input(false);
   /** Se emite con la fila al pulsar el botón «Ver detalle». */
@@ -194,6 +198,47 @@ export class DataTable<T> {
 
   protected cellText(column: TableColumn<T>, row: T): string {
     return column.display?.(row) ?? column.value(row);
+  }
+
+  private valorCsv(valor: string): string {
+    return `"${valor.replaceAll('"', '""')}"`;
+  }
+
+  private nombreArchivo(): string {
+    const ahora = new Date();
+    const nombre =
+      (this.caption() || 'listado')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'listado';
+    const dia = String(ahora.getDate()).padStart(2, '0');
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const hora = String(ahora.getHours()).padStart(2, '0');
+    const minuto = String(ahora.getMinutes()).padStart(2, '0');
+
+    return `${nombre}_${dia}-${mes}-${ahora.getFullYear()}_${hora}${minuto}.csv`;
+  }
+
+  /** Descarga las filas filtradas y ordenadas con el texto que muestra la tabla. */
+  protected exportarCsv(): void {
+    const columnas = this.columns().filter((columna) => columna.exportar !== false);
+    const lineas = [
+      columnas.map((columna) => this.valorCsv(columna.header)).join(';'),
+      ...this.filteredRows().map((fila) =>
+        columnas.map((columna) => this.valorCsv(this.cellText(columna, fila))).join(';'),
+      ),
+    ];
+
+    const blob = new Blob(['\uFEFF', lineas.join('\r\n')], {
+      type: 'text/csv;charset=utf-8',
+    });
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = this.nombreArchivo();
+    enlace.click();
+    URL.revokeObjectURL(url);
   }
 
   /** Las columnas `checkbox` se marcan cuando el valor de la fila es `'true'`. */

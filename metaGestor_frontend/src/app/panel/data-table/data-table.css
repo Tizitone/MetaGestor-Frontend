@@ -109,6 +109,11 @@
   background: transparent;
 }
 
+.button--exportar {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
 .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));

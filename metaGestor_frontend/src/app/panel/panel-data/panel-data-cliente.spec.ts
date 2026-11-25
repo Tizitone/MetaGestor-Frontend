@@ -32,7 +32,7 @@ describe('PanelData con rol CLIENTE', () => {
   });
 
   it('solo consulta los endpoints habilitados para un cliente', () => {
-    TestBed.inject(PanelData);
+    const data = TestBed.inject(PanelData);
     TestBed.tick();
 
     http.expectOne(`${urlApi}/clientes/7`).flush({
@@ -75,5 +75,7 @@ describe('PanelData con rol CLIENTE', () => {
     ]) {
       http.expectNone(`${urlApi}${prohibida}`);
     }
+
+    expect(data.puedeExportar).toBe(false);
   });
 });
