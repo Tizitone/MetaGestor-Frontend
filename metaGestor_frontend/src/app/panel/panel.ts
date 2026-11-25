@@ -33,6 +33,7 @@ export class Panel {
 
     if (currentRol.includes('ADMIN')) {
       return [
+        { path: '/panel/resumen', label: 'Resumen' },
         { path: '/panel/clientes', label: 'Clientes', count: this.data.clientes().length },
         { path: '/panel/empleados', label: 'Empleados', count: this.data.empleados().length },
         { path: '/panel/gerentes', label: 'Gerentes', count: this.data.gerentes().length },
@@ -46,6 +47,7 @@ export class Panel {
       const idUsuario = this.sesion.idUsuario();
 
       return [
+        { path: '/panel/resumen', label: 'Resumen' },
         // El gerente accede a su propia ficha desde el menú.
         ...(idUsuario
           ? [{ path: `/panel/gerentes/${idUsuario}`, label: 'Mi perfil' } as const]

@@ -1,0 +1,28 @@
+<section class="page" aria-labelledby="resumen-title">
+  <header class="page__header">
+    <div>
+      <p class="page__eyebrow">Gestión · Indicadores</p>
+      <h1 id="resumen-title" class="page__title">Resumen</h1>
+      <p class="page__description">
+        Totales actualizados del panel. Cada tarjeta abre el listado correspondiente para revisar
+        el detalle.
+      </p>
+    </div>
+    <p class="page__summary"><strong>{{ totalRegistros() }}</strong> registros en total</p>
+  </header>
+
+  @for (grupo of grupos(); track grupo.titulo) {
+    <section class="resumen__grupo">
+      <h2 class="resumen__subtitulo">{{ grupo.titulo }}</h2>
+      <div class="resumen__grid">
+        @for (indicador of grupo.indicadores; track indicador.etiqueta) {
+          <a class="resumen__tarjeta" [routerLink]="indicador.destino">
+            <span class="resumen__etiqueta">{{ indicador.etiqueta }}</span>
+            <strong class="resumen__total">{{ indicador.total }}</strong>
+            <span class="resumen__accion">{{ indicador.detalle }} →</span>
+          </a>
+        }
+      </div>
+    </section>
+  }
+</section>

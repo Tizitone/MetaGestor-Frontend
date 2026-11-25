@@ -44,18 +44,22 @@ describe('Panel', () => {
     http.verify();
   });
 
-  it('renders the six management sections with their counts', () => {
+  it('renders the summary and the management sections with their counts', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const labels = Array.from(compiled.querySelectorAll('.nav__link')).map((link) =>
       link.textContent?.replace(/\s+/g, ' ').trim(),
     );
 
-    expect(labels).toHaveLength(6);
-    expect(labels[0]).toContain('Clientes');
-    expect(labels[1]).toContain('Empleados');
-    expect(labels[2]).toContain('Gerentes');
-    expect(labels[5]).toContain('Registros');
+    expect(labels).toHaveLength(7);
+    expect(labels[0]).toContain('Resumen');
+    expect(labels[1]).toContain('Clientes');
+    expect(labels[2]).toContain('Empleados');
+    expect(labels[3]).toContain('Gerentes');
+    expect(labels[6]).toContain('Registros');
     expect(compiled.querySelectorAll('.nav__count')).toHaveLength(6);
+
+    const resumen = compiled.querySelector<HTMLAnchorElement>('a[href="/panel/resumen"]');
+    expect(resumen?.textContent).toContain('Resumen');
   });
 
   it('renders the router outlet for the section pages', () => {

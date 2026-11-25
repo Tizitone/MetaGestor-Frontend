@@ -44,16 +44,20 @@ describe('Panel con rol GERENTE', () => {
     http.verify();
   });
 
-  it('offers their own profile and employee management', () => {
+  it('offers the summary, their own profile and employee management', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const labels = Array.from(compiled.querySelectorAll('.nav__link')).map((link) =>
       link.textContent?.replace(/\s+/g, ' ').trim(),
     );
 
-    expect(labels).toHaveLength(6);
-    expect(labels[0]).toContain('Mi perfil');
-    expect(labels[1]).toContain('Clientes');
-    expect(labels[2]).toContain('Empleados');
+    expect(labels).toHaveLength(7);
+    expect(labels[0]).toContain('Resumen');
+    expect(labels[1]).toContain('Mi perfil');
+    expect(labels[2]).toContain('Clientes');
+    expect(labels[3]).toContain('Empleados');
+
+    const resumen = compiled.querySelector<HTMLAnchorElement>('a[href="/panel/resumen"]');
+    expect(resumen?.textContent).toContain('Resumen');
 
     const perfil = compiled.querySelector<HTMLAnchorElement>('a[href="/panel/gerentes/3"]');
     expect(perfil?.textContent).toContain('Mi perfil');

@@ -6,6 +6,7 @@ import {
 import { perfilGerenteGuard } from '../pagina-Auth/guards/gerente-guard';
 import { authGuard } from '../pagina-Auth/guards/auth-guard';
 import { soloAdminGuard } from '../pagina-Auth/guards/admin-guard';
+import { soloAdminOGerenteGuard } from '../pagina-Auth/guards/panel-resumen-guard';
 import { redireccionInicioPanel } from '../pagina-Auth/guards/redireccion-por-rol';
 
 /**
@@ -22,6 +23,12 @@ export const PANEL_ROUTES: Routes = [
     loadComponent: () => import('./panel').then((m) => m.Panel),
     children: [
       { path: '', pathMatch: 'full', redirectTo: redireccionInicioPanel },
+      {
+        path: 'resumen',
+        title: 'Resumen | MetaGestor',
+        canActivate: [soloAdminOGerenteGuard],
+        loadComponent: () => import('./resumen/resumen').then((m) => m.Resumen),
+      },
       {
         path: 'clientes',
         title: 'Clientes | MetaGestor',
