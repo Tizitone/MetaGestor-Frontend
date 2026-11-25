@@ -114,6 +114,32 @@
   color: var(--accent-strong);
 }
 
+.button--peligro {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+
+.button--peligro:hover {
+  border-color: #922f25;
+  background: #922f25;
+  color: #fff;
+}
+
+.confirmacion__texto {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.confirmacion__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
 .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Modal } from '../modal/modal';
 
 export type BadgeTone = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 
@@ -47,7 +48,7 @@ function normalize(value: string): string {
 
 @Component({
   selector: 'app-data-table',
-  imports: [RouterLink],
+  imports: [RouterLink, Modal],
   templateUrl: './data-table.html',
   styleUrl: './data-table.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +73,7 @@ export class DataTable<T> {
   readonly filaDetalle = output<T>();
   /** Se emite con la fila al pulsar el botón «Modificar». */
   readonly filaModificada = output<T>();
-  /** Se emite con la fila al pulsar el botón «Eliminar». */
+  /** Se emite con la fila después de confirmar la eliminación. */
   readonly filaEliminada = output<T>();
 
   protected readonly filterPanelId = `table-filters-${nextFilterPanelId++}`;
@@ -82,6 +83,14 @@ export class DataTable<T> {
   protected readonly sortKey = signal<string | null>(null);
   protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
   private readonly pageIndex = signal(0);
+  /** Fila pendiente de confirmación; se emite solo al aceptar la baja. */
+  protected readonly filaPorEliminar = signal<T | null>(null);
+  /** Identificador de esa fila, tomado del texto de la primera columna. */
+  protected readonly etiquetaFilaPorEliminar = computed(() => {
+    const fila = this.filaPorEliminar();
+    const columna = this.columns()[0];
+    return fila === null || columna === undefined ? '' : this.cellText(columna, fila);
+  });
 
   protected readonly hasColumnFilters = computed(() =>
     this.columns().some((column) => column.filter !== undefined),
@@ -312,5 +321,23 @@ export class DataTable<T> {
 
   protected goToPage(index: number): void {
     this.pageIndex.set(Math.min(Math.max(index, 0), this.pageCount() - 1));
+  }
+
+  protected pedirEliminacion(row: T): void {
+    this.filaPorEliminar.set(row);
+  }
+
+  protected cancelarEliminacion(): void {
+    this.filaPorEliminar.set(null);
+  }
+
+  protected confirmarEliminacion(): void {
+    const fila = this.filaPorEliminar();
+    if (fila === null) {
+      return;
+    }
+
+    this.filaEliminada.emit(fila);
+    this.filaPorEliminar.set(null);
   }
 }

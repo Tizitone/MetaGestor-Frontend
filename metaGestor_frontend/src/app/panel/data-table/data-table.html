@@ -186,7 +186,7 @@
                       type="button"
                       class="table__accion table__accion--peligro"
                       [attr.aria-label]="'Eliminar fila'"
-                      (click)="filaEliminada.emit(row)"
+                      (click)="pedirEliminacion(row)"
                     >
                       Eliminar
                     </button>
@@ -244,3 +244,18 @@
     }
   </footer>
 </div>
+
+@if (filaPorEliminar()) {
+  <app-modal titulo="Confirmar eliminación" (cerrar)="cancelarEliminacion()">
+    <p class="confirmacion__texto">
+      ¿Eliminar «{{ etiquetaFilaPorEliminar() }}» de {{ caption() }}? Esta acción no se puede
+      deshacer.
+    </p>
+    <div class="confirmacion__acciones">
+      <button type="button" class="button" (click)="cancelarEliminacion()">Cancelar</button>
+      <button type="button" class="button button--peligro" (click)="confirmarEliminacion()">
+        Eliminar
+      </button>
+    </div>
+  </app-modal>
+}

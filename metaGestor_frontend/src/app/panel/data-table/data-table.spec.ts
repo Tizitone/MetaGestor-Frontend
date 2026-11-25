@@ -363,4 +363,83 @@ describe('DataTable', () => {
     expect(descarga.contenido).not.toContain('Perfil');
     expect(descarga.contenido).not.toContain('Ver perfil');
   });
+
+  async function crearTablaConEliminacion() {
+    const fixture = TestBed.createComponent(DataTable<Person>);
+    fixture.componentRef.setInput('columns', COLUMNS);
+    fixture.componentRef.setInput('rows', ROWS);
+    fixture.componentRef.setInput('rowId', (row: Person) => row.id);
+    fixture.componentRef.setInput('caption', 'Personas');
+    fixture.componentRef.setInput('mostrarAcciones', true);
+    const emitido = vi.fn();
+    fixture.componentInstance.filaEliminada.subscribe(emitido);
+    await fixture.whenStable();
+    return { fixture, emitido };
+  }
+
+  async function pulsarEliminar(fixture: TableFixture): Promise<void> {
+    const compiled = fixture.nativeElement as HTMLElement;
+    (compiled.querySelector('tbody .table__accion--peligro') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
+  function botonConfirmacion(fixture: TableFixture, clase: string): HTMLButtonElement {
+    const compiled = fixture.nativeElement as HTMLElement;
+    return compiled.querySelector(
+      `app-modal .confirmacion__acciones .${clase}`,
+    ) as HTMLButtonElement;
+  }
+
+  it('asks for confirmation before emitting the deleted row', async () => {
+    const { fixture, emitido } = await crearTablaConEliminacion();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('app-modal')).toBeFalsy();
+
+    await pulsarEliminar(fixture);
+
+    expect(compiled.querySelector('app-modal')?.textContent).toContain('Confirmar eliminación');
+    expect(compiled.querySelector('.confirmacion__texto')?.textContent).toContain(
+      '¿Eliminar «1» de Personas?',
+    );
+    expect(emitido).not.toHaveBeenCalled();
+  });
+
+  it('cancels the deletion without emitting the row', async () => {
+    const { fixture, emitido } = await crearTablaConEliminacion();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    await pulsarEliminar(fixture);
+    botonConfirmacion(fixture, 'button:not(.button--peligro)').click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-modal')).toBeFalsy();
+    expect(emitido).not.toHaveBeenCalled();
+  });
+
+  it('emits the confirmed row once and closes the modal', async () => {
+    const { fixture, emitido } = await crearTablaConEliminacion();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    await pulsarEliminar(fixture);
+    botonConfirmacion(fixture, 'button--peligro').click();
+    fixture.detectChanges();
+
+    expect(emitido).toHaveBeenCalledTimes(1);
+    expect(emitido).toHaveBeenCalledWith(ROWS[0]);
+    expect(compiled.querySelector('app-modal')).toBeFalsy();
+  });
+
+  it('closes the confirmation on backdrop without emitting the row', async () => {
+    const { fixture, emitido } = await crearTablaConEliminacion();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    await pulsarEliminar(fixture);
+    (compiled.querySelector('app-modal .modal__fondo') as HTMLElement).click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-modal')).toBeFalsy();
+    expect(emitido).not.toHaveBeenCalled();
+  });
 });
